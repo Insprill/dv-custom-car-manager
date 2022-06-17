@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import net.insprill.customcarmanager.CustomCarManager;
+import net.insprill.customcarmanager.config.Locale;
 
 public class Window extends Application {
 
@@ -13,7 +13,7 @@ public class Window extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle(CustomCarManager.getLocale().getLine("window.title"));
+        this.primaryStage.setTitle(Locale.getLine("window.title"));
 
         BorderPane pane = new BorderPane();
 
