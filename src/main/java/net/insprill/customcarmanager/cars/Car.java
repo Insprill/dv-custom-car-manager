@@ -25,7 +25,7 @@ public class Car {
     private String calculateName() {
         if (carConfigFile.exists()) {
             try {
-                return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").toString();
+                return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
             } catch (Exception e) {
                 new ErrorDialog(e);
             }
