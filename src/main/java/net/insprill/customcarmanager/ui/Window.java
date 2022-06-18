@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -42,6 +43,7 @@ public final class Window extends Application {
         this.carManager = new CarManager();
 
         primaryStage.setTitle(Locale.getLine("window.title"));
+        primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icons/icon.png")));
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
         Scene scene = new Scene(root, 600, 400);
