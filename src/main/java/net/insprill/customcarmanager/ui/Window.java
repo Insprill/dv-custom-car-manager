@@ -2,6 +2,7 @@ package net.insprill.customcarmanager.ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -51,6 +52,10 @@ public final class Window extends Application {
 
     public CarManager getCarManager() {
         return this.carManager;
+    }
+
+    public Node findNode(String id) {
+        return getPrimaryStage().getScene().lookup(id.startsWith("#") ? id : "#" + id);
     }
 
 }

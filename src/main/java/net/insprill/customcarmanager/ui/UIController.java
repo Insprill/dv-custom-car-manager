@@ -19,7 +19,7 @@ public class UIController {
             return;
         String path = file.getAbsolutePath();
         Config.setString("install-directory", path);
-        TextField lookup = (TextField) Window.getInstance().getPrimaryStage().getScene().lookup("#install_dir_field");
+        TextField lookup = (TextField) Window.getInstance().findNode("#install_dir_field");
         lookup.setText(path);
     }
 
