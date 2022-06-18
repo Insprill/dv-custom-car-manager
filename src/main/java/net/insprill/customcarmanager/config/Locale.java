@@ -13,6 +13,7 @@ public class Locale {
     public static void init() throws IOException {
         properties = new Properties();
         if (!tryLoad(Config.getString("locale"))) {
+            System.err.println("Locale '" + Config.getString("locale") + "' not found, using default.");
             tryLoad(DEFAULT_LOCALE);
         }
     }
