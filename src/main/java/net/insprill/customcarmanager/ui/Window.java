@@ -4,9 +4,16 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import net.insprill.customcarmanager.cars.CarManager;
+import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
+import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 public final class Window extends Application {
@@ -24,12 +31,14 @@ public final class Window extends Application {
     // endregion
 
     private Stage primaryStage;
+    private CarManager carManager;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
         Window.setInstance(this);
 
         this.primaryStage = primaryStage;
+        this.carManager = new CarManager();
 
         primaryStage.setTitle(Locale.getLine("window.title"));
 
@@ -47,5 +56,37 @@ public final class Window extends Application {
     public Stage getPrimaryStage() {
         return this.primaryStage;
     }
+
+    public CarManager getCarManager() {
+        return this.carManager;
+    }
+
+    // region Actions
+
+    private void selectInstallDirectory() {
+        File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.dv-install-directory.title"));
+        if (file == null)
+            return;
+        String path = file.getAbsolutePath();
+        Config.setString("install-directory", path);
+        TextField lookup = (TextField) getPrimaryStage().getScene().lookup("#install_dir_field");
+        lookup.setText(path);
+    }
+
+    private void installCarFromFolder() {
+        File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"));
+        if (file == null)
+            return;
+        getCarManager().installCarFromFolder(file);
+    }
+
+    private void installCarFromArchive() {
+        File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Archive", "*.zip"));
+        if (file == null)
+            return;
+        getCarManager().installCarFromArchive(file);
+    }
+
+    // endregion
 
 }
