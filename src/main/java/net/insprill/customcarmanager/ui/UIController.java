@@ -43,6 +43,8 @@ public class UIController {
 
     @FXML
     private void installCarFromFolder() {
+        if (!checkInstallDir())
+            return;
         File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"));
         if (file == null)
             return;
@@ -52,6 +54,8 @@ public class UIController {
 
     @FXML
     private void installCarFromArchive() {
+        if (!checkInstallDir())
+            return;
         File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Zip files (*.zip)", "*.zip", "*.ZIP"));
         if (file == null)
             return;
@@ -61,14 +65,26 @@ public class UIController {
 
     @FXML
     public void deleteCar(ActionEvent value) {
+        if (!checkInstallDir())
+            return;
         String carName = ((Text) ((Node) value.getSource()).getParent().lookup("#car_name")).getText();
         Window.getInstance().getCarManager().getCar(carName).delete();
         updateCars();
     }
 
-    private void updateCars() {
+    public static void updateCars() {
+        if (!checkInstallDir())
+            return;
         Window.getInstance().getCarManager().findCars();
         Window.getInstance().populateCarList();
+    }
+
+    private static boolean checkInstallDir() {
+        if (Config.getString("install-directory").isEmpty()) {
+            new ErrorDialog(Locale.getLine("dialog.error.no-install-dir"));
+            return false;
+        }
+        return true;
     }
 
 }

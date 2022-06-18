@@ -53,8 +53,7 @@ public final class Window extends Application {
         primaryStage.show();
 
         ((TextField) findNode("#install_dir_field")).setText(Config.getString("install-directory"));
-        carManager.findCars();
-        populateCarList();
+        UIController.updateCars();
     }
 
     public Stage getPrimaryStage() {
