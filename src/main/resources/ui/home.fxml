@@ -8,7 +8,7 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.insprill.customcarmanager.ui.UIController">
    <children>
       <TextField fx:id="install_dir_field" editable="false" layoutX="26.0" layoutY="35.0" prefHeight="25.0" prefWidth="375.0" />
-      <Button fx:id="select_install_dir_button" layoutX="416.0" layoutY="35.0" mnemonicParsing="false" onAction="#selectInstallDirectory" prefHeight="25.0" prefWidth="160.0" text="Select Install Directory" />
+      <Button fx:id="select_install_dir_button" layoutX="409.0" layoutY="35.0" mnemonicParsing="false" onAction="#selectInstallDirectory" prefHeight="25.0" prefWidth="167.0" text="Select Installation Directory" />
       <ScrollPane hbarPolicy="NEVER" layoutX="26.0" layoutY="140.0" prefHeight="250.0" prefWidth="550.0">
          <content>
             <VBox fx:id="car_list" alignment="TOP_CENTER" prefHeight="250.0" prefWidth="550.0" />
@@ -24,12 +24,12 @@
             <Font size="17.0" />
          </font>
       </Text>
-      <Button fx:id="install_car_button" layoutX="100.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromFolder" prefHeight="25.0" prefWidth="175.0" text="Install Car from Folder">
+      <Button fx:id="install_car_folder_button" layoutX="100.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromFolder" prefHeight="25.0" prefWidth="175.0" text="Install Car(s) from Folder">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button fx:id="install_car_button1" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromArchive" prefHeight="25.0" prefWidth="175.0" text="Install Car from Archive">
+      <Button fx:id="install_car_archive_button" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromArchive" prefHeight="25.0" prefWidth="175.0" text="Install Car from Archive">
          <font>
             <Font size="13.0" />
          </font>

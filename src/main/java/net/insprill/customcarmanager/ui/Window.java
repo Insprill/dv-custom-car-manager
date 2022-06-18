@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
@@ -46,6 +47,13 @@ public final class Window extends Application {
         primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icons/icon.png")));
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
+
+        ((Text) root.lookup("#install_dir_header")).setText(Locale.getLine("window.install-dir.header"));
+        ((Labeled) root.lookup("#select_install_dir_button")).setText(Locale.getLine("window.install-dir.button"));
+        ((Labeled) root.lookup("#install_car_folder_button")).setText(Locale.getLine("window.cars.install-from-folder"));
+        ((Labeled) root.lookup("#install_car_archive_button")).setText(Locale.getLine("window.cars.install-from-archive"));
+        ((Text) root.lookup("#installed_cars_header")).setText(Locale.getLine("window.cars.installed.header"));
+
         Scene scene = new Scene(root, 600, 400);
 
         primaryStage.setScene(scene);
@@ -75,6 +83,7 @@ public final class Window extends Application {
             for (Car car : getCarManager().getCars()) {
                 Parent obj = FXMLLoader.load(getClass().getClassLoader().getResource("ui/car.fxml"));
                 ((Text) obj.lookup("#car_name")).setText(car.getName());
+                ((Labeled) obj.lookup("#delete_button")).setText(Locale.getLine("window.cars.delete-button"));
                 carList.getChildren().add(obj);
             }
         } catch (IOException e) {
