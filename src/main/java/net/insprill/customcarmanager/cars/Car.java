@@ -2,13 +2,11 @@ package net.insprill.customcarmanager.cars;
 
 import com.google.gson.JsonParser;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
+import net.insprill.customcarmanager.util.IO;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.stream.Stream;
 
 public class Car {
 
@@ -38,10 +36,8 @@ public class Car {
     }
 
     public void delete() {
-        try (Stream<Path> walk = Files.walk(directory.toPath())) {
-            walk.sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+        try {
+            IO.deleteDirectory(directory);
         } catch (IOException e) {
             new ErrorDialog(e);
         }
