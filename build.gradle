@@ -35,8 +35,8 @@ shadowJar {
 }
 
 application {
-    mainModule = 'net.insprill.dvcustomcarmanager'
-    mainClass = 'net.insprill.dvcustomcarmanager.HelloApplication'
+    mainModule = 'net.insprill.customcarmanager'
+    mainClass = 'net.insprill.customcarmanager.CustomCarManager'
 }
 
 javafx {
