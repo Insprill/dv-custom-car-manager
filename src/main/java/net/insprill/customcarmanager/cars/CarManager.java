@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CarManager {
@@ -48,29 +49,35 @@ public class CarManager {
     public void installCarFromFolder(File file) {
         if (!file.isDirectory())
             throw new IllegalArgumentException("File must be a directory");
-        file = findBaseFolder(file);
-        if (file == null)
+
+
+        List<File> cars = findCars(file);
+        if (cars.isEmpty()) {
+            new ErrorDialog(Locale.getLine("dialog.error.car-not-found"));
             return;
-
-        File installDir = new File(getCarsDir(), file.getName());
-
-        if (installDir.exists()) {
-            File config = findConfig(installDir);
-            if (config == null) {
-                new ErrorDialog(Locale.getLine("dialog.error.dir-already-exists"));
-                return;
-            }
-            new Car(installDir).delete();
         }
 
-        try {
-            IO.copyDirectory(file, installDir);
-        } catch (IOException e) {
-            new ErrorDialog(e);
+        for (File car : cars) {
+            File installDir = new File(getCarsDir(), car.getName());
+
+            if (installDir.exists()) {
+                File config = findConfig(installDir);
+                if (config == null) {
+                    new ErrorDialog(Locale.getLine("dialog.error.dir-already-exists"));
+                    continue;
+                }
+                new Car(installDir).delete();
+            }
+
             try {
-                IO.deleteDirectory(installDir);
-            } catch (IOException ex) {
+                IO.copyDirectory(file, installDir);
+            } catch (IOException e) {
                 new ErrorDialog(e);
+                try {
+                    IO.deleteDirectory(installDir);
+                } catch (IOException ex) {
+                    new ErrorDialog(e);
+                }
             }
         }
     }
@@ -98,25 +105,21 @@ public class CarManager {
         }
     }
 
-    private File findBaseFolder(File file) {
+    private List<File> findCars(File file) {
         if (!file.isDirectory())
             throw new IllegalArgumentException("File must be a directory");
 
-        File[] files = file.listFiles();
-
         if (findConfig(file) != null)
-            return file;
+            return Collections.singletonList(file);
 
+        File[] files = file.listFiles();
+        List<File> cars = new ArrayList<>();
         for (File subFile : files) {
             if (subFile.isDirectory()) {
-                File baseFolder = findBaseFolder(subFile);
-                if (baseFolder != null)
-                    return baseFolder;
+                cars.addAll(findCars(subFile));
             }
         }
-
-        new ErrorDialog(Locale.getLine("dialog.error.car-not-found"));
-        return null;
+        return cars;
     }
 
     private File findConfig(File dir) {
