@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import net.insprill.customcarmanager.cars.CarManager;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
@@ -25,6 +26,11 @@ public class UIController {
 
         if (Arrays.stream(file.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
             new ErrorDialog(Locale.getLine("dialog.error.invalid-install-dir"));
+            return;
+        }
+
+        if (!new File(file, CarManager.CARS_DIR).exists()) {
+            new ErrorDialog(Locale.getLine("dialog.error.ccl-not-found"));
             return;
         }
 

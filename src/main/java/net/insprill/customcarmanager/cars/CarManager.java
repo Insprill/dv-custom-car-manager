@@ -17,7 +17,7 @@ import java.util.List;
 public class CarManager {
 
     private static final String CAR_CONFIG = "car.json";
-    private static final String CARS_DIR = "Mods" + File.separator + "DVCustomCarLoader" + File.separator + "Cars";
+    public static final String CARS_DIR = "Mods" + File.separator + "DVCustomCarLoader" + File.separator + "Cars";
 
     private final List<Car> cars = new ArrayList<>();
 
