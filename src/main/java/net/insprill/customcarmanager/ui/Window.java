@@ -1,26 +1,29 @@
 package net.insprill.customcarmanager.ui;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import net.insprill.customcarmanager.config.Locale;
 
+import java.io.IOException;
+
 public class Window extends Application {
 
-    private Stage primaryStage;
-
     @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle(Locale.getLine("window.title"));
+    public void start(Stage primaryStage) throws IOException {
+        primaryStage.setTitle(Locale.getLine("window.title"));
 
-        BorderPane pane = new BorderPane();
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
 
-        Scene scene = new Scene(pane, 800, 600);
 
-        this.primaryStage.setScene(scene);
-        this.primaryStage.show();
+
+        Scene scene = new Scene(root, 600, 400);
+
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
     }
 
 }
