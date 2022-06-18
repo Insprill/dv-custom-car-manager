@@ -11,6 +11,7 @@ public class FileChooserFactory {
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.setTitle(title);
+        fileChooser.getExtensionFilters().add(filter);
         fileChooser.setSelectedExtensionFilter(filter);
 
         return fileChooser.showOpenDialog(Window.getInstance().getPrimaryStage());

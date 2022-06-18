@@ -38,7 +38,7 @@ public class UIController {
 
     @FXML
     private void installCarFromArchive() {
-        File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Archive", "*.zip"));
+        File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Zip files (*.zip)", "*.zip", "*.ZIP"));
         if (file == null)
             return;
         Window.getInstance().getCarManager().installCarFromArchive(file);
