@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField layoutX="143.0" layoutY="35.0" prefHeight="25.0" prefWidth="315.0" />
+      <Button layoutX="221.0" layoutY="66.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="160.0" text="Select Install Directory" />
+      <ScrollPane layoutX="26.0" layoutY="140.0" prefHeight="250.0" prefWidth="550.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
+      <Text layoutX="254.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Installed Cars">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text layoutX="246.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Install Directory">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>
