@@ -63,6 +63,6 @@ jlinkZip {
 launch4j {
     jarTask = shadowJar
     mainClassName = 'net.insprill.customcarmanager.CustomCarManager'
-    icon = "${sourceSets.main.resources.name}/icons/icon.ico"
+    icon = "${rootDir}/src/main/resources/icons/icon.ico"
     outfile = "CustomCarManager.exe"
 }
