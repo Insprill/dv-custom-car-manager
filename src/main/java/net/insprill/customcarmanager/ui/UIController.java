@@ -8,10 +8,12 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class UIController {
 
@@ -20,6 +22,12 @@ public class UIController {
         File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.dv-install-directory.title"));
         if (file == null)
             return;
+
+        if (Arrays.stream(file.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
+            new ErrorDialog(Locale.getLine("dialog.error.invalid-install-dir"));
+            return;
+        }
+
         String path = file.getAbsolutePath();
         Config.setString("install-directory", path);
         TextField lookup = (TextField) Window.getInstance().findNode("#install_dir_field");
