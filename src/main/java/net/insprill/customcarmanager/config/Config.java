@@ -27,10 +27,10 @@ public class Config {
                 configFolder.mkdirs();
                 configFile.createNewFile();
                 config = JsonParser.parseString(new String(is.readAllBytes())).getAsJsonObject();
+                save();
             } else {
                 loadFromDisk();
             }
-            save();
         }
     }
 
