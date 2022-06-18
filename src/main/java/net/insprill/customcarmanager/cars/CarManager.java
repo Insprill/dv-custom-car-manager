@@ -18,6 +18,7 @@ public class CarManager {
     }
 
     public void findCars() {
+        this.cars.clear();
         for (File file : getCarsDir().listFiles()) {
             if (!file.isDirectory())
                 continue;
@@ -27,6 +28,14 @@ public class CarManager {
 
     public List<Car> getCars() {
         return new ArrayList<>(this.cars);
+    }
+
+    public Car getCar(String name) {
+        for (Car car : this.cars) {
+            if (car.getName().equals(name))
+                return car;
+        }
+        return null;
     }
 
     public void installCarFromFolder(File file) {

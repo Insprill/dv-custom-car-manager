@@ -5,15 +5,14 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="525.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="525.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.insprill.customcarmanager.ui.UIController">
    <children>
       <Text fx:id="car_name" layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Car Name" wrappingWidth="311.25">
          <font>
             <Font size="16.0" />
          </font>
       </Text>
-      <Button layoutX="459.0" layoutY="8.0" mnemonicParsing="false" text="Delete" textFill="RED">
+      <Button layoutX="459.0" layoutY="8.0" mnemonicParsing="false" onAction="#deleteCar" text="Delete" textFill="RED">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

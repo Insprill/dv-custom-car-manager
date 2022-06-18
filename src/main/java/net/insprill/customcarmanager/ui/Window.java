@@ -68,11 +68,13 @@ public final class Window extends Application {
     }
 
     public void populateCarList() {
+        VBox carList = (VBox) findNode("#car_list");
+        carList.getChildren().clear();
         try {
             for (Car car : getCarManager().getCars()) {
                 Parent obj = FXMLLoader.load(getClass().getClassLoader().getResource("ui/car.fxml"));
                 ((Text) obj.lookup("#car_name")).setText(car.getName());
-                ((VBox) findNode("#car_list")).getChildren().add(obj);
+                carList.getChildren().add(obj);
             }
         } catch (IOException e) {
             new ErrorDialog(e);
