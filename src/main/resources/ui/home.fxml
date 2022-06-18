@@ -24,12 +24,12 @@
             <Font size="17.0" />
          </font>
       </Text>
-      <Button fx:id="install_car_button" layoutX="125.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromFolder" prefHeight="25.0" prefWidth="150.0" text="Install Car from Folder">
+      <Button fx:id="install_car_button" layoutX="100.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromFolder" prefHeight="25.0" prefWidth="175.0" text="Install Car from Folder">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button fx:id="install_car_button1" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromZip" prefHeight="25.0" prefWidth="150.0" text="Install Car from Zip">
+      <Button fx:id="install_car_button1" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromArchive" prefHeight="25.0" prefWidth="175.0" text="Install Car from Archive">
          <font>
             <Font size="13.0" />
          </font>
