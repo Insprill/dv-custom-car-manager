@@ -4,9 +4,12 @@ import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.util.IO;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +77,26 @@ public class CarManager {
     }
 
     public void installCarFromArchive(File file) {
+        File tempFolder;
+        try {
+            tempFolder = Files.createTempDirectory("dvcustomcarloader").toFile();
+        } catch (IOException e) {
+            new ErrorDialog(e);
+            return;
+        }
 
+        try (ZipFile zipFile = new ZipFile(file)) {
+            zipFile.extractAll(tempFolder.getAbsolutePath());
+            installCarFromFolder(tempFolder);
+        } catch (IOException e) {
+            new ErrorDialog(e);
+        } finally {
+            try {
+                IO.deleteDirectory(tempFolder);
+            } catch (IOException e) {
+                new ErrorDialog(e);
+            }
+        }
     }
 
     private File findBaseFolder(File file) {
