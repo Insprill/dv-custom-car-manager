@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.beryx.jlink' version '2.24.1'
     id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'net.insprill'
@@ -17,8 +18,18 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.google.code.gson:gson:2.9.0'
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+}
+
+shadowJar {
+    dependencies {
+        exclude(dependency(':javafx.*:.*'))
+    }
+
+    minimize()
 }
 
 application {

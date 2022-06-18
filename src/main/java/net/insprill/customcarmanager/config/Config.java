@@ -1,30 +1,32 @@
 package net.insprill.customcarmanager.config;
 
-import java.io.BufferedReader;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Properties;
+import java.nio.file.StandardOpenOption;
 
 public class Config {
 
     private static File configFolder;
     private static File configFile;
 
-    private static Properties configProps;
+    private static JsonObject config;
 
     public static void init() throws IOException {
         configFolder = new File(System.getProperty("user.home") + File.separator + ".customcarmanager");
-        configProps = new Properties();
+        config = new JsonObject();
 
-        configFile = new File(configFolder, "config.properties");
+        configFile = new File(configFolder, "config.json");
 
-        try (InputStream is = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
+        try (InputStream is = Config.class.getClassLoader().getResourceAsStream("config.json")) {
             if (!configFile.exists()) {
                 configFolder.mkdirs();
                 configFile.createNewFile();
-                configProps.load(is);
+                config = JsonParser.parseString(new String(is.readAllBytes())).getAsJsonObject();
             } else {
                 loadFromDisk();
             }
@@ -33,27 +35,24 @@ public class Config {
     }
 
     private static void loadFromDisk() throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(configFile.toPath())) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#"))
-                    continue;
-                String[] split = line.split("=");
-                configProps.setProperty(split[0], split[1]);
-            }
+        try (InputStream is = Files.newInputStream(configFile.toPath(), StandardOpenOption.READ)) {
+            config = JsonParser.parseString(new String(is.readAllBytes())).getAsJsonObject();
         }
     }
 
     public static String getString(String key) {
-        return configProps.getProperty(key);
+        if (config.has(key)) {
+            return config.get(key).getAsString();
+        }
+        return null;
     }
 
     public static void setString(String key, String value) {
-        configProps.setProperty(key, value);
+        config.addProperty(key, value);
     }
 
     public static void save() throws IOException {
-        configProps.store(Files.newOutputStream(configFile.toPath()), null);
+        Files.writeString(configFile.toPath(), config.toString(), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     private Config() {
