@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.beryx.jlink' version '2.24.1'
+    id 'edu.sc.seis.launch4j' version '2.5.3'
     id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
@@ -57,4 +58,11 @@ jlink {
 
 jlinkZip {
     group = 'distribution'
+}
+
+launch4j {
+    jarTask = shadowJar
+    mainClassName = 'net.insprill.customcarmanager.CustomCarManager'
+    icon = "${sourceSets.main.resources.name}/icon.ico"
+    outfile = "CustomCarManager.exe"
 }
