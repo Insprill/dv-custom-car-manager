@@ -8,18 +8,25 @@ import java.util.List;
 
 public class CarManager {
 
+    private static final String CAR_CONFIG = "car.json";
     private static final String CARS_DIR = "Mods" + File.separator + "DVCustomCarLoader" + File.separator + "Cars";
 
     private final List<Car> cars = new ArrayList<>();
 
+    private File getCarsDir() {
+        return new File(Config.getString("install-directory"), CARS_DIR);
+    }
+
     public void findCars() {
-        File dvDir = new File(Config.getString("install-directory"));
-        File carsDir = new File(dvDir, CARS_DIR);
-        for (File file : carsDir.listFiles()) {
+        for (File file : getCarsDir().listFiles()) {
             if (!file.isDirectory())
                 continue;
             this.cars.add(new Car(file));
         }
+    }
+
+    public List<Car> getCars() {
+        return new ArrayList<>(this.cars);
     }
 
     public void installCarFromFolder(File file) {
