@@ -10,9 +10,9 @@
       <TextField fx:id="install_dir_field" editable="false" layoutX="26.0" layoutY="35.0" prefHeight="25.0" prefWidth="375.0" />
       <Button fx:id="select_install_dir_button" layoutX="416.0" layoutY="35.0" mnemonicParsing="false" onAction="#selectInstallDirectory" prefHeight="25.0" prefWidth="160.0" text="Select Install Directory" />
       <ScrollPane layoutX="26.0" layoutY="140.0" prefHeight="250.0" prefWidth="550.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-        </content>
+         <content>
+            <VBox fx:id="car_list" alignment="TOP_CENTER" prefHeight="250.0" prefWidth="550.0" />
+         </content>
       </ScrollPane>
       <Text fx:id="installed_cars_header" layoutX="250.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Installed Cars">
          <font>
