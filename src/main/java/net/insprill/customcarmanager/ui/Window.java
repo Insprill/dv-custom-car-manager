@@ -1,6 +1,7 @@
 package net.insprill.customcarmanager.ui;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -44,8 +45,6 @@ public final class Window extends Application {
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
 
-
-
         Scene scene = new Scene(root, 600, 400);
 
         primaryStage.setScene(scene);
@@ -63,6 +62,7 @@ public final class Window extends Application {
 
     // region Actions
 
+    @FXML
     private void selectInstallDirectory() {
         File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.dv-install-directory.title"));
         if (file == null)
@@ -73,6 +73,7 @@ public final class Window extends Application {
         lookup.setText(path);
     }
 
+    @FXML
     private void installCarFromFolder() {
         File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"));
         if (file == null)
@@ -80,6 +81,7 @@ public final class Window extends Application {
         getCarManager().installCarFromFolder(file);
     }
 
+    @FXML
     private void installCarFromArchive() {
         File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Archive", "*.zip"));
         if (file == null)
