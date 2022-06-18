@@ -21,6 +21,7 @@ public class UIController {
         Config.setString("install-directory", path);
         TextField lookup = (TextField) Window.getInstance().findNode("#install_dir_field");
         lookup.setText(path);
+        updateCars();
     }
 
     @FXML
@@ -29,6 +30,7 @@ public class UIController {
         if (file == null)
             return;
         Window.getInstance().getCarManager().installCarFromFolder(file);
+        updateCars();
     }
 
     @FXML
@@ -37,6 +39,12 @@ public class UIController {
         if (file == null)
             return;
         Window.getInstance().getCarManager().installCarFromArchive(file);
+        updateCars();
+    }
+
+    private void updateCars() {
+        Window.getInstance().getCarManager().findCars();
+        Window.getInstance().populateCarList();
     }
 
 }

@@ -5,9 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.insprill.customcarmanager.cars.Car;
 import net.insprill.customcarmanager.cars.CarManager;
+import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 
 import java.io.IOException;
 
@@ -38,12 +44,15 @@ public final class Window extends Application {
         primaryStage.setTitle(Locale.getLine("window.title"));
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
-
         Scene scene = new Scene(root, 600, 400);
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
+        ((TextField) findNode("#install_dir_field")).setText(Config.getString("install-directory"));
+        carManager.findCars();
+        populateCarList();
     }
 
     public Stage getPrimaryStage() {
@@ -56,6 +65,18 @@ public final class Window extends Application {
 
     public Node findNode(String id) {
         return getPrimaryStage().getScene().lookup(id.startsWith("#") ? id : "#" + id);
+    }
+
+    public void populateCarList() {
+        try {
+            for (Car car : getCarManager().getCars()) {
+                Parent obj = FXMLLoader.load(getClass().getClassLoader().getResource("ui/car.fxml"));
+                ((Text) obj.lookup("#car_name")).setText(car.getName());
+                ((VBox) findNode("#car_list")).getChildren().add(obj);
+            }
+        } catch (IOException e) {
+            new ErrorDialog(e);
+        }
     }
 
 }
