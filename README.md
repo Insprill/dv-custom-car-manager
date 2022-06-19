@@ -83,7 +83,8 @@ Installing cars from `.zip` files is basically the same process, except you slec
 
 ### Uninstalling Cars
 
-Uninstalling cars is as simple as pressing the `Delete` button next to the car you want to uninstall.
+Uninstalling cars is as simple as pressing the `Delete` button next to the car you want to uninstall.  
+This will move the car to your recycle bin, and you can restore it from there if need be.
 
 <br>
 
