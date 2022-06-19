@@ -72,7 +72,7 @@ public class CarManager {
             try {
                 IO.copyDirectory(car, installDir);
             } catch (IOException e) {
-                new ErrorDialog(e);
+                new ErrorDialog(Locale.getLine("dialog.error.install-copy-failed"), e);
                 try {
                     IO.deleteDirectory(installDir);
                 } catch (IOException ex) {
@@ -87,7 +87,7 @@ public class CarManager {
         try {
             tempFolder = Files.createTempDirectory("dvcustomcarloader").toFile();
         } catch (IOException e) {
-            new ErrorDialog(e);
+            new ErrorDialog(Locale.getLine("dialog.error.temp-dir-creation-failed"), e);
             return;
         }
 
@@ -95,12 +95,12 @@ public class CarManager {
             zipFile.extractAll(tempFolder.getAbsolutePath());
             installCarFromFolder(tempFolder);
         } catch (IOException e) {
-            new ErrorDialog(e);
+            new ErrorDialog(Locale.getLine("dialog.error.archive-extraction-failed").formatted(file.getName()), e);
         } finally {
             try {
                 IO.deleteDirectory(tempFolder);
             } catch (IOException e) {
-                new ErrorDialog(e);
+                new ErrorDialog(Locale.getLine("dialog.error.temp-dir-deletion-failed").formatted(tempFolder.getAbsolutePath()), e);
             }
         }
     }

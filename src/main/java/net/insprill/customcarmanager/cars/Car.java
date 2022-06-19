@@ -1,6 +1,7 @@
 package net.insprill.customcarmanager.cars;
 
 import com.google.gson.JsonParser;
+import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.util.IO;
 
@@ -23,7 +24,7 @@ public class Car {
         try {
             return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
         } catch (Exception e) {
-            new ErrorDialog(e);
+            new ErrorDialog(Locale.getLine("dialog.error.car-name-not-found").formatted(directory.getAbsolutePath()), e);
             return directory.getName();
         }
     }
