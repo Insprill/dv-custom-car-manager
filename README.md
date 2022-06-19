@@ -59,7 +59,7 @@ The one thing you do need to have installed is Java 17 or newer. You can install
       4. Click "Browse"
       ![Picture](https://imgur.com/CU0hGE6.png)
       The directory that opens in File Explorer is your Derail Valley installation directory.  
-      You can copy this directory to your clipboard by right-clicking the "Derail Valley" in the menu bar, and clicking "Copy address".
+      You can copy this directory to your clipboard by right-clicking the "Derail Valley" in the menu bar, and clicking "Copy address".  
       ![Picture](https://imgur.com/ARKVDEZ.png)  
 
 
