@@ -27,12 +27,10 @@ dependencies {
 }
 
 shadowJar {
-    dependencies {
-        exclude(dependency(':javafx.*:.*'))
-    }
-
-    minimize()
+    archiveFileName.set('CustomCarManager.jar')
 }
+
+jar { enabled = false }
 
 application {
     mainModule = 'net.insprill.customcarmanager'
