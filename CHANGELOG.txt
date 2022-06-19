@@ -3,6 +3,7 @@
 - Fixed "Copy stacktrace to clipboard" button not copying the exception type.
 - Fixed stacktraces not being shown from certain errors.
 - Fixed "install from archive" button text inconsistency.
+- Fixed some libraries not being bundled correctly.
 - Made some error messages more descriptive.
 
 
