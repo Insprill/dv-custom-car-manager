@@ -7,7 +7,6 @@ import java.awt.datatransfer.StringSelection;
 public class TextHelper {
 
     public static String getStacktrace(Throwable ex) {
-        ex.printStackTrace();
         StringBuilder sb = new StringBuilder();
         for (StackTraceElement element : ex.getStackTrace()) {
             sb.append(element.toString());
