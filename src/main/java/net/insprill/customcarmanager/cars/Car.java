@@ -5,7 +5,6 @@ import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.util.IO;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 public class Car {
@@ -36,11 +35,7 @@ public class Car {
     }
 
     public void delete() {
-        try {
-            IO.deleteDirectory(directory);
-        } catch (IOException e) {
-            new ErrorDialog(e);
-        }
+        IO.moveToTrash(directory);
     }
 
 }

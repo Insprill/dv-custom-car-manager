@@ -1,5 +1,6 @@
 package net.insprill.customcarmanager.util;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +20,10 @@ public class IO {
                     .map(Path::toFile)
                     .forEach(File::delete);
         }
+    }
+
+    public static void moveToTrash(File file) {
+        Desktop.getDesktop().moveToTrash(file);
     }
 
     public static void copyDirectory(File source, File dest) throws IOException {
