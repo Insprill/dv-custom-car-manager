@@ -20,14 +20,12 @@ public class Car {
     }
 
     private String calculateName() {
-        if (carConfigFile.exists()) {
-            try {
-                return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
-            } catch (Exception e) {
-                new ErrorDialog(e);
-            }
+        try {
+            return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
+        } catch (Exception e) {
+            new ErrorDialog(e);
+            return directory.getName();
         }
-        return directory.getName();
     }
 
     public String getName() {
