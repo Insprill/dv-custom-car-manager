@@ -8,6 +8,10 @@ public class TextHelper {
 
     public static String getStacktrace(Throwable ex) {
         StringBuilder sb = new StringBuilder();
+
+        sb.append(ex.getClass().getName()).append(": ").append(ex.getLocalizedMessage());
+        sb.append("\n");
+
         for (StackTraceElement element : ex.getStackTrace()) {
             sb.append(element.toString());
             sb.append("\n");
