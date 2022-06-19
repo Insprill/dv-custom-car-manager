@@ -64,7 +64,7 @@ The one thing you do need to have installed is Java 17 or newer. You can install
 
 
 3. 
-    Once your installation directory is set, you should see any cars you currently have installed in the "Installed Cars" section.
+    Once your installation directory is set, you should see any cars you currently have installed in the "Installed Cars" section.  
     ![Picture](https://imgur.com/ojvuHPx.png)
 
 <br>
