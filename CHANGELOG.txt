@@ -1,0 +1,10 @@
+1.0.1:
+- Fixed errors when copying files being ignored.
+- Fixed "Copy stacktrace to clipboard" button not copying the exception type.
+- Fixed stacktraces not being shown from certain errors.
+- Fixed "install from archive" button text inconsistency.
+- Made some error messages more descriptive.
+
+
+1.0.0:
+- Initial release.
