@@ -25,4 +25,8 @@ public class TextHelper {
         clipboard.setContents(stringSelection, null);
     }
 
+    private TextHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }
