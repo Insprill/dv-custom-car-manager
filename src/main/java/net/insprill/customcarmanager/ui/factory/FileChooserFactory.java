@@ -17,4 +17,8 @@ public class FileChooserFactory {
         return fileChooser.showOpenDialog(Window.getInstance().getPrimaryStage());
     }
 
+    private FileChooserFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }
