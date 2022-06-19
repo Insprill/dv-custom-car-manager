@@ -75,7 +75,6 @@ Installing cars can be done in one of two ways. They can be installed from a `.z
 Both methods support installing multiple cars at once.
 
 To install cars from a folder, click the "Install Car(s) from Folder" button.  
-![Picture](https://imgur.com/kwjRoA3.png)  
 Now simply navigate to the folder where the car is located, and select it. CCM will now install the car.
 
 Installing cars from `.zip` files is basically the same process, except you slect the `.zip` file instead of the folder.
@@ -85,6 +84,12 @@ Installing cars from `.zip` files is basically the same process, except you slec
 ### Uninstalling Cars
 
 Uninstalling cars is as simple as pressing the `Delete` button next to the car you want to uninstall.
+
+<br>
+
+### Updating Cars
+
+Cars can be updated by simply installing the new version. CCM will automatically remove the old version and install the new one, even if the name of the folder/file they came from is different.
 
 
 
