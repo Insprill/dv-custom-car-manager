@@ -75,7 +75,7 @@ public class UIController {
     public static void updateCars() {
         if (!checkInstallDir())
             return;
-        Window.getInstance().getCarManager().findCars();
+        Window.getInstance().getCarManager().populateCars();
         Window.getInstance().populateCarList();
     }
 

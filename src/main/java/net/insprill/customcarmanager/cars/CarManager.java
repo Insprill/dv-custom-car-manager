@@ -25,7 +25,7 @@ public class CarManager {
         return new File(Config.getString("install-directory"), CARS_DIR);
     }
 
-    public void findCars() {
+    public void populateCars() {
         this.cars.clear();
         for (File file : getCarsDir().listFiles()) {
             if (!file.isDirectory())
