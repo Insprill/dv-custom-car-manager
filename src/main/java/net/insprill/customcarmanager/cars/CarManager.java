@@ -70,7 +70,7 @@ public class CarManager {
             }
 
             try {
-                IO.copyDirectory(file, installDir);
+                IO.copyDirectory(car, installDir);
             } catch (IOException e) {
                 new ErrorDialog(e);
                 try {
