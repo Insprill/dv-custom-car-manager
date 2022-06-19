@@ -5,24 +5,55 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.util.TextHelper;
 
 public class ErrorDialog extends Alert {
 
-    public ErrorDialog(String errorMessage) {
+    private final VBox content = new VBox();
+
+    public ErrorDialog(String message) {
+        this(message, null);
+    }
+
+    public ErrorDialog(Throwable ex) {
+        this(null, ex);
+    }
+
+    public ErrorDialog(String message, Throwable ex) {
         super(AlertType.ERROR, null, ButtonType.CLOSE);
         init();
-        setContentText(errorMessage);
+
+        if (message != null) {
+            if (ex != null) {
+                setMessage(message);
+            } else {
+                setContentText(message);
+            }
+        }
+
+        if (ex != null) {
+            if (message != null) {
+                Region spacer = new Region();
+                spacer.setPrefHeight(10);
+                content.getChildren().add(spacer);
+            }
+            setException(ex);
+            getDialogPane().setContent(content);
+        }
+
         showAndWait();
     }
 
-    public ErrorDialog(Exception ex) {
-        super(AlertType.ERROR, null, ButtonType.CLOSE);
-        init();
+    private void setMessage(String message) {
+        content.getChildren().add(new Text(message));
+    }
 
+    private void setException(Throwable ex) {
         String errorMessage = TextHelper.getStacktrace(ex);
 
         ButtonType copyToClipboard = new ButtonType(Locale.getLine("dialog.error.copy-stacktrace-to-clipboard"), ButtonBar.ButtonData.BACK_PREVIOUS);
@@ -36,11 +67,7 @@ public class ErrorDialog extends Alert {
             e.consume();
         });
 
-        VBox content = new VBox();
-        content.getChildren().addAll(errorText);
-        getDialogPane().setContent(content);
-
-        showAndWait();
+        content.getChildren().add(errorText);
     }
 
     private void init() {
