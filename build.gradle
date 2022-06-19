@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'net.insprill'
-version '1.0.0'
+version '1.0.1'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -31,6 +31,8 @@ shadowJar {
 }
 
 jar { enabled = false }
+
+assemble.finalizedBy(createAllExecutables)
 
 application {
     mainModule = 'net.insprill.customcarmanager'
