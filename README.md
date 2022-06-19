@@ -36,7 +36,55 @@
 
 ## Usage
 
-Usage documentation coming soon!
+### Installation
+
+Custom Car Manager doesn't need installation as it is a standalone program.  
+The one thing you do need to have installed is Java 17 or newer. You can install that [here](https://download.oracle.com/java/17/archive/jdk-17.0.3.1_windows-x64_bin.exe).  
+
+### Setup
+
+1. 
+    When you run CCM for the first time, you will get a warning telling you to set your Derail Valley installation directory.
+    ![Picture](https://imgur.com/DKTAK0D.png)  
+    You can simply press Close.
+
+
+2. 
+    To set your Derail Valley installation directory, click the "Select Installation Directory" button.
+    ![Picture](https://imgur.com/FaijhWX.png)  
+    If you're unsure where Derail Valley is installed, you can find it in Steam.
+      1. Right click on Derail Valley
+      2. Click "Properties"
+      3. Click "Local Files"
+      4. Click "Browse"
+      ![Picture](https://imgur.com/CU0hGE6.png)
+      The directory that opens in File Explorer is your Derail Valley installation directory.  
+      You can copy this directory to your clipboard by right-clicking the "Derail Valley" in the menu bar, and clicking "Copy address".
+      ![Picture](https://imgur.com/ARKVDEZ.png)  
+
+
+3. 
+    Once your installation directory is set, you should see any cars you currently have installed in the "Installed Cars" section.
+    ![Picture](https://imgur.com/ojvuHPx.png)
+
+<br>
+
+### Installing Cars
+
+Installing cars can be done in one of two ways. They can be installed from a `.zip` file, or from a folder.  
+Both methods support installing multiple cars at once.
+
+To install cars from a folder, click the "Install Car(s) from Folder" button.  
+![Picture](https://imgur.com/kwjRoA3.png)  
+Now simply navigate to the folder where the car is located, and select it. CCM will now install the car.
+
+Installing cars from `.zip` files is basically the same process, except you slect the `.zip` file instead of the folder.
+
+<br>
+
+### Uninstalling Cars
+
+Uninstalling cars is as simple as pressing the `Delete` button next to the car you want to uninstall.
 
 
 
