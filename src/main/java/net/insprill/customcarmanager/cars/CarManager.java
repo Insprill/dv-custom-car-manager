@@ -50,14 +50,13 @@ public class CarManager {
         if (!file.isDirectory())
             throw new IllegalArgumentException("File must be a directory");
 
-
-        List<File> cars = findCars(file);
-        if (cars.isEmpty()) {
+        List<File> foundCars = findCars(file);
+        if (foundCars.isEmpty()) {
             new ErrorDialog(Locale.getLine("dialog.error.car-not-found"));
             return;
         }
 
-        for (File car : cars) {
+        for (File car : foundCars) {
             File installDir = new File(getCarsDir(), car.getName());
 
             if (installDir.exists()) {
@@ -113,13 +112,13 @@ public class CarManager {
             return Collections.singletonList(file);
 
         File[] files = file.listFiles();
-        List<File> cars = new ArrayList<>();
+        List<File> foundCars = new ArrayList<>();
         for (File subFile : files) {
             if (subFile.isDirectory()) {
-                cars.addAll(findCars(subFile));
+                foundCars.addAll(findCars(subFile));
             }
         }
-        return cars;
+        return foundCars;
     }
 
     private File findConfig(File dir) {
