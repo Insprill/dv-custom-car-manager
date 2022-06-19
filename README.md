@@ -44,7 +44,7 @@ The one thing you do need to have installed is Java 17 or newer. You can install
 ### Setup
 
 1. 
-    When you run CCM for the first time, you will get a warning telling you to set your Derail Valley installation directory.
+    When you run CCM for the first time, you will get a warning telling you to set your Derail Valley installation directory.  
     ![Picture](https://imgur.com/DKTAK0D.png)  
     You can simply press Close.
 
