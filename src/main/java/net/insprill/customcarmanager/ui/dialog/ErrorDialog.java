@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.util.TextHelper;
@@ -34,6 +35,10 @@ public class ErrorDialog extends Alert {
             TextHelper.copyToClipboard(errorMessage);
             e.consume();
         });
+
+        VBox content = new VBox();
+        content.getChildren().addAll(errorText);
+        getDialogPane().setContent(content);
 
         showAndWait();
     }
