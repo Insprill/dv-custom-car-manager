@@ -25,7 +25,6 @@ public class Config {
         try (InputStream is = Config.class.getClassLoader().getResourceAsStream("config.json")) {
             if (!configFile.exists()) {
                 configFolder.mkdirs();
-                configFile.createNewFile();
                 config = JsonParser.parseString(new String(is.readAllBytes())).getAsJsonObject();
                 save();
             } else {
@@ -52,7 +51,7 @@ public class Config {
     }
 
     public static void save() throws IOException {
-        Files.writeString(configFile.toPath(), config.toString(), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+        Files.writeString(configFile.toPath(), config.toString(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     private Config() {
