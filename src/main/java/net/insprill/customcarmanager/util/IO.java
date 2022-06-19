@@ -33,15 +33,9 @@ public class IO {
             throw new IllegalStateException("Destination file already exists");
 
         try (Stream<Path> stream = Files.walk(source.toPath())) {
-            stream.forEach(file -> copy(file, dest.toPath().resolve(source.toPath().relativize(file))));
-        }
-    }
-
-    private static void copy(Path source, Path dest) {
-        try {
-            Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            for (Path path : stream.toList()) {
+                Files.copy(path, dest.toPath().resolve(source.toPath().relativize(path)), StandardCopyOption.REPLACE_EXISTING);
+            }
         }
     }
 
