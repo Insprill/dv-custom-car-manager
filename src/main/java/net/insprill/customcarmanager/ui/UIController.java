@@ -1,9 +1,12 @@
 package net.insprill.customcarmanager.ui;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import net.insprill.customcarmanager.cars.CarManager;
@@ -17,6 +20,7 @@ import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 public class UIController {
 
@@ -41,6 +45,40 @@ public class UIController {
         TextField lookup = (TextField) Window.getInstance().findNode("#install_dir_field");
         lookup.setText(path);
         updateCars();
+    }
+
+    @FXML
+    private void onDragOver(DragEvent event) {
+        if (!event.getDragboard().hasFiles())
+            return;
+
+        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        event.consume();
+    }
+
+    @FXML
+    private void onDragDropped(DragEvent event) {
+        if (!CarManager.checkInstallDir(true))
+            return;
+        if (!event.getDragboard().hasFiles())
+            return;
+
+        event.setDropCompleted(true);
+        event.consume();
+
+        List<File> files = event.getDragboard().getFiles();
+
+        // If we don't run this later the drag/drop icon will stay until all dialogs are closed
+        Platform.runLater(() -> {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    Window.getInstance().getCarManager().installCarFromFolder(file);
+                } else {
+                    Window.getInstance().getCarManager().installCarFromArchive(file);
+                }
+            }
+            updateCars();
+        });
     }
 
     @FXML
@@ -86,9 +124,6 @@ public class UIController {
     }
 
     public static void updateCars() {
-        if (!CarManager.checkInstallDir(true))
-            return;
-
         Window.getInstance().getCarManager().populateCars();
         Window.getInstance().populateCarList();
     }
