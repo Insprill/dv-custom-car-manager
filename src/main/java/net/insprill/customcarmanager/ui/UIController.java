@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import net.insprill.customcarmanager.cars.CarManager;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.dialog.ConfirmationDialog;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
@@ -68,6 +69,8 @@ public class UIController {
         if (!CarManager.checkInstallDir(true))
             return;
         String carName = ((Text) ((Node) value.getSource()).getParent().lookup("#car_name")).getText();
+        if (!ConfirmationDialog.show(Locale.getLine("dialog.confirmation.delete-car").formatted(carName)))
+            return;
         Window.getInstance().getCarManager().getCar(carName).delete();
         updateCars();
     }
