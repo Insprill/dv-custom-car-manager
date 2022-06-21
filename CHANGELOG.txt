@@ -1,9 +1,10 @@
 1.1.0:
+- Added support for installing cars from .rar files.
 - Added the ability to drag/drop files into the car list to install/update it.
 - Added an info message after installing/updating/deleting cars.
 - Added a confirmation dialog before deleting cars.
 - Fixed the installation directory field being focused at startup.
-- Fixed error message when starting without an installation directory set. It's now an info message.
+- Fixed no installation directory warning showing as an error instead of an info message at startup.
 - Fixed possible issue when installing from archives after the temp directory failed to delete from another car.
 
 1.0.1:
