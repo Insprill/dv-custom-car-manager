@@ -69,7 +69,8 @@ public class UIController {
         if (!CarManager.checkInstallDir(true))
             return;
         String carName = ((Text) ((Node) value.getSource()).getParent().lookup("#car_name")).getText();
-        if (!ConfirmationDialog.show(Locale.getLine("dialog.confirmation.delete-car").formatted(carName)))
+        String confirmMsg = Locale.getLine("dialog.confirmation.delete-car").formatted(carName);
+        if (!ConfirmationDialog.show(confirmMsg))
             return;
         Window.getInstance().getCarManager().getCar(carName).delete();
         updateCars();

@@ -11,15 +11,20 @@ public class ConfirmationDialog extends Alert {
 
     private ConfirmationDialog(String message) {
         super(AlertType.CONFIRMATION, null, ButtonType.YES, ButtonType.NO);
-        ((Button) getDialogPane().lookupButton(ButtonType.YES)).setDefaultButton(false);
-        ((Button) getDialogPane().lookupButton(ButtonType.NO)).setDefaultButton(true);
         initStyle(StageStyle.UTILITY);
         headerTextProperty().setValue(null);
         setContentText(message);
     }
 
     public static boolean show(String message) {
-        Optional<ButtonType> result = new ConfirmationDialog(message).showAndWait();
+        return ConfirmationDialog.show(message, false);
+    }
+
+    public static boolean show(String message, boolean isYesDefault) {
+        ConfirmationDialog dialog = new ConfirmationDialog(message);
+        ((Button) dialog.getDialogPane().lookupButton(ButtonType.YES)).setDefaultButton(isYesDefault);
+        ((Button) dialog.getDialogPane().lookupButton(ButtonType.NO)).setDefaultButton(!isYesDefault);
+        Optional<ButtonType> result = dialog.showAndWait();
         return result.filter(buttonType -> buttonType == ButtonType.YES).isPresent();
     }
 
