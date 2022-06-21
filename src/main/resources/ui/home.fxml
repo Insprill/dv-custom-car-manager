@@ -29,7 +29,7 @@
             <Font size="13.0" />
          </font>
       </Button>
-      <Button fx:id="install_car_archive_button" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromArchive" prefHeight="25.0" prefWidth="175.0" text="Install Car from Archive">
+      <Button fx:id="install_car_archive_button" layoutX="325.0" layoutY="75.0" mnemonicParsing="false" onAction="#installCarFromArchive" prefHeight="25.0" prefWidth="175.0" text="Install Car(s) from Archive">
          <font>
             <Font size="13.0" />
          </font>
