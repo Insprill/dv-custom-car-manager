@@ -3,6 +3,7 @@ package net.insprill.customcarmanager.cars;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
+import net.insprill.customcarmanager.ui.dialog.InfoDialog;
 import net.insprill.customcarmanager.util.IO;
 import net.lingala.zip4j.ZipFile;
 
@@ -123,6 +124,20 @@ public class CarManager {
 
     private File findConfig(File dir) {
         return Arrays.stream(dir.listFiles()).filter(f -> f.getName().equals(CAR_CONFIG)).findFirst().orElse(null);
+    }
+
+    public static boolean checkInstallDir(boolean error) {
+        if (!Config.getString("install-directory").isEmpty())
+            return true;
+
+        String str = Locale.getLine("dialog.error.no-install-dir");
+        if (error) {
+            new ErrorDialog(str);
+        } else {
+            new InfoDialog(str);
+        }
+
+        return false;
     }
 
 }
