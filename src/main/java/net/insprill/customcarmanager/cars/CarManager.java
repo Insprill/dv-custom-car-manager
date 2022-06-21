@@ -1,5 +1,7 @@
 package net.insprill.customcarmanager.cars;
 
+import com.github.junrar.Junrar;
+import com.github.junrar.exception.RarException;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
@@ -97,10 +99,16 @@ public class CarManager {
             return;
         }
 
-        try (ZipFile zipFile = new ZipFile(file)) {
-            zipFile.extractAll(tempFolder.getAbsolutePath());
+        try {
+            if (file.getName().endsWith(".zip") || file.getName().endsWith(".ZIP")) {
+                try (ZipFile zipFile = new ZipFile(file)) {
+                    zipFile.extractAll(tempFolder.getAbsolutePath());
+                }
+            } else {
+                Junrar.extract(file, tempFolder);
+            }
             installCarFromFolder(tempFolder);
-        } catch (IOException e) {
+        } catch (IOException | RarException e) {
             new ErrorDialog(Locale.getLine("dialog.error.archive-extraction-failed").formatted(file.getName()), e);
         } finally {
             try {

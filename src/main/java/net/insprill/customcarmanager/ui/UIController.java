@@ -99,7 +99,7 @@ public class UIController {
         if (!CarManager.checkInstallDir(true))
             return;
 
-        File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Zip files (*.zip)", "*.zip", "*.ZIP"));
+        File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Archive", "*.zip", "*.ZIP", "*.rar", "*.RAR"));
         if (file == null)
             return;
 
