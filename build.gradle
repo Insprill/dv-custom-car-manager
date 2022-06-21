@@ -26,7 +26,6 @@ dependencies {
 shadowJar {
     archiveFileName.set('CustomCarManager.jar')
 }
-build.dependsOn shadowJar
 
 jar { enabled = false }
 
