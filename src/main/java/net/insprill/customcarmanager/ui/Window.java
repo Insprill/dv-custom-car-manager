@@ -61,6 +61,10 @@ public final class Window extends Application {
         primaryStage.show();
 
         ((TextField) findNode("#install_dir_field")).setText(Config.getString("install-directory"));
+
+        if (!CarManager.checkInstallDir(false))
+            return;
+
         UIController.updateCars();
     }
 
