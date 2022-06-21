@@ -11,6 +11,7 @@ import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ConfirmationDialog;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
+import net.insprill.customcarmanager.ui.dialog.InfoDialog;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
@@ -46,9 +47,11 @@ public class UIController {
     private void installCarFromFolder() {
         if (!CarManager.checkInstallDir(true))
             return;
+
         File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"));
         if (file == null)
             return;
+
         Window.getInstance().getCarManager().installCarFromFolder(file);
         updateCars();
     }
@@ -57,9 +60,11 @@ public class UIController {
     private void installCarFromArchive() {
         if (!CarManager.checkInstallDir(true))
             return;
+
         File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Zip files (*.zip)", "*.zip", "*.ZIP"));
         if (file == null)
             return;
+
         Window.getInstance().getCarManager().installCarFromArchive(file);
         updateCars();
     }
@@ -68,17 +73,22 @@ public class UIController {
     public void deleteCar(ActionEvent value) {
         if (!CarManager.checkInstallDir(true))
             return;
+
         String carName = ((Text) ((Node) value.getSource()).getParent().lookup("#car_name")).getText();
         String confirmMsg = Locale.getLine("dialog.confirmation.delete-car").formatted(carName);
         if (!ConfirmationDialog.show(confirmMsg))
             return;
+
         Window.getInstance().getCarManager().getCar(carName).delete();
         updateCars();
+
+        new InfoDialog(Locale.getLine("dialog.info.car-deleted").formatted(carName));
     }
 
     public static void updateCars() {
         if (!CarManager.checkInstallDir(true))
             return;
+
         Window.getInstance().getCarManager().populateCars();
         Window.getInstance().populateCarList();
     }
