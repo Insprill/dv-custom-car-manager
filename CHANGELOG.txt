@@ -1,6 +1,14 @@
+1.1.0:
+- Added the ability to drag/drop files into the car list to install/update it.
+- Added an info message after installing/updating/deleting cars.
+- Added a confirmation dialog before deleting cars.
+- Fixed the installation directory field being focused at startup.
+- Fixed error message when starting without an installation directory set. It's now an info message.
+- Fixed possible issue when installing from archives after the temp directory failed to delete from another car.
+
 1.0.1:
 - Fixed errors when copying files being ignored.
-- Fixed "Copy stacktrace to clipboard" button not copying the exception type.
+- Fixed the "Copy stacktrace to clipboard" button not copying the exception type.
 - Fixed stacktraces not being shown from certain errors.
 - Fixed "install from archive" button text inconsistency.
 - Fixed some libraries not being bundled correctly.
