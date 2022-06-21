@@ -17,10 +17,10 @@ public class Car {
     public Car(File directory) {
         this.directory = directory;
         this.carConfigFile = new File(directory, "car.json");
-        this.name = calculateName();
+        this.name = findName();
     }
 
-    private String calculateName() {
+    private String findName() {
         try {
             return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
         } catch (Exception e) {
