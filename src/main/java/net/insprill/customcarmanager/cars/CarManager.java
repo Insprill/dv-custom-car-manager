@@ -60,6 +60,8 @@ public class CarManager {
         for (File car : foundCars) {
             File installDir = new File(getCarsDir(), car.getName());
 
+            boolean updated = false;
+
             if (installDir.exists()) {
                 File config = findConfig(installDir);
                 if (config == null) {
@@ -67,10 +69,12 @@ public class CarManager {
                     continue;
                 }
                 new Car(installDir).delete();
+                updated = true;
             }
 
             try {
                 IO.copyDirectory(car, installDir);
+                new InfoDialog(Locale.getLine((updated) ? "dialog.info.car-updated" : "dialog.info.car-installed").formatted(car.getName()));
             } catch (IOException e) {
                 new ErrorDialog(Locale.getLine("dialog.error.install-copy-failed"), e);
                 try {
