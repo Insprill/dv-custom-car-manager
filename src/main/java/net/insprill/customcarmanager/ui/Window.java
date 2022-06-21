@@ -49,6 +49,7 @@ public final class Window extends Application {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
 
         ((Text) root.lookup("#install_dir_header")).setText(Locale.getLine("window.install-dir.header"));
+        ((TextField) root.lookup("#install_dir_field")).setText(Config.getString("install-directory"));
         ((Labeled) root.lookup("#select_install_dir_button")).setText(Locale.getLine("window.install-dir.button"));
         ((Labeled) root.lookup("#install_car_folder_button")).setText(Locale.getLine("window.cars.install-from-folder"));
         ((Labeled) root.lookup("#install_car_archive_button")).setText(Locale.getLine("window.cars.install-from-archive"));
@@ -60,7 +61,7 @@ public final class Window extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
 
-        ((TextField) findNode("#install_dir_field")).setText(Config.getString("install-directory"));
+        root.requestFocus();
 
         if (!CarManager.checkInstallDir(false))
             return;
