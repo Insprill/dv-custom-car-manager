@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CarManager {
 
@@ -78,6 +79,7 @@ public class CarManager {
             } catch (IOException e) {
                 new ErrorDialog(Locale.getLine("dialog.error.install-copy-failed"), e);
                 try {
+                    // Ensure a possibly incomplete installation is removed
                     IO.deleteDirectory(installDir);
                 } catch (IOException ex) {
                     new ErrorDialog(e);
@@ -89,7 +91,7 @@ public class CarManager {
     public void installCarFromArchive(File file) {
         File tempFolder;
         try {
-            tempFolder = Files.createTempDirectory("dvcustomcarloader").toFile();
+            tempFolder = Files.createTempDirectory("customcarmanager-" + ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE)).toFile();
         } catch (IOException e) {
             new ErrorDialog(Locale.getLine("dialog.error.temp-dir-creation-failed"), e);
             return;
