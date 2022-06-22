@@ -13,14 +13,6 @@ public class CustomCarManager {
         Locale.init();
 
         Window.launch(Window.class, args);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                Config.save();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
     }
 
 }
