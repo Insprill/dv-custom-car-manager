@@ -2,6 +2,7 @@ package net.insprill.customcarmanager.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +49,11 @@ public class Config {
 
     public static void setString(String key, String value) {
         json.addProperty(key, value);
+        try {
+            save();
+        } catch (IOException e) {
+            new ErrorDialog(Locale.getLine("dialog.error.config-save-failed").formatted(configFile.getAbsolutePath()), e);
+        }
     }
 
     public static void save() throws IOException {
