@@ -13,11 +13,19 @@ public class InfoDialog extends Alert {
     }
 
     public static void show(String message) {
+        show(message, false);
+    }
+
+    public static void show(String message, boolean blocking) {
         InfoDialog dialog = new InfoDialog();
 
         dialog.setContentText(message);
 
-        dialog.showAndWait();
+        if (blocking) {
+            dialog.showAndWait();
+        } else {
+            dialog.show();
+        }
     }
 
 }
