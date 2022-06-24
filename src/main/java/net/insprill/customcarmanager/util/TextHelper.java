@@ -19,6 +19,7 @@ public class TextHelper {
         sb.append("\n");
 
         for (StackTraceElement element : ex.getStackTrace()) {
+            sb.append(" at ");
             sb.append(element.toString());
             sb.append("\n");
         }
