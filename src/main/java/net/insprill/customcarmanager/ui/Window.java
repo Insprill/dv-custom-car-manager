@@ -24,17 +24,13 @@ import net.insprill.customcarmanager.ui.factory.FXMLFactory;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
 
 public final class Window extends Application {
 
-    private static final String CUSTOM_CAR_LOADER_HOME_PAGE = "https://www.nexusmods.com/derailvalley/mods/324";
+    public static final String CUSTOM_CAR_LOADER_HOME_PAGE = "https://www.nexusmods.com/derailvalley/mods/324";
 
     // region Singleton
     private static Window instance;
@@ -83,8 +79,10 @@ public final class Window extends Application {
 
         root.requestFocus();
 
-        if (!CarManager.checkInstallDir(false))
+        if (!CarManager.checkInstallDir(false)) {
+            this.controller.setInstallDir(""); // Reset if the user did something weird in the config file.
             return;
+        }
 
         getCarManager().updateCars();
     }
@@ -137,25 +135,23 @@ public final class Window extends Application {
             if (file == null)
                 return;
 
-            if (Arrays.stream(file.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
-                ErrorDialog.show(Locale.getLine("dialog.error.invalid-install-dir"));
+            if (!CarManager.checkInstall(file.getAbsolutePath())) {
+                setInstallDir(""); // Reset if the user did something weird in the config file.
                 return;
             }
 
-            if (!new File(file, CarManager.CARS_DIR).exists()) {
-                ErrorDialog.show(Locale.getLine("dialog.error.ccl-not-found"));
-                try {
-                    Desktop.getDesktop().browse(new URI(CUSTOM_CAR_LOADER_HOME_PAGE));
-                } catch (IOException | URISyntaxException e) {
-                    ErrorDialog.show(e);
-                }
-                return;
-            }
-
-            String path = file.getAbsolutePath();
-            Config.setString("install-directory", path);
-            install_dir_field.setText(path);
+            setInstallDir(file.getAbsolutePath());
             Window.getInstance().getCarManager().updateCars();
+        }
+
+        /**
+         * Sets the config's {@code install-directory} field, and updates the install_dir_field {@link TextField}.
+         *
+         * @param dir The directory to set.
+         */
+        private void setInstallDir(String dir) {
+            Config.setString("install-directory", dir);
+            install_dir_field.setText(dir);
         }
 
         @FXML

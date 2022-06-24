@@ -10,8 +10,11 @@ import net.insprill.customcarmanager.ui.dialog.InfoDialog;
 import net.insprill.customcarmanager.util.IO;
 import net.lingala.zip4j.ZipFile;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,23 +183,52 @@ public class CarManager {
     }
 
     /**
-     * Checks that the installation directory is set, and shows a popup message if not.
+     * Checks that the installation directory is set, along with what {@link #checkInstall(String)} checks.
      *
      * @param error Whether the popup message show if the installation directory is not set should be an error, or an info message.
-     * @return True if the installation directory is set, false otherwise.
+     * @return True if the installation directory is set and {@link #checkInstall(String)}'s requirements are met, false otherwise.
      */
     public static boolean checkInstallDir(boolean error) {
-        if (!Config.getString("install-directory").isEmpty())
-            return true;
+        String installDir = Config.getString("install-directory");
 
-        String str = Locale.getLine("dialog.error.no-install-dir");
-        if (error) {
-            ErrorDialog.show(str);
-        } else {
-            InfoDialog.show(str);
+        if (installDir.isEmpty()) {
+            String str = Locale.getLine("dialog.error.no-install-dir");
+            if (error) {
+                ErrorDialog.show(str);
+            } else {
+                InfoDialog.show(str);
+            }
+            return false;
         }
 
-        return false;
+        return checkInstall(installDir);
+    }
+
+    /**
+     * Checks that the installation directory passed in is valid, and Custom Car Loader is installed, and shows errors dialogs if not.
+     *
+     * @param installDir The path to the installation directory to check.
+     * @return True if the installation directory is set and CCL is installed, false otherwise.
+     */
+    public static boolean checkInstall(String installDir) {
+        File installDirFile = new File(installDir);
+
+        if (Arrays.stream(installDirFile.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
+            ErrorDialog.show(Locale.getLine("dialog.error.invalid-install-dir"));
+            return false;
+        }
+
+        if (!new File(installDirFile, CarManager.CARS_DIR).exists()) {
+            ErrorDialog.show(Locale.getLine("dialog.error.ccl-not-found"));
+            try {
+                Desktop.getDesktop().browse(new URI(Window.CUSTOM_CAR_LOADER_HOME_PAGE));
+            } catch (IOException | URISyntaxException e) {
+                ErrorDialog.show(e);
+            }
+            return false;
+        }
+
+        return true;
     }
 
 }
