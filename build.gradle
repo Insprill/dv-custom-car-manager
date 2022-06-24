@@ -22,6 +22,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'net.lingala.zip4j:zip4j:2.10.0'
     implementation 'com.github.junrar:junrar:7.5.2'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 shadowJar {
@@ -41,6 +44,10 @@ application {
 javafx {
     version = sourceCompatibility
     modules = ['javafx.controls', 'javafx.fxml']
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jlink {
