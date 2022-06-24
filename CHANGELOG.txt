@@ -7,6 +7,7 @@
 - Fixed Custom Car Loader not being recommended on startup if it's not installed.
 - Fixed the config not saving under certain circumstances.
 - Fixed the next car only installing after the info message from the previous was cleared.
+- Fixed development builds from GitHub not working.
 - The installation directory is now cleared on startup if it's set to something invalid.
 - Code cleanup.
 
