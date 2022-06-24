@@ -24,12 +24,17 @@ import net.insprill.customcarmanager.ui.factory.FXMLFactory;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
 public final class Window extends Application {
+
+    private static final String CUSTOM_CAR_LOADER_HOME_PAGE = "https://www.nexusmods.com/derailvalley/mods/324";
 
     // region Singleton
     private static Window instance;
@@ -139,6 +144,11 @@ public final class Window extends Application {
 
             if (!new File(file, CarManager.CARS_DIR).exists()) {
                 ErrorDialog.show(Locale.getLine("dialog.error.ccl-not-found"));
+                try {
+                    Desktop.getDesktop().browse(new URI(CUSTOM_CAR_LOADER_HOME_PAGE));
+                } catch (IOException | URISyntaxException e) {
+                    ErrorDialog.show(e);
+                }
                 return;
             }
 
