@@ -7,6 +7,9 @@ import javafx.stage.StageStyle;
 
 import java.util.Optional;
 
+/**
+ * A dialog that lets the user choose whether to continue with an action.
+ */
 public class ConfirmationDialog extends Alert {
 
     private ConfirmationDialog(String message) {
@@ -16,10 +19,23 @@ public class ConfirmationDialog extends Alert {
         setContentText(message);
     }
 
+    /**
+     * Shows the confirmation dialog, with the "Yes" button being highlighted by default.
+     *
+     * @param message The message to show.
+     * @return True if the user selected "Yes", false otherwise.
+     */
     public static boolean show(String message) {
         return ConfirmationDialog.show(message, false);
     }
 
+    /**
+     * Shows the confirmation dialog, with the "Yes".
+     *
+     * @param message      The message to show.
+     * @param isYesDefault Whether the "Yes" button should be highlighted by default, or the "No" button.
+     * @return True if the user selected "Yes", false otherwise.
+     */
     public static boolean show(String message, boolean isYesDefault) {
         ConfirmationDialog dialog = new ConfirmationDialog(message);
         ((Button) dialog.getDialogPane().lookupButton(ButtonType.YES)).setDefaultButton(isYesDefault);

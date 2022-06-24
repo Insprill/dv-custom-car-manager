@@ -12,6 +12,9 @@ import javafx.stage.StageStyle;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.util.TextHelper;
 
+/**
+ * A dialog that lets the user know an error has occurred, or an action was invalid.
+ */
 public class ErrorDialog extends Alert {
 
     private final VBox content = new VBox();
@@ -22,10 +25,19 @@ public class ErrorDialog extends Alert {
         headerTextProperty().setValue(Locale.getLine("dialog.error.title"));
     }
 
+    /**
+     * @param message Sets the message to display.
+     * @apiNote Only use this if also adding an exception! Otherwise, use the dialogs {@code #setContentText} method.
+     */
     private void setMessage(String message) {
         content.getChildren().add(new Text(message));
     }
 
+    /**
+     * Sets the exception shown in the dialog.
+     *
+     * @param ex The exception to show.
+     */
     private void setException(Throwable ex) {
         String errorMessage = TextHelper.getStacktrace(ex);
 
@@ -43,14 +55,30 @@ public class ErrorDialog extends Alert {
         content.getChildren().add(errorText);
     }
 
+    /**
+     * Shows an error dialog.
+     *
+     * @param message The message to show.
+     */
     public static void show(String message) {
         show(message, null);
     }
 
+    /**
+     * Shows an error dialog.
+     *
+     * @param ex The error to show.
+     */
     public static void show(Throwable ex) {
         show(null, ex);
     }
 
+    /**
+     * Shows an error dialog.
+     *
+     * @param message The message to show.
+     * @param ex      The error to show.
+     */
     public static void show(String message, Throwable ex) {
         ErrorDialog dialog = new ErrorDialog();
 

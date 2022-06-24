@@ -26,10 +26,16 @@ public class CarManager {
 
     private final List<Car> cars = new ArrayList<>();
 
+    /**
+     * @return The directory cars are installed in.
+     */
     private File getCarsDir() {
         return new File(Config.getString("install-directory"), CARS_DIR);
     }
 
+    /**
+     * Re-scans the cars directory and updates the caches and UI accordingly.
+     */
     public void updateCars() {
         this.cars.clear();
         for (File file : getCarsDir().listFiles()) {
@@ -40,10 +46,19 @@ public class CarManager {
         Window.getInstance().populateCarList();
     }
 
+    /**
+     * @return A clone of the car list.
+     */
     public List<Car> getCars() {
         return new ArrayList<>(this.cars);
     }
 
+    /**
+     * Gets a car by it's name.
+     *
+     * @param name The name of the car.
+     * @return The car.
+     */
     public Car getCar(String name) {
         for (Car car : this.cars) {
             if (car.getName().equals(name))
@@ -52,11 +67,16 @@ public class CarManager {
         return null;
     }
 
-    public void installCarFromFolder(File file) {
-        if (!file.isDirectory())
+    /**
+     * Installs cars from a folder, recursively.
+     *
+     * @param dir The directory to install the cars from.
+     */
+    public void installCarsFromFolder(File dir) {
+        if (!dir.isDirectory())
             throw new IllegalArgumentException("File must be a directory");
 
-        List<File> foundCars = findCars(file);
+        List<File> foundCars = findCars(dir);
         if (foundCars.isEmpty()) {
             ErrorDialog.show(Locale.getLine("dialog.error.car-not-found"));
             return;
@@ -73,7 +93,7 @@ public class CarManager {
                     ErrorDialog.show(Locale.getLine("dialog.error.dir-already-exists"));
                     continue;
                 }
-                new Car(installDir).delete();
+                new Car(installDir).deleteAndUpdate();
                 updated = true;
             }
 
@@ -92,7 +112,12 @@ public class CarManager {
         }
     }
 
-    public void installCarFromArchive(File file) {
+    /**
+     * Installs cars from an archive ({@code .zip} or {@code .rar}), recursively.
+     *
+     * @param file The archive file to install the cars from.
+     */
+    public void installCarsFromArchive(File file) {
         File tempFolder;
         try {
             tempFolder = Files.createTempDirectory("customcarmanager-" + ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE)).toFile();
@@ -109,7 +134,7 @@ public class CarManager {
             } else {
                 Junrar.extract(file, tempFolder);
             }
-            installCarFromFolder(tempFolder);
+            installCarsFromFolder(tempFolder);
         } catch (IOException | RarException e) {
             ErrorDialog.show(Locale.getLine("dialog.error.archive-extraction-failed").formatted(file.getName()), e);
         } finally {
@@ -121,14 +146,20 @@ public class CarManager {
         }
     }
 
-    private List<File> findCars(File file) {
-        if (!file.isDirectory())
+    /**
+     * Finds all cars in a directory, recursively.
+     *
+     * @param dir The directory to scan.
+     * @return A list of all cars found, or an empty list if none were found.
+     */
+    private List<File> findCars(File dir) {
+        if (!dir.isDirectory())
             throw new IllegalArgumentException("File must be a directory");
 
-        if (findConfig(file) != null)
-            return Collections.singletonList(file);
+        if (findConfig(dir) != null)
+            return Collections.singletonList(dir);
 
-        File[] files = file.listFiles();
+        File[] files = dir.listFiles();
         List<File> foundCars = new ArrayList<>();
         for (File subFile : files) {
             if (subFile.isDirectory()) {
@@ -138,10 +169,22 @@ public class CarManager {
         return foundCars;
     }
 
+    /**
+     * Finds the {@code config.json} file of a car.
+     *
+     * @param dir The directory of the car.
+     * @return The config file, or null if none was found.
+     */
     private File findConfig(File dir) {
         return Arrays.stream(dir.listFiles()).filter(f -> f.getName().equals(CAR_CONFIG)).findFirst().orElse(null);
     }
 
+    /**
+     * Checks that the installation directory is set, and shows a popup message if not.
+     *
+     * @param error Whether the popup message show if the installation directory is not set should be an error, or an info message.
+     * @return True if the installation directory is set, false otherwise.
+     */
     public static boolean checkInstallDir(boolean error) {
         if (!Config.getString("install-directory").isEmpty())
             return true;

@@ -9,18 +9,27 @@ import net.insprill.customcarmanager.util.IO;
 import java.io.File;
 import java.nio.file.Files;
 
+/**
+ * A Class representing a CCL car.
+ */
 public class Car {
 
     private final String name;
     private final File directory;
     private final File carConfigFile;
 
+    /**
+     * @param directory The directory of the car.
+     */
     public Car(File directory) {
         this.directory = directory;
         this.carConfigFile = new File(directory, "car.json");
         this.name = findName();
     }
 
+    /**
+     * @return Finds the name of the car from it's {@code car.json} file, or the folder name if an error occurs.
+     */
     private String findName() {
         try {
             return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
@@ -30,11 +39,17 @@ public class Car {
         }
     }
 
+    /**
+     * @return The name of the car.
+     */
     public String getName() {
         return this.name;
     }
 
-    public void delete() {
+    /**
+     * Moves the car to the recycle bin, and updates the UI.
+     */
+    public void deleteAndUpdate() {
         IO.moveToTrash(directory);
         Window.getInstance().getCarManager().updateCars();
     }

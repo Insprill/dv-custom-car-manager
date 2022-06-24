@@ -15,6 +15,9 @@ import net.insprill.customcarmanager.ui.factory.FXMLFactory;
 
 import java.io.IOException;
 
+/**
+ * A UI element representing a CCL car.
+ */
 public class CarElement {
 
     private final Parent parent;
@@ -28,10 +31,18 @@ public class CarElement {
         this.controller.delete_button.setText(Locale.getLine("window.cars.delete-button"));
     }
 
+    /**
+     * @return The {@link Parent} of this element.
+     */
     public Parent getParent() {
         return this.parent;
     }
 
+    /**
+     * Toggles the background color between a lighter and darker color.
+     *
+     * @param toggle The background toggle.
+     */
     public void toggleBackgroundColor(boolean toggle) {
         this.controller.car_background.setStyle("-fx-background-color: #" + ((toggle) ? "FAFAFA" : "F0F0F0"));
     }
@@ -52,7 +63,7 @@ public class CarElement {
             if (!ConfirmationDialog.show(confirmMsg))
                 return;
 
-            Window.getInstance().getCarManager().getCar(carName).delete();
+            Window.getInstance().getCarManager().getCar(carName).deleteAndUpdate();
 
             InfoDialog.show(Locale.getLine("dialog.info.car-deleted").formatted(carName));
         }

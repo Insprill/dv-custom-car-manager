@@ -84,14 +84,23 @@ public final class Window extends Application {
         getCarManager().updateCars();
     }
 
+    /**
+     * @return The primary {@link Stage} of the application.
+     */
     public Stage getPrimaryStage() {
         return this.primaryStage;
     }
 
+    /**
+     * @return The {@link CarManager} associated with the application.
+     */
     public CarManager getCarManager() {
         return this.carManager;
     }
 
+    /**
+     * Regenerates the car list from the {@link CarManager}'s cache.
+     */
     public void populateCarList() {
         this.controller.car_list.getChildren().clear();
         boolean alternate = false;
@@ -164,9 +173,9 @@ public final class Window extends Application {
             Platform.runLater(() -> {
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        Window.getInstance().getCarManager().installCarFromFolder(file);
+                        Window.getInstance().getCarManager().installCarsFromFolder(file);
                     } else {
-                        Window.getInstance().getCarManager().installCarFromArchive(file);
+                        Window.getInstance().getCarManager().installCarsFromArchive(file);
                     }
                 }
                 Window.getInstance().getCarManager().updateCars();
@@ -182,7 +191,7 @@ public final class Window extends Application {
             if (file == null)
                 return;
 
-            Window.getInstance().getCarManager().installCarFromFolder(file);
+            Window.getInstance().getCarManager().installCarsFromFolder(file);
             Window.getInstance().getCarManager().updateCars();
         }
 
@@ -195,7 +204,7 @@ public final class Window extends Application {
             if (file == null)
                 return;
 
-            Window.getInstance().getCarManager().installCarFromArchive(file);
+            Window.getInstance().getCarManager().installCarsFromArchive(file);
             Window.getInstance().getCarManager().updateCars();
         }
 
