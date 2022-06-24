@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CarManager {
 
     private static final String CAR_CONFIG = "car.json";
-    public static final String CARS_DIR = "Mods" + File.separator + "DVCustomCarLoader" + File.separator + "Cars";
+    private static final String CARS_DIR = "Mods" + File.separator + "DVCustomCarLoader" + File.separator + "Cars";
+    private static final Set<String> COMPATIBLE_ARCHIVES = Set.of(".zip", ".rar");
 
     private final List<Car> cars = new ArrayList<>();
 
@@ -57,7 +59,7 @@ public class CarManager {
     }
 
     /**
-     * Gets a car by it's name.
+     * Gets a car by its name.
      *
      * @param name The name of the car.
      * @return The car.
@@ -129,6 +131,11 @@ public class CarManager {
             return;
         }
 
+        if (!isCompatibleArchive(file)) {
+            ErrorDialog.show(Locale.getLine("dialog.error.invalid-archive"));
+            return;
+        }
+
         try {
             if (file.getName().endsWith(".zip") || file.getName().endsWith(".ZIP")) {
                 try (ZipFile zipFile = new ZipFile(file)) {
@@ -180,6 +187,23 @@ public class CarManager {
      */
     private File findConfig(File dir) {
         return Arrays.stream(dir.listFiles()).filter(f -> f.getName().equals(CAR_CONFIG)).findFirst().orElse(null);
+    }
+
+    /**
+     * Checks whether the provided file is a supported archive.
+     *
+     * @param file The file to check.
+     * @return True if it's a supported archive, false otherwise.
+     */
+    public static boolean isCompatibleArchive(File file) {
+        if (file.isDirectory())
+            return false;
+
+        int idx = file.getName().lastIndexOf('.');
+        if (idx == -1)
+            return false;
+
+        return COMPATIBLE_ARCHIVES.contains(file.getName().substring(idx).toLowerCase());
     }
 
     /**
