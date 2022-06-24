@@ -1,7 +1,12 @@
 1.2.0-SNAPSHOT:
 - Added alternating background to cars to make it easier to delete the correct one.
-- Fixed the next car only installing after the info message from the previous was cleared.
+- Added better Derail Valley installation validation.
+- Custom Car Loader's Nexus Mods page is now automatically opened if it isn't installed.
+- Fixed a crash when starting the program with an invalid installation directory set.
+- Fixed Custom Car Loader not being recommended on startup if it's not installed.
 - Fixed the config not saving under certain circumstances.
+- Fixed the next car only installing after the info message from the previous was cleared.
+- The installation directory is now cleared on startup if it's set to something invalid.
 - Code cleanup.
 
 
