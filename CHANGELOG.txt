@@ -1,4 +1,4 @@
-1.2.0-SNAPSHOT:
+1.2.0:
 - Added alternating background to cars to make it easier to delete the correct one.
 - Added better Derail Valley installation validation.
 - Added a specific error message if attempting to install an unsupported archive (eg .7z).
