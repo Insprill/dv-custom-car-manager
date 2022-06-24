@@ -1,3 +1,9 @@
+1.2.0-SNAPSHOT:
+- Added alternating background to cars to make it easier to delete the correct one.
+- The config is now saved whenever updated instead of only when the program is closed.
+- Code cleanup.
+
+
 1.1.0:
 - Added support for installing cars from .rar files.
 - Added the ability to drag/drop files into the car list to install/update it.
@@ -6,6 +12,7 @@
 - Fixed the installation directory field being focused at startup.
 - Fixed no installation directory warning showing as an error instead of an info message at startup.
 - Fixed possible issue when installing from archives after the temp directory failed to delete from another car.
+
 
 1.0.1:
 - Fixed errors when copying files being ignored.
