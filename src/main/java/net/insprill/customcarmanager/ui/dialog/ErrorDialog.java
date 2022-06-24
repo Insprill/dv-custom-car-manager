@@ -16,37 +16,10 @@ public class ErrorDialog extends Alert {
 
     private final VBox content = new VBox();
 
-    public ErrorDialog(String message) {
-        this(message, null);
-    }
-
-    public ErrorDialog(Throwable ex) {
-        this(null, ex);
-    }
-
-    public ErrorDialog(String message, Throwable ex) {
+    private ErrorDialog() {
         super(AlertType.ERROR, null, ButtonType.CLOSE);
-        init();
-
-        if (message != null) {
-            if (ex != null) {
-                setMessage(message);
-            } else {
-                setContentText(message);
-            }
-        }
-
-        if (ex != null) {
-            if (message != null) {
-                Region spacer = new Region();
-                spacer.setPrefHeight(10);
-                content.getChildren().add(spacer);
-            }
-            setException(ex);
-            getDialogPane().setContent(content);
-        }
-
-        showAndWait();
+        initStyle(StageStyle.UTILITY);
+        headerTextProperty().setValue(Locale.getLine("dialog.error.title"));
     }
 
     private void setMessage(String message) {
@@ -70,9 +43,36 @@ public class ErrorDialog extends Alert {
         content.getChildren().add(errorText);
     }
 
-    private void init() {
-        initStyle(StageStyle.UTILITY);
-        headerTextProperty().setValue(Locale.getLine("dialog.error.title"));
+    public static void show(String message) {
+        show(message, null);
+    }
+
+    public static void show(Throwable ex) {
+        show(null, ex);
+    }
+
+    public static void show(String message, Throwable ex) {
+        ErrorDialog dialog = new ErrorDialog();
+
+        if (message != null) {
+            if (ex != null) {
+                dialog.setMessage(message);
+            } else {
+                dialog.setContentText(message);
+            }
+        }
+
+        if (ex != null) {
+            if (message != null) {
+                Region spacer = new Region();
+                spacer.setPrefHeight(10);
+                dialog.content.getChildren().add(spacer);
+            }
+            dialog.setException(ex);
+            dialog.getDialogPane().setContent(dialog.content);
+        }
+
+        dialog.showAndWait();
     }
 
 }

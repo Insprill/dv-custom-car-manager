@@ -52,7 +52,7 @@ public class Config {
         try {
             save();
         } catch (IOException e) {
-            new ErrorDialog(Locale.getLine("dialog.error.config-save-failed").formatted(configFile.getAbsolutePath()), e);
+            ErrorDialog.show(Locale.getLine("dialog.error.config-save-failed").formatted(configFile.getAbsolutePath()), e);
         }
     }
 

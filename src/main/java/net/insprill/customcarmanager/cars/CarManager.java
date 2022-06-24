@@ -58,7 +58,7 @@ public class CarManager {
 
         List<File> foundCars = findCars(file);
         if (foundCars.isEmpty()) {
-            new ErrorDialog(Locale.getLine("dialog.error.car-not-found"));
+            ErrorDialog.show(Locale.getLine("dialog.error.car-not-found"));
             return;
         }
 
@@ -70,7 +70,7 @@ public class CarManager {
             if (installDir.exists()) {
                 File config = findConfig(installDir);
                 if (config == null) {
-                    new ErrorDialog(Locale.getLine("dialog.error.dir-already-exists"));
+                    ErrorDialog.show(Locale.getLine("dialog.error.dir-already-exists"));
                     continue;
                 }
                 new Car(installDir).delete();
@@ -81,12 +81,12 @@ public class CarManager {
                 IO.copyDirectory(car, installDir);
                 new InfoDialog(Locale.getLine((updated) ? "dialog.info.car-updated" : "dialog.info.car-installed").formatted(car.getName()));
             } catch (IOException e) {
-                new ErrorDialog(Locale.getLine("dialog.error.install-copy-failed"), e);
+                ErrorDialog.show(Locale.getLine("dialog.error.install-copy-failed"), e);
                 try {
                     // Ensure a possibly incomplete installation is removed
                     IO.deleteDirectory(installDir);
                 } catch (IOException ex) {
-                    new ErrorDialog(e);
+                    ErrorDialog.show(e);
                 }
             }
         }
@@ -97,7 +97,7 @@ public class CarManager {
         try {
             tempFolder = Files.createTempDirectory("customcarmanager-" + ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE)).toFile();
         } catch (IOException e) {
-            new ErrorDialog(Locale.getLine("dialog.error.temp-dir-creation-failed"), e);
+            ErrorDialog.show(Locale.getLine("dialog.error.temp-dir-creation-failed"), e);
             return;
         }
 
@@ -111,12 +111,12 @@ public class CarManager {
             }
             installCarFromFolder(tempFolder);
         } catch (IOException | RarException e) {
-            new ErrorDialog(Locale.getLine("dialog.error.archive-extraction-failed").formatted(file.getName()), e);
+            ErrorDialog.show(Locale.getLine("dialog.error.archive-extraction-failed").formatted(file.getName()), e);
         } finally {
             try {
                 IO.deleteDirectory(tempFolder);
             } catch (IOException e) {
-                new ErrorDialog(Locale.getLine("dialog.error.temp-dir-deletion-failed").formatted(tempFolder.getAbsolutePath()), e);
+                ErrorDialog.show(Locale.getLine("dialog.error.temp-dir-deletion-failed").formatted(tempFolder.getAbsolutePath()), e);
             }
         }
     }
@@ -148,7 +148,7 @@ public class CarManager {
 
         String str = Locale.getLine("dialog.error.no-install-dir");
         if (error) {
-            new ErrorDialog(str);
+            ErrorDialog.show(str);
         } else {
             new InfoDialog(str);
         }

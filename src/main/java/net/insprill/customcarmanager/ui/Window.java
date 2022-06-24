@@ -103,7 +103,7 @@ public final class Window extends Application {
                 alternate = !alternate;
             }
         } catch (IOException e) {
-            new ErrorDialog(e);
+            ErrorDialog.show(e);
         }
     }
 
@@ -124,12 +124,12 @@ public final class Window extends Application {
                 return;
 
             if (Arrays.stream(file.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
-                new ErrorDialog(Locale.getLine("dialog.error.invalid-install-dir"));
+                ErrorDialog.show(Locale.getLine("dialog.error.invalid-install-dir"));
                 return;
             }
 
             if (!new File(file, CarManager.CARS_DIR).exists()) {
-                new ErrorDialog(Locale.getLine("dialog.error.ccl-not-found"));
+                ErrorDialog.show(Locale.getLine("dialog.error.ccl-not-found"));
                 return;
             }
 

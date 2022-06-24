@@ -25,7 +25,7 @@ public class Car {
         try {
             return JsonParser.parseString(Files.readString(carConfigFile.toPath())).getAsJsonObject().get("identifier").getAsString();
         } catch (Exception e) {
-            new ErrorDialog(Locale.getLine("dialog.error.car-name-not-found").formatted(directory.getAbsolutePath()), e);
+            ErrorDialog.show(Locale.getLine("dialog.error.car-name-not-found").formatted(directory.getAbsolutePath()), e);
             return directory.getName();
         }
     }
