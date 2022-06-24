@@ -87,11 +87,9 @@ public final class Window extends Application {
         boolean alternate = false;
         try {
             for (Car car : getCarManager().getCars()) {
-                Parent obj = FXMLLoader.load(getClass().getClassLoader().getResource("ui/car.fxml"));
-                obj.lookup("#car_background").setStyle("-fx-background-color: #" + ((alternate) ? "FAFAFA" : "F5F5F5"));
-                ((Text) obj.lookup("#car_name")).setText(car.getName());
-                ((Labeled) obj.lookup("#delete_button")).setText(Locale.getLine("window.cars.delete-button"));
-                carList.getChildren().add(obj);
+                CarElement element = new CarElement(car);
+                element.toggleBackgroundColor(alternate);
+                carList.getChildren().add(element.getParent());
                 alternate = !alternate;
             }
         } catch (IOException e) {
