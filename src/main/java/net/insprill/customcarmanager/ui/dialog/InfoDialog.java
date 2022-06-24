@@ -6,18 +6,18 @@ import javafx.stage.StageStyle;
 
 public class InfoDialog extends Alert {
 
-    public InfoDialog(String message) {
+    private InfoDialog() {
         super(AlertType.INFORMATION, null, ButtonType.CLOSE);
-        init();
-
-        setContentText(message);
-
-        showAndWait();
-    }
-
-    private void init() {
         initStyle(StageStyle.UTILITY);
         headerTextProperty().setValue(null);
+    }
+
+    public static void show(String message) {
+        InfoDialog dialog = new InfoDialog();
+
+        dialog.setContentText(message);
+
+        dialog.showAndWait();
     }
 
 }

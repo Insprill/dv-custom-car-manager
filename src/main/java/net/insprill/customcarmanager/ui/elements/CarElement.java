@@ -54,7 +54,7 @@ public class CarElement {
 
             Window.getInstance().getCarManager().getCar(carName).delete();
 
-            new InfoDialog(Locale.getLine("dialog.info.car-deleted").formatted(carName));
+            InfoDialog.show(Locale.getLine("dialog.info.car-deleted").formatted(carName));
         }
 
     }

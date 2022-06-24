@@ -79,7 +79,7 @@ public class CarManager {
 
             try {
                 IO.copyDirectory(car, installDir);
-                new InfoDialog(Locale.getLine((updated) ? "dialog.info.car-updated" : "dialog.info.car-installed").formatted(car.getName()));
+                InfoDialog.show(Locale.getLine((updated) ? "dialog.info.car-updated" : "dialog.info.car-installed").formatted(car.getName()));
             } catch (IOException e) {
                 ErrorDialog.show(Locale.getLine("dialog.error.install-copy-failed"), e);
                 try {
@@ -150,7 +150,7 @@ public class CarManager {
         if (error) {
             ErrorDialog.show(str);
         } else {
-            new InfoDialog(str);
+            InfoDialog.show(str);
         }
 
         return false;
