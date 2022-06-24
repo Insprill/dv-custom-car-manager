@@ -17,4 +17,8 @@ public class FXMLFactory {
 
     }
 
+    private FXMLFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }
