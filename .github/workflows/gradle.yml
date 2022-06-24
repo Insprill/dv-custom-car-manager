@@ -23,7 +23,10 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Custom Car Manager
-          path: |
-            build/launch4j/CustomCarManager.exe
-            build/libs/CustomCarManager.jar
+          name: Custom Car Manager Executable
+          path: build/launch4j/CustomCarManager.exe
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Custom Car Manager JAR
+          path: build/libs/CustomCarManager.jar
