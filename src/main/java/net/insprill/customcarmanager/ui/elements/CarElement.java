@@ -33,7 +33,7 @@ public class CarElement {
     }
 
     public void toggleBackgroundColor(boolean toggle) {
-        this.controller.car_background.setStyle("-fx-background-color: #" + ((toggle) ? "FAFAFA" : "F5F5F5"));
+        this.controller.car_background.setStyle("-fx-background-color: #" + ((toggle) ? "FAFAFA" : "F0F0F0"));
     }
 
     public static class Controller {
