@@ -45,7 +45,8 @@ Usage instructions can be found on the [Wiki](https://github.com/Insprill/dv-cus
 
 To compile dv-custom-car-manager, you need JDK 17 or higher and an internet connection.  
 Clone this repo, then run `./gradlew build` from your terminal.  
-You can find the compiled jar in the `build/libs` directory.
+You can find the compiled jar in the `build/libs` directory.  
+If you'd like the executable, it can be found in the `build/launch4j` directory.  
 
 
 
