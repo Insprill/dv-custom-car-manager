@@ -19,7 +19,9 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@main
         with:
-          arguments: build
+          arguments: |
+            build
+            --no-daemon
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
