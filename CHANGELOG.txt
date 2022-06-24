@@ -1,6 +1,7 @@
 1.2.0-SNAPSHOT:
 - Added alternating background to cars to make it easier to delete the correct one.
-- The config is now saved whenever updated instead of only when the program is closed.
+- Fixed the next car only installing after the info message from the previous was cleared.
+- Fixed the config not saving under certain circumstances.
 - Code cleanup.
 
 
