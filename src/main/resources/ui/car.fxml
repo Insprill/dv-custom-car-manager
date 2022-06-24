@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 <Pane fx:id="car_background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="40.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="net.insprill.customcarmanager.ui.elements.car.CarElementController">
+      fx:controller="net.insprill.customcarmanager.ui.elements.CarElement$Controller">
     <Text fx:id="car_name" layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Car Name"
           wrappingWidth="311.25">
         <font>

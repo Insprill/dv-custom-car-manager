@@ -4,6 +4,7 @@ import com.github.junrar.Junrar;
 import com.github.junrar.exception.RarException;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.Window;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.ui.dialog.InfoDialog;
 import net.insprill.customcarmanager.util.IO;
@@ -29,13 +30,14 @@ public class CarManager {
         return new File(Config.getString("install-directory"), CARS_DIR);
     }
 
-    public void populateCars() {
+    public void updateCars() {
         this.cars.clear();
         for (File file : getCarsDir().listFiles()) {
             if (!file.isDirectory())
                 continue;
             this.cars.add(new Car(file));
         }
+        Window.getInstance().populateCarList();
     }
 
     public List<Car> getCars() {

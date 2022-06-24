@@ -2,6 +2,7 @@ package net.insprill.customcarmanager.cars;
 
 import com.google.gson.JsonParser;
 import net.insprill.customcarmanager.config.Locale;
+import net.insprill.customcarmanager.ui.Window;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
 import net.insprill.customcarmanager.util.IO;
 
@@ -35,6 +36,7 @@ public class Car {
 
     public void delete() {
         IO.moveToTrash(directory);
+        Window.getInstance().getCarManager().updateCars();
     }
 
 }

@@ -1,23 +1,33 @@
 package net.insprill.customcarmanager.ui;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Labeled;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.insprill.customcarmanager.cars.Car;
 import net.insprill.customcarmanager.cars.CarManager;
 import net.insprill.customcarmanager.config.Config;
 import net.insprill.customcarmanager.config.Locale;
 import net.insprill.customcarmanager.ui.dialog.ErrorDialog;
+import net.insprill.customcarmanager.ui.elements.CarElement;
+import net.insprill.customcarmanager.ui.factory.FXMLFactory;
+import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
+import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public final class Window extends Application {
 
@@ -35,6 +45,7 @@ public final class Window extends Application {
 
     private Stage primaryStage;
     private CarManager carManager;
+    private Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -46,14 +57,18 @@ public final class Window extends Application {
         primaryStage.setTitle(Locale.getLine("window.title"));
         primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icons/icon.png")));
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/home.fxml"));
+        FXMLFactory.FXMLElement<Controller> fxml = FXMLFactory.load("/ui/home.fxml");
 
-        ((Text) root.lookup("#install_dir_header")).setText(Locale.getLine("window.install-dir.header"));
-        ((TextField) root.lookup("#install_dir_field")).setText(Config.getString("install-directory"));
-        ((Labeled) root.lookup("#select_install_dir_button")).setText(Locale.getLine("window.install-dir.button"));
-        ((Labeled) root.lookup("#install_car_folder_button")).setText(Locale.getLine("window.cars.install-from-folder"));
-        ((Labeled) root.lookup("#install_car_archive_button")).setText(Locale.getLine("window.cars.install-from-archive"));
-        ((Text) root.lookup("#installed_cars_header")).setText(Locale.getLine("window.cars.installed.header"));
+        Parent root = fxml.parent();
+
+        this.controller = fxml.controller();
+
+        this.controller.install_dir_header.setText(Locale.getLine("window.install-dir.header"));
+        this.controller.install_dir_field.setText(Config.getString("install-directory"));
+        this.controller.select_install_dir_button.setText(Locale.getLine("window.install-dir.button"));
+        this.controller.install_car_folder_button.setText(Locale.getLine("window.cars.install-from-folder"));
+        this.controller.install_car_archive_button.setText(Locale.getLine("window.cars.install-from-archive"));
+        this.controller.installed_cars_header.setText(Locale.getLine("window.cars.installed.header"));
 
         Scene scene = new Scene(root, 600, 400);
 
@@ -66,7 +81,7 @@ public final class Window extends Application {
         if (!CarManager.checkInstallDir(false))
             return;
 
-        UIController.updateCars();
+        getCarManager().updateCars();
     }
 
     public Stage getPrimaryStage() {
@@ -77,24 +92,113 @@ public final class Window extends Application {
         return this.carManager;
     }
 
-    public Node findNode(String id) {
-        return getPrimaryStage().getScene().lookup(id.startsWith("#") ? id : "#" + id);
-    }
-
     public void populateCarList() {
-        VBox carList = (VBox) findNode("#car_list");
-        carList.getChildren().clear();
+        this.controller.car_list.getChildren().clear();
         boolean alternate = false;
         try {
             for (Car car : getCarManager().getCars()) {
                 CarElement element = new CarElement(car);
                 element.toggleBackgroundColor(alternate);
-                carList.getChildren().add(element.getParent());
+                this.controller.car_list.getChildren().add(element.getParent());
                 alternate = !alternate;
             }
         } catch (IOException e) {
             new ErrorDialog(e);
         }
+    }
+
+    public static class Controller {
+
+        public Button install_car_archive_button;
+        public Button install_car_folder_button;
+        public Text install_dir_header;
+        public Text installed_cars_header;
+        public VBox car_list;
+        public Button select_install_dir_button;
+        public TextField install_dir_field;
+
+        @FXML
+        private void selectInstallDirectory() {
+            File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.dv-install-directory.title"));
+            if (file == null)
+                return;
+
+            if (Arrays.stream(file.listFiles()).noneMatch(f -> f.getName().equals("DerailValley.exe"))) {
+                new ErrorDialog(Locale.getLine("dialog.error.invalid-install-dir"));
+                return;
+            }
+
+            if (!new File(file, CarManager.CARS_DIR).exists()) {
+                new ErrorDialog(Locale.getLine("dialog.error.ccl-not-found"));
+                return;
+            }
+
+            String path = file.getAbsolutePath();
+            Config.setString("install-directory", path);
+            install_dir_field.setText(path);
+            Window.getInstance().getCarManager().updateCars();
+        }
+
+        @FXML
+        private void onDragOver(DragEvent event) {
+            if (!event.getDragboard().hasFiles())
+                return;
+
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            event.consume();
+        }
+
+        @FXML
+        private void onDragDropped(DragEvent event) {
+            if (!CarManager.checkInstallDir(true))
+                return;
+            if (!event.getDragboard().hasFiles())
+                return;
+
+            event.setDropCompleted(true);
+            event.consume();
+
+            List<File> files = event.getDragboard().getFiles();
+
+            // If we don't run this later the drag/drop icon will stay until all dialogs are closed
+            Platform.runLater(() -> {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        Window.getInstance().getCarManager().installCarFromFolder(file);
+                    } else {
+                        Window.getInstance().getCarManager().installCarFromArchive(file);
+                    }
+                }
+                Window.getInstance().getCarManager().updateCars();
+            });
+        }
+
+        @FXML
+        private void installCarFromFolder() {
+            if (!CarManager.checkInstallDir(true))
+                return;
+
+            File file = FolderChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"));
+            if (file == null)
+                return;
+
+            Window.getInstance().getCarManager().installCarFromFolder(file);
+            Window.getInstance().getCarManager().updateCars();
+        }
+
+        @FXML
+        private void installCarFromArchive() {
+            if (!CarManager.checkInstallDir(true))
+                return;
+
+            File file = FileChooserFactory.newDialog(Locale.getLine("folder-chooser.install-car.title"), new FileChooser.ExtensionFilter("Archive", "*.zip", "*.ZIP", "*.rar", "*.RAR"));
+            if (file == null)
+                return;
+
+            Window.getInstance().getCarManager().installCarFromArchive(file);
+            Window.getInstance().getCarManager().updateCars();
+        }
+
     }
 
 }
