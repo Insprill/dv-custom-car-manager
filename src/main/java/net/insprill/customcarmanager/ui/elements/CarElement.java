@@ -31,6 +31,7 @@ public class CarElement {
         this.controller.car = car;
         this.controller.car_name.setText(car.getName());
         this.controller.delete_button.setText(Locale.getLine("window.cars.delete-button"));
+        this.controller.open_folder_button.setText(Locale.getLine("window.cars.open-folder"));
     }
 
     /**
@@ -54,6 +55,7 @@ public class CarElement {
         public Pane car_background;
         public Text car_name;
         public Button delete_button;
+        public Button open_folder_button;
 
         public Car car;
 
