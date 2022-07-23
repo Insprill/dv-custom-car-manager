@@ -6,7 +6,7 @@ class UserInterface {open
 } {
   Function {make_window()} {open
   } {
-    Fl_Window {} {
+    Fl_Window window {
       label {Custom Car Manager} open
       xywh {6203 1932 600 400} type Double labelfont 4 labelsize 12 visible
     } {
