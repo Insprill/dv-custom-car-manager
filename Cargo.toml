@@ -11,3 +11,7 @@ fltk-theme = { version = "0.4" }
 
 [build-dependencies]
 fl2rust = "0.4"
+
+[profile.release]
+strip = true
+lto = true
