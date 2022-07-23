@@ -1,10 +1,6 @@
-use fltk::{prelude::*, *};
-use fltk_theme::{ColorTheme, color_themes};
-mod home;
+pub mod ui;
+use ui::window;
 
 fn main() {
-    let app = app::App::default();
-    let theme = ColorTheme::new(color_themes::DARK_THEME);
-    theme.apply();
-    app.run().unwrap();
+    window::init();
 }
