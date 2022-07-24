@@ -8,14 +8,14 @@ class UserInterface {open
   } {
     Fl_Window window {
       label {Custom Car Manager} open
-      xywh {6203 1932 600 400} type Double labelfont 4 labelsize 12 visible
+      xywh {5351 1944 600 400} type Double labelfont 4 labelsize 12 visible
     } {
       Fl_Button select_install_dir_button {
         label {Select Installation Directory}
-        xywh {410 35 175 25} box GTK_UP_BOX labelsize 12
+        xywh {410 35 175 25} box GLEAM_UP_BOX labelsize 12
       }
       Fl_Input install_dir_field {
-        xywh {20 35 380 25} labeltype NO_LABEL labelsize 12 align 68 textsize 12
+        xywh {20 35 380 25} box GLEAM_DOWN_BOX labeltype NO_LABEL labelsize 12 align 68 textsize 12
       }
       Fl_Text_Display {} {
         label {Derail Valley Install Directory}
@@ -23,17 +23,17 @@ class UserInterface {open
       }
       Fl_Button {} {
         label {Install Car(s) from Folder}
-        xywh {100 75 175 25} box GTK_UP_BOX labelsize 12
+        xywh {100 75 175 25} box GLEAM_UP_BOX labelsize 12
       }
       Fl_Button {} {
         label {Install Car(s) from Archive}
-        xywh {325 75 175 25} box GTK_UP_BOX labelsize 12
+        xywh {325 75 175 25} box GLEAM_UP_BOX labelsize 12
       }
       Fl_Text_Display {} {
         label {Installed Cars}
         xywh {135 130 320 5} box NO_BOX labelfont 5 labelsize 17 textfont 4 textsize 17
       }
-      Fl_Scroll {} {open
+      Fl_Scroll {} {open selected
         xywh {20 135 565 255}
       } {}
     }
