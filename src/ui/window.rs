@@ -1,5 +1,4 @@
 use fltk::{*, prelude::*};
-use fltk::dialog::FileDialogType;
 use fltk_theme::{color_themes, ColorTheme};
 
 use crate::ui::home;
@@ -11,7 +10,7 @@ pub fn init() {
     let mut ui = home::UserInterface::make_window();
     ui.window.center_screen();
     ui.select_install_dir_button.set_callback(move |_| {
-        let (selected, path) = utils::open_file_chooser(FileDialogType::BrowseFile, String::from(".txt"));
+        let (selected, path) = utils::open_folder_chooser();
         println!("{selected}");
         println!("{path}");
     });
