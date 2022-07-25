@@ -7,15 +7,16 @@ class UserInterface {open
   Function {make_window()} {open
   } {
     Fl_Window window {
-      label {Custom Car Manager} open selected
+      label {Custom Car Manager} open
       xywh {1093 336 600 400} type Double labelfont 4 labelsize 12 visible
     } {
       Fl_Button select_install_dir_button {
         label {Select Installation Directory}
+        callback {crate::ui::window_controller::select_install_dir();} selected
         xywh {410 35 175 25} box GLEAM_UP_BOX labelsize 12
       }
       Fl_Input install_dir_field {
-        xywh {20 35 380 25} box GLEAM_DOWN_BOX labeltype NO_LABEL labelsize 12 align 68 textsize 12
+        xywh {20 35 380 25} box GLEAM_DOWN_BOX labeltype NO_LABEL labelfont 4 labelsize 12 align 68 textfont 4 textsize 12
       }
       Fl_Text_Display {} {
         label {Derail Valley Install Directory}
