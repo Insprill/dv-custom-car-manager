@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TextHelperTest {
+class TextHelperTest {
 
     @Test
     void getStacktrace() {
