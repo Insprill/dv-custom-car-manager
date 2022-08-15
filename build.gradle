@@ -67,7 +67,7 @@ launch4j {
     mainClassName = 'net.insprill.customcarmanager.CustomCarManager'
     icon = "${rootDir}/src/main/resources/icons/icon.ico"
     outfile = "CustomCarManager.exe"
-    downloadUrl = "https://download.oracle.com/java/17/archive/jdk-17.0.3.1_windows-x64_bin.exe"
+    downloadUrl = "https://download.oracle.com/java/17/archive/jdk-17.0.4_windows-x64_bin.exe"
 }
 
 task packageDistribution(type: Zip) {
