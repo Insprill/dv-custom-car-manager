@@ -15,7 +15,7 @@ class UserInterface {open
         callback {crate::ui::window_controller::select_install_dir();} selected
         xywh {410 35 175 25} box GLEAM_UP_BOX labelsize 12
       }
-      Fl_Input install_dir_field {
+      Fl_Output install_dir_field {
         xywh {20 35 380 25} box GLEAM_DOWN_BOX labeltype NO_LABEL labelfont 4 labelsize 12 align 68 textfont 4 textsize 12
       }
       Fl_Text_Display {} {
