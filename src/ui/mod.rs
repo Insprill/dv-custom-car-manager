@@ -6,6 +6,7 @@ use crate::data::AppState;
 pub fn main_window() -> WindowDesc<AppState> {
     WindowDesc::new(root())
         .title("Custom Car Manager")
+        .window_size((600.0, 400.0))
 }
 
 fn root() -> impl Widget<AppState> {
