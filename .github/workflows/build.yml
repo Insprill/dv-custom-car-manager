@@ -1,0 +1,52 @@
+name: Build
+
+on: [ push, pull_request ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            suffix: ''
+            name: Linux
+          - os: windows-latest
+            suffix: .exe
+            name: Windows
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          components: clippy
+          override: true
+          profile: minimal
+          toolchain: stable
+
+      - name: Setup Cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Install Linux Dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get install -y libssl-dev
+
+      - name: Check Code Style
+        uses: actions-rs/clippy@master
+        with:
+          args: -- -D warnings
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Intellectual-${{ matrix.name }}
+          path: target/release/intellectual${{ matrix.suffix }}
