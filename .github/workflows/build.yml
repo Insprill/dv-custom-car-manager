@@ -48,5 +48,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Intellectual-${{ matrix.name }}
-          path: target/release/intellectual${{ matrix.suffix }}
+          name: custom-car-manager-${{ matrix.name }}
+          path: target/release/custom-car-manager${{ matrix.suffix }}
