@@ -2,6 +2,7 @@ use druid::{Data, Lens};
 use crate::Config;
 
 pub mod config;
+pub mod ccl_car;
 
 #[derive(Clone, Data, Lens)]
 pub struct AppState {
