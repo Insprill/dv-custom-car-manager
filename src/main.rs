@@ -5,6 +5,7 @@ use crate::data::config::Config;
 
 mod ui;
 mod data;
+mod cmd;
 
 fn main() {
     let config = Config::load().unwrap_or_default();
