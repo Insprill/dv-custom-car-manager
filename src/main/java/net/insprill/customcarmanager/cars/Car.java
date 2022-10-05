@@ -46,6 +46,10 @@ public class Car {
         return this.name;
     }
 
+    public File getDirectory() {
+        return this.directory;
+    }
+
     /**
      * Moves the car to the recycle bin, and updates the UI.
      */

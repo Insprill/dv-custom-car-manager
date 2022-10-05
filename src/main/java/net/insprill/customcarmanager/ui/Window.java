@@ -23,6 +23,7 @@ import net.insprill.customcarmanager.ui.elements.CarElement;
 import net.insprill.customcarmanager.ui.factory.FXMLFactory;
 import net.insprill.customcarmanager.ui.factory.FileChooserFactory;
 import net.insprill.customcarmanager.ui.factory.FolderChooserFactory;
+import net.insprill.customcarmanager.util.Processes;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,6 +86,10 @@ public final class Window extends Application {
         }
 
         getCarManager().updateCars();
+
+        if (Processes.isProcessRunning("DerailValley")) {
+            ErrorDialog.show(Locale.getLine("dialog.error.derail-valley-running"));
+        }
     }
 
     /**

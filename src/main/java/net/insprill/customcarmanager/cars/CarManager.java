@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,6 +49,7 @@ public class CarManager {
                 continue;
             this.cars.add(new Car(file));
         }
+        this.cars.sort(Comparator.comparing(Car::getName));
         Window.getInstance().populateCarList();
     }
 

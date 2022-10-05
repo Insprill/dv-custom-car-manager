@@ -13,6 +13,7 @@ import net.insprill.customcarmanager.ui.dialog.ConfirmationDialog;
 import net.insprill.customcarmanager.ui.dialog.InfoDialog;
 import net.insprill.customcarmanager.ui.factory.FXMLFactory;
 
+import java.awt.Desktop;
 import java.io.IOException;
 
 /**
@@ -27,8 +28,10 @@ public class CarElement {
         FXMLFactory.FXMLElement<Controller> fxml = FXMLFactory.load("/ui/car.fxml");
         this.parent = fxml.parent();
         this.controller = fxml.controller();
+        this.controller.car = car;
         this.controller.car_name.setText(car.getName());
         this.controller.delete_button.setText(Locale.getLine("window.cars.delete-button"));
+        this.controller.open_folder_button.setText(Locale.getLine("window.cars.open-folder"));
     }
 
     /**
@@ -52,6 +55,9 @@ public class CarElement {
         public Pane car_background;
         public Text car_name;
         public Button delete_button;
+        public Button open_folder_button;
+
+        public Car car;
 
         @FXML
         public void deleteCar() {
@@ -66,6 +72,11 @@ public class CarElement {
             Window.getInstance().getCarManager().getCar(carName).deleteAndUpdate();
 
             InfoDialog.show(Locale.getLine("dialog.info.car-deleted").formatted(carName));
+        }
+
+        @FXML
+        public void openFolder() throws IOException {
+            Desktop.getDesktop().open(car.getDirectory());
         }
 
     }
