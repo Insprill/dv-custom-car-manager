@@ -1,15 +1,15 @@
 use druid::{Data, Lens};
 use crate::Config;
-use crate::data::ccl_car::CclCar;
+use crate::data::ccl::Car;
 
 pub mod config;
-pub mod ccl_car;
+pub mod ccl;
 
 #[derive(Clone, Data, Lens)]
 pub struct AppState {
     pub config: Config,
     #[data(ignore)]
-    pub cars: Vec<CclCar>,
+    pub cars: Vec<Car>,
 }
 
 impl AppState {
