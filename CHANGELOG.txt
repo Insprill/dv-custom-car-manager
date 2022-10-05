@@ -3,6 +3,7 @@
 - Added more checks against corrupt .rar files.
 - Added a warning on startup if Derail Valley is running.
 - Updated the Java install URL.
+- Cars are now sorted alphabetically.
 
 
 1.2.0:
