@@ -14,7 +14,7 @@ pub fn main_window() -> WindowDesc<AppState> {
 }
 
 fn root() -> impl Widget<AppState> {
-    let dv_install_dir_header = Label::new("Derail Valley Install Directory").with_text_size(20.0);
+    let dv_install_dir_header = Label::new("Derail Valley Install Directory").with_text_size(22.0);
 
     let dv_install_dir_field = TextBox::new()
         .fix_width(375.0)
@@ -49,11 +49,19 @@ fn root() -> impl Widget<AppState> {
         .with_spacer(50.0)
         .with_child(install_car_from_archive);
 
-    let cars_header = Label::new("Installed Cars").with_text_size(20.0);
+    let cars_header = Label::new("Installed Cars").with_text_size(22.0);
     let cars_scroll = Scroll::new(List::new(|| {
-        let car_name = Label::raw().lens(Car::config.then(CarConfig::identifier));
-        let delete_button = Button::new("Delete");
-        Flex::row().with_child(car_name).with_child(delete_button)
+        let car_name = Label::raw()
+            .with_text_size(16.0)
+            .fix_width(215.0)
+            .lens(Car::config.then(CarConfig::identifier));
+        let open_dir_button = Button::new("Open Folder").align_right();
+        let delete_button = Button::new("Delete").align_right();
+        Flex::row()
+            .with_child(car_name)
+            .with_child(open_dir_button)
+            .with_child(delete_button)
+            .fix_width(400.0)
     }))
     .fix_height(200.0)
     .lens(AppState::cars);
@@ -62,9 +70,9 @@ fn root() -> impl Widget<AppState> {
         .with_child(dv_install_dir_header)
         .with_spacer(10.0)
         .with_child(dv_install_dir_row)
-        .with_spacer(20.0)
-        .with_child(install_car_row)
         .with_spacer(10.0)
+        .with_child(install_car_row)
+        .with_spacer(15.0)
         .with_child(cars_header)
         .with_spacer(10.0)
         .with_child(cars_scroll)
