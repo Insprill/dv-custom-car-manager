@@ -7,8 +7,8 @@ const CONFIG_NAME: &str = "car.json";
 
 #[derive(Clone)]
 pub struct Car {
-    config: CarConfig,
-    directory: PathBuf,
+    pub config: CarConfig,
+    pub directory: PathBuf,
 }
 
 impl Car {

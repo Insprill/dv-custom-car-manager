@@ -4,7 +4,8 @@ use druid::widget::{Button, Flex, Label, Scroll, TextBox};
 use native_dialog::FileDialog;
 
 use crate::Config;
-use crate::data::AppState;
+use crate::data::{AppState, ccl};
+use crate::data::ccl::Car;
 
 pub fn main_window() -> WindowDesc<AppState> {
     WindowDesc::new(root())
@@ -41,9 +42,7 @@ fn root() -> impl Widget<AppState> {
 
     let cars_header = Label::new("Installed Cars")
         .with_text_size(20.0);
-    let cars_flex = Flex::column()
-        .with_child(car());
-    let cars_scroll = Scroll::new(cars_flex)
+    let cars_scroll = Scroll::new(Flex::column())
         .vertical();
 
     Flex::column()
@@ -60,6 +59,10 @@ fn root() -> impl Widget<AppState> {
     // .debug_paint_layout()
 }
 
-fn car() -> impl Widget<AppState> {
+fn car(car: Car) -> impl Widget<AppState> {
+    let car_name = Label::new(car.config.identifier);
+    let delete_button = Button::new("Delete");
     Flex::row()
+        .with_child(car_name)
+        .with_child(delete_button)
 }
