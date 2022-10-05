@@ -24,8 +24,7 @@ fn root() -> impl Widget<AppState> {
         .on_click(|_, state: &mut AppState, _| {
             let path = FileDialog::new().show_open_single_dir().unwrap();
             if let Some(path) = path {
-                state.config.dv_install_dir = path.to_string_lossy().to_string();
-                state.config.save();
+                state.attempt_set_install_dir(path)
             }
         });
     let dv_install_dir_row = Flex::row()
