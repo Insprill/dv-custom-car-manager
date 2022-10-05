@@ -10,7 +10,7 @@ use zip::ZipArchive;
 use crate::{AppState, Config};
 
 pub const CONFIG_NAME: &str = "car.json";
-const CARS_PATH: &str = "Mods/DVCustomCarLoader/Cars";
+const CARS_PATH: [&'static str; 3] = ["Mods", "DVCustomCarLoader", "Cars"];
 
 #[derive(Clone)]
 pub struct Car {
@@ -41,7 +41,7 @@ impl CarConfig {
 }
 
 pub fn cars_path(config: &Config) -> PathBuf {
-    PathBuf::from(config.dv_install_dir.as_str()).join(CARS_PATH)
+    PathBuf::from(config.dv_install_dir.as_str()).join(CARS_PATH.iter().collect::<PathBuf>())
 }
 
 pub fn dir_contains_car(path: &PathBuf) -> bool {
@@ -87,7 +87,9 @@ pub fn install_from_archive(path: PathBuf, state: &AppState) {
                 );
                 continue;
             }
-        };
+        }
+        .canonicalize()
+        .expect("Failed to canonicalize path");
 
         if !file.is_file() {
             continue;
