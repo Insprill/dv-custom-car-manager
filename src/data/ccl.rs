@@ -3,6 +3,7 @@ use std::io::BufReader;
 use std::path::{Path, PathBuf};
 use std::{fs, io};
 
+use druid::{Data, Lens};
 use log::{info, warn};
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
@@ -12,9 +13,10 @@ use crate::{AppState, Config};
 pub const CONFIG_NAME: &str = "car.json";
 const CARS_PATH: [&'static str; 3] = ["Mods", "DVCustomCarLoader", "Cars"];
 
-#[derive(Clone)]
+#[derive(Clone, Data, Lens)]
 pub struct Car {
     pub config: CarConfig,
+    #[data(ignore)]
     pub directory: PathBuf,
 }
 
@@ -27,7 +29,7 @@ impl Car {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Data, Lens, Serialize, Deserialize)]
 pub struct CarConfig {
     pub identifier: String,
 }

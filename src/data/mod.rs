@@ -1,27 +1,27 @@
 use std::fs;
-use std::path::{PathBuf};
+use std::path::PathBuf;
+use std::sync::Arc;
 
 use druid::{Data, Lens};
 
+use crate::data::ccl::Car;
 use crate::Config;
-use crate::data::ccl::{Car};
 
-pub mod config;
 pub mod ccl;
+pub mod config;
 
 const DV_EXE: &str = "DerailValley.exe";
 
 #[derive(Clone, Data, Lens)]
 pub struct AppState {
     pub config: Config,
-    #[data(ignore)]
-    pub cars: Vec<Car>,
+    pub cars: Arc<Vec<Car>>,
 }
 
 impl AppState {
     pub fn from_config(config: Config) -> Self {
         Self {
-            cars: collect_cars(&config),
+            cars: Arc::new(collect_cars(&config)),
             config,
         }
     }
@@ -32,7 +32,13 @@ impl AppState {
         }
 
         let mut paths = fs::read_dir(&path).unwrap();
-        if paths.any(|path| path.unwrap().file_name().to_string_lossy().to_string().eq(DV_EXE)) {
+        if paths.any(|path| {
+            path.unwrap()
+                .file_name()
+                .to_string_lossy()
+                .to_string()
+                .eq(DV_EXE)
+        }) {
             self.config.dv_install_dir = path.to_string_lossy().to_string();
             self.config.save();
         } else {
