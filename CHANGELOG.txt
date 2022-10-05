@@ -1,5 +1,6 @@
 2.0.0:
 - Rewrote the program in Rust. Java is no longer required.
+- Moved config location (%appdata% on Windows, home/.config on Linux)
 
 
 1.3.0:
