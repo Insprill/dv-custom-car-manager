@@ -43,10 +43,9 @@ Usage instructions can be found on the [Wiki](https://github.com/Insprill/dv-cus
 
 ## Compiling
 
-To compile dv-custom-car-manager, you need JDK 17 or higher and an internet connection.  
-Clone this repo, then run `./gradlew build` from your terminal.  
-You can find the compiled jar in the `build/libs` directory.  
-If you'd like the executable, it can be found in the `build/launch4j` directory.  
+To compile Custom Car Manager, you need [Rust](https://www.rust-lang.org/tools/install), and `libgtk-3-dev` if on Linux.  
+Clone this repo, then run `cargo build --release` from your terminal.  
+You can find the compiled program in the `target/release` directory.  
 
 
 
@@ -55,16 +54,9 @@ If you'd like the executable, it can be found in the `build/launch4j` directory.
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
-contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Make your changes.
-4. Stage your changes (`git add .`)
-5. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-6. Push to the Branch (`git push origin feature/AmazingFeature`)
-7. Open a Pull Request
+Contributions are what make the open source community such an amazing place to learn, inspire, and create.  
+Any contributions you make are **greatly appreciated**!  
+If you're new to contributing to open-source projects, you can follow [this](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) guide.
 
 
 
