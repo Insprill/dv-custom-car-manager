@@ -33,8 +33,20 @@ fn root() -> impl Widget<AppState> {
         .with_spacer(10.0)
         .with_child(dv_select_install_dir_button);
 
-    let install_car_from_folder = Button::new("Install Car(s) from Folder");
-    let install_car_from_archive = Button::new("Install Car(s) from Archive");
+    let install_car_from_folder = Button::new("Install Car(s) from Folder")
+        .on_click(|_, _, _ | {
+            let path = FileDialog::new().show_open_single_dir().unwrap();
+            if let Some(path) = path {
+                ccl::install_from_folder(path);
+            }
+        });
+    let install_car_from_archive = Button::new("Install Car(s) from Archive")
+        .on_click(|_, _, _ | {
+            let path = FileDialog::new().show_open_single_file().unwrap();
+            if let Some(path) = path {
+                ccl::install_from_archive(path);
+            }
+        });
     let install_car_row = Flex::row()
         .with_child(install_car_from_folder)
         .with_spacer(50.0)
