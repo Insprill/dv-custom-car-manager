@@ -8,7 +8,6 @@ use crate::data::config::Config;
 
 mod ui;
 mod data;
-mod cmd;
 
 fn main() {
     CombinedLogger::init(
