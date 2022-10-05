@@ -1,13 +1,13 @@
 use std::fs::{create_dir_all, File};
-use std::io;
+use std::{fs, io};
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
-use crate::AppState;
+use crate::{AppState, Config};
 
-const CONFIG_NAME: &str = "car.json";
+pub const CONFIG_NAME: &str = "car.json";
 const CARS_PATH: &str = "Mods/DVCustomCarLoader/Cars";
 
 #[derive(Clone)]
@@ -19,14 +19,9 @@ pub struct Car {
 impl Car {
     pub fn new(directory: PathBuf) -> Self {
         Self {
-            config: Self::read_config(directory.as_path()),
+            config: CarConfig::new(directory.as_path()),
             directory,
         }
-    }
-
-    fn read_config(directory: &Path) -> CarConfig {
-        let file = File::open(directory.join(CONFIG_NAME)).expect("Failed to find car configuration");
-        serde_json::from_reader(file).expect("Failed to read car configuration")
     }
 }
 
@@ -35,8 +30,20 @@ pub struct CarConfig {
     pub identifier: String,
 }
 
-fn cars_path(state: &AppState) -> PathBuf {
-    PathBuf::from(state.config.dv_install_dir.as_str()).join(CARS_PATH)
+impl CarConfig {
+    fn new(directory: &Path) -> Self {
+        let file = File::open(directory.join(CONFIG_NAME)).expect("Failed to find car configuration");
+        serde_json::from_reader(file).expect("Failed to read car configuration")
+    }
+}
+
+pub fn cars_path(config: &Config) -> PathBuf {
+    PathBuf::from(config.dv_install_dir.as_str()).join(CARS_PATH)
+}
+
+pub fn dir_contains_car(path: &PathBuf) -> bool {
+    let mut dir = fs::read_dir(path).expect("Failed to read dir");
+    dir.any(|f| f.unwrap().file_name().to_string_lossy().to_string().eq(CONFIG_NAME))
 }
 
 pub fn install_from_folder(path: PathBuf) {
@@ -58,7 +65,7 @@ pub fn install_from_archive(path: PathBuf, state: &AppState) {
         panic!("TODO: failed to find car")
     }
 
-    let cars_path = cars_path(state);
+    let cars_path = cars_path(&state.config);
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();

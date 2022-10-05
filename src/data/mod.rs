@@ -4,7 +4,7 @@ use std::path::{PathBuf};
 use druid::{Data, Lens};
 
 use crate::Config;
-use crate::data::ccl::Car;
+use crate::data::ccl::{Car};
 
 pub mod config;
 pub mod ccl;
@@ -21,8 +21,8 @@ pub struct AppState {
 impl AppState {
     pub fn from_config(config: Config) -> Self {
         Self {
+            cars: collect_cars(&config),
             config,
-            cars: Vec::new(),
         }
     }
 
@@ -38,5 +38,19 @@ impl AppState {
         } else {
             panic!("TODO: invalid dir")
         }
+    }
+}
+
+fn collect_cars(config: &Config) -> Vec<Car> {
+    if config.dv_install_dir.is_empty() {
+        Vec::new()
+    } else {
+        let mut cars = Vec::new();
+        for path in fs::read_dir(ccl::cars_path(config)).unwrap() {
+            if ccl::dir_contains_car(&path.as_ref().unwrap().path()) {
+                cars.push(Car::new(path.unwrap().path()))
+            }
+        }
+        cars
     }
 }
