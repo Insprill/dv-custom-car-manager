@@ -15,7 +15,7 @@ impl Config {
         AppDirs::new(Some("custom-car-manager"), false)
     }
 
-    fn config_dir() -> Option<PathBuf> {
+    pub fn config_dir() -> Option<PathBuf> {
         Self::app_dirs().map(|dirs| dirs.config_dir)
     }
 
