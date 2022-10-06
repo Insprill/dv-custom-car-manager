@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 druid = { git = "https://github.com/linebender/druid.git" }
+infer = "0.9.0"
 log = "0.4.17"
 native-dialog = "0.6.3"
 platform-dirs = "0.3.0"
