@@ -1,3 +1,6 @@
+// Don't show console on windows.
+#![windows_subsystem = "windows"]
+
 use std::fs::File;
 
 use druid::AppLauncher;
