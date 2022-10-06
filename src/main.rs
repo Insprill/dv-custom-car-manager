@@ -7,6 +7,8 @@ use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode, WriteLogg
 use crate::data::config::Config;
 use crate::data::AppState;
 
+mod cmd;
+mod controller;
 mod data;
 mod mods;
 mod ui;

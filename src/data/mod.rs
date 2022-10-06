@@ -25,7 +25,7 @@ impl AppState {
             cars: Arc::new(Vec::new()),
             config,
         };
-        update_cars(&mut state);
+        state.update_cars();
         state
     }
 
@@ -48,18 +48,18 @@ impl AppState {
             panic!("TODO: invalid dir")
         }
     }
-}
 
-fn update_cars(state: &mut AppState) {
-    if state.config.dv_install_dir.is_empty() {
-        state.cars = Arc::new(Vec::new());
-    } else {
-        let mut cars = Vec::new();
-        for path in fs::read_dir(ccl::cars_path(&state.config)).unwrap() {
-            if ccl::dir_contains_car(&path.as_ref().unwrap().path()) {
-                cars.push(Car::new(path.unwrap().path()))
+    pub fn update_cars(&mut self) {
+        if self.config.dv_install_dir.is_empty() {
+            self.cars = Arc::new(Vec::new());
+        } else {
+            let mut cars = Vec::new();
+            for path in fs::read_dir(ccl::cars_path(&self.config)).unwrap() {
+                if ccl::dir_contains_car(&path.as_ref().unwrap().path()) {
+                    cars.push(Car::new(path.unwrap().path()))
+                }
             }
+            self.cars = Arc::new(cars);
         }
-        state.cars = Arc::new(cars);
     }
 }
