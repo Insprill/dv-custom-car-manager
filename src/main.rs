@@ -1,8 +1,9 @@
 use std::fs::File;
 
 use druid::AppLauncher;
-use log::LevelFilter;
+use log::{warn, LevelFilter};
 use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode, WriteLogger};
+use sysinfo::{System, SystemExt};
 
 use crate::data::config::Config;
 use crate::data::AppState;
@@ -33,6 +34,11 @@ fn main() {
         ),
     ])
     .unwrap();
+
+    if System::new_all().processes_by_name("DerailValley").count() > 0 {
+        warn!("Derail Valley is running!")
+        // TODO: DV is running alert
+    }
 
     let config = Config::load().unwrap_or_default();
     let state = AppState::from_config(config);
