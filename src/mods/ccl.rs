@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use std::{env, fs, io};
 
 use druid::{Data, Lens};
-use fs_extra::dir::{move_dir, CopyOptions};
+use fs_extra::dir::{self, CopyOptions};
 use log::{info, warn};
 use rand::distributions::{Alphanumeric, DistString};
 use serde::{Deserialize, Serialize};
@@ -119,7 +119,11 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
         );
     }
     install_from_folder(&extract_dir, state);
-    fs::remove_dir_all(extract_dir).expect("Failed to remove temp dir");
+    fs::remove_dir_all(&extract_dir).expect("Failed to remove temp dir");
+    info!(
+        "Removed temp dir at \"{}\"",
+        extract_dir.to_string_lossy().to_string()
+    )
 }
 
 fn is_file_supported_archive(path: &PathBuf) -> bool {
@@ -143,9 +147,22 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
         let file_path = &file.path();
         if file_path.is_dir() {
             if dir_contains_car(file_path) {
-                move_dir(file_path, cars_path(&state.config), &CopyOptions::new())
-                    .expect("Failed to move dir");
+                let temp_car_ident = Car::new(file_path.clone()).config.identifier;
+                if let Some(car) = state
+                    .cars
+                    .iter()
+                    .find(|x| x.config.identifier.eq(&temp_car_ident))
+                {
+                    info!(
+                        "Deleting old car from \"{}\"",
+                        car.directory.to_string_lossy().to_string()
+                    );
+                    car.delete().expect("Failed to delete old car")
+                }
+                let cars_path = cars_path(&state.config);
+                dir::copy(file_path, cars_path, &CopyOptions::new()).expect("Failed to move dir");
                 state.update_cars();
+                info!("Successfully installed {}", temp_car_ident);
             } else {
                 install_from_folder(file_path, state);
             }
@@ -159,10 +176,6 @@ fn create_parents(path: &PathBuf) {
     if let Some(p) = path.parent() {
         if !p.exists() {
             fs::create_dir_all(&p).expect("Failed to create directory");
-            info!(
-                "Created directory \"{}\"",
-                p.file_name().unwrap().to_string_lossy().to_string()
-            );
         }
     }
 }
