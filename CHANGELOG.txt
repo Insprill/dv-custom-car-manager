@@ -1,5 +1,6 @@
 2.0.0:
 - Rewrote the program in Rust. Java is no longer required.
+- Added support for installing from archives nested in folders.
 - Moved config location (%appdata% on Windows, home/.config on Linux)
 
 
