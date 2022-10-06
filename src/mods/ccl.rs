@@ -1,10 +1,12 @@
 use std::fs::File;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
-use std::{fs, io};
+use std::{env, fs, io};
 
 use druid::{Data, Lens};
+use fs_extra::dir::{move_dir, CopyOptions};
 use log::{info, warn};
+use rand::distributions::{Alphanumeric, DistString};
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
 
@@ -62,26 +64,6 @@ pub fn dir_contains_car(path: &PathBuf) -> bool {
     })
 }
 
-pub fn install_from_folder(path: &PathBuf, state: &mut AppState) {
-    if !path.is_dir() {
-        panic!("TODO: not a directory")
-    }
-    for res in fs::read_dir(path).unwrap() {
-        let file = res.unwrap();
-        let file_path = &file.path();
-        let file_type = file.file_type().unwrap();
-        if file_type.is_dir() {
-            if dir_contains_car(path) {
-                install_from_folder(file_path, state);
-            } else {
-                create_parents(&file_path);
-            }
-        } else if file_type.is_file() {
-            install_from_archive(file_path, state)
-        }
-    }
-}
-
 pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
     if !path.is_file() {
         panic!("TODO: not a file")
@@ -99,12 +81,23 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
         panic!("TODO: failed to find car")
     }
 
-    let cars_path = cars_path(&state.config);
+    let extract_dir = env::temp_dir()
+        .join("customcarmanager")
+        .join(Alphanumeric.sample_string(&mut rand::thread_rng(), 12));
+
+    info!(
+        "Created temp dir at \"{}\"",
+        extract_dir.to_string_lossy().to_string()
+    );
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).expect("Failed to get archive file");
+        if !file.is_file() {
+            continue;
+        }
+
         let file_path = match file.enclosed_name() {
-            Some(path) => cars_path.join(path),
+            Some(path) => extract_dir.join(path),
             None => {
                 warn!(
                     "Not extracting file with suspicious path \"{}\"",
@@ -113,10 +106,6 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
                 continue;
             }
         };
-
-        if !file.is_file() {
-            continue;
-        }
 
         create_parents(&file_path);
 
@@ -129,7 +118,8 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
             file.size()
         );
     }
-    state.update_cars();
+    install_from_folder(&extract_dir, state);
+    fs::remove_dir_all(extract_dir).expect("Failed to remove temp dir");
 }
 
 fn is_file_supported_archive(path: &PathBuf) -> bool {
@@ -142,6 +132,27 @@ fn is_file_supported_archive(path: &PathBuf) -> bool {
         },
         None => false,
     };
+}
+
+pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
+    if !root_path.is_dir() {
+        panic!("TODO: not a directory")
+    }
+    for res in fs::read_dir(root_path).unwrap() {
+        let file = res.unwrap();
+        let file_path = &file.path();
+        if file_path.is_dir() {
+            if dir_contains_car(file_path) {
+                move_dir(file_path, cars_path(&state.config), &CopyOptions::new())
+                    .expect("Failed to move dir");
+                state.update_cars();
+            } else {
+                install_from_folder(file_path, state);
+            }
+        } else if file_path.is_file() && is_file_supported_archive(file_path) {
+            install_from_archive(file_path, state)
+        }
+    }
 }
 
 fn create_parents(path: &PathBuf) {
