@@ -18,8 +18,8 @@ where
         env: &Env,
     ) {
         match event {
-            Event::Command(cmd) if cmd.is(cmd::DELETE_CAR) => {
-                let car = cmd.get_unchecked(cmd::DELETE_CAR);
+            Event::Command(cmd) if cmd.is(cmd::CCL_DELETE_CAR) => {
+                let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
                 match car.delete() {
                     Err(err) => {
                         error!("Failed to delete car! {}", err.to_string())

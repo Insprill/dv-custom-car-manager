@@ -89,7 +89,7 @@ fn car() -> impl Widget<Car> {
         .lens(Car::config.then(CarConfig::identifier));
     let open_dir_button = Button::new("Open Folder").align_right();
     let delete_button = Button::new("Delete")
-        .on_click(|ctx, car: &mut Car, _| ctx.submit_command(cmd::DELETE_CAR.with(car.clone())))
+        .on_click(|ctx, car: &mut Car, _| ctx.submit_command(cmd::CCL_DELETE_CAR.with(car.clone())))
         .align_right();
 
     Flex::row()
