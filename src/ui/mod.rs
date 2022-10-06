@@ -1,11 +1,11 @@
 use druid::widget::{Button, Flex, Label, List, Scroll, TextBox};
-use druid::LensExt;
+use druid::{FileSpec, LensExt};
 use druid::{UnitPoint, Widget, WidgetExt, WindowDesc};
-use native_dialog::FileDialog;
 
 use crate::controller::ccl::CclController;
+use crate::controller::dv::DvController;
 use crate::data::AppState;
-use crate::mods::ccl::{self, Car, CarConfig};
+use crate::mods::ccl::{Car, CarConfig};
 use crate::{cmd, Config};
 
 pub fn main_window() -> WindowDesc<AppState> {
@@ -31,11 +31,11 @@ fn dv_install_dir() -> impl Widget<AppState> {
         .fix_width(375.0)
         .lens(AppState::config.then(Config::dv_install_dir));
     let dv_select_install_dir_button =
-        Button::new("Select Install Directory").on_click(|_, state: &mut AppState, _| {
-            let path = FileDialog::new().show_open_single_dir().unwrap();
-            if let Some(path) = path {
-                state.attempt_set_install_dir(path)
-            }
+        Button::new("Select Install Directory").on_click(|ctx, _, _| {
+            let options = druid::FileDialogOptions::new()
+                .select_directories()
+                .accept_command(cmd::DV_SET_INSTALL_DIR);
+            ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
     let dv_install_dir_row = Flex::row()
         .with_child(dv_install_dir_field)
@@ -46,22 +46,28 @@ fn dv_install_dir() -> impl Widget<AppState> {
         .with_child(dv_install_dir_header)
         .with_spacer(10.0)
         .with_child(dv_install_dir_row)
+        .controller(DvController)
 }
 
 fn cars() -> impl Widget<AppState> {
     let install_car_from_folder =
-        Button::new("Install Car(s) from Folder").on_click(|_, state: &mut AppState, _| {
-            let path = FileDialog::new().show_open_single_dir().unwrap();
-            if let Some(path) = path {
-                ccl::install_from_folder(&path, state);
-            }
+        Button::new("Install Car(s) from Folder").on_click(|ctx, _, _| {
+            let options = druid::FileDialogOptions::new()
+                .multi_selection()
+                .select_directories()
+                .accept_command(cmd::CCL_INSTALL_FOLDER);
+            ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
     let install_car_from_archive =
-        Button::new("Install Car(s) from Archive").on_click(|_, state: &mut AppState, _| {
-            let path = FileDialog::new().show_open_single_file().unwrap();
-            if let Some(path) = path {
-                ccl::install_from_archive(&path, state);
-            }
+        Button::new("Install Car(s) from Archive").on_click(|ctx, _, _| {
+            let options = druid::FileDialogOptions::new()
+                .multi_selection()
+                .allowed_types(vec![FileSpec {
+                    name: "Archive",
+                    extensions: &["zip", "rar"],
+                }])
+                .accept_command(cmd::CCL_INSTALL_ARCHIVE);
+            ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
     let install_car_row = Flex::row()
         .with_child(install_car_from_folder)

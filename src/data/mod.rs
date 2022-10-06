@@ -29,7 +29,7 @@ impl AppState {
         state
     }
 
-    pub fn attempt_set_install_dir(&mut self, path: PathBuf) {
+    pub fn attempt_set_install_dir(&mut self, path: &PathBuf) {
         if !path.is_dir() {
             panic!("TODO: not a dir")
         }

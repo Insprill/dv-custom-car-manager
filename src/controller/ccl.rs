@@ -1,7 +1,7 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
 use log::error;
 
-use crate::{cmd, data::AppState};
+use crate::{cmd, data::AppState, mods::ccl};
 
 pub struct CclController;
 
@@ -29,6 +29,14 @@ where
                         state.update_cars();
                     }
                 }
+            }
+            Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_ARCHIVE) => {
+                let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_ARCHIVE);
+                ccl::install_from_archive(&file_info.path, state);
+            }
+            Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_FOLDER) => {
+                let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_FOLDER);
+                ccl::install_from_folder(&file_info.path, state);
             }
             _ => child.event(ctx, event, state, env),
         }
