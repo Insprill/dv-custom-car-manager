@@ -4,10 +4,11 @@ use std::sync::Arc;
 
 use druid::{Data, Lens};
 
-use crate::data::ccl::Car;
-use crate::Config;
+use crate::{
+    mods::ccl::{self, Car},
+    Config,
+};
 
-pub mod ccl;
 pub mod config;
 
 const DV_EXE: &str = "DerailValley.exe";

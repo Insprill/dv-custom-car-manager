@@ -3,8 +3,8 @@ use druid::LensExt;
 use druid::{UnitPoint, Widget, WidgetExt, WindowDesc};
 use native_dialog::FileDialog;
 
-use crate::data::ccl::{Car, CarConfig};
-use crate::data::{ccl, AppState};
+use crate::data::AppState;
+use crate::mods::ccl::{self, Car, CarConfig};
 use crate::Config;
 
 pub fn main_window() -> WindowDesc<AppState> {

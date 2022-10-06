@@ -8,6 +8,7 @@ use crate::data::config::Config;
 use crate::data::AppState;
 
 mod data;
+mod mods;
 mod ui;
 
 fn main() {
