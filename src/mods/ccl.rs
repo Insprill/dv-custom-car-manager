@@ -31,8 +31,8 @@ impl Car {
         }
     }
 
-    pub fn delete(&self) {
-        trash::delete(&self.directory).expect("Failed to move dir to trash");
+    pub fn delete(&self) -> Result<(), trash::Error> {
+        trash::delete(&self.directory)
     }
 }
 

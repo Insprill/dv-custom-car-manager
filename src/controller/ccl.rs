@@ -1,4 +1,5 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
+use log::error;
 
 use crate::{cmd, data::AppState};
 
@@ -19,8 +20,15 @@ where
         match event {
             Event::Command(cmd) if cmd.is(cmd::DELETE_CAR) => {
                 let car = cmd.get_unchecked(cmd::DELETE_CAR);
-                car.delete();
-                state.update_cars();
+                match car.delete() {
+                    Err(err) => {
+                        error!("Failed to delete car! {}", err.to_string())
+                        //TODO: error dialog
+                    }
+                    Ok(_) => {
+                        state.update_cars();
+                    }
+                }
             }
             _ => child.event(ctx, event, state, env),
         }
