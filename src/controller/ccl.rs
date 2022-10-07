@@ -20,15 +20,10 @@ where
         match event {
             Event::Command(cmd) if cmd.is(cmd::CCL_DELETE_CAR) => {
                 let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
-                match car.delete() {
-                    Err(err) => {
-                        error!("Failed to delete car! {}", err.to_string())
-                        //TODO: error dialog
-                    }
-                    Ok(_) => {
-                        state.update_cars();
-                    }
-                }
+                car.delete().unwrap_or_else(|err| {
+                    error!("Failed to delete car! {}", err.to_string());
+                });
+                state.update_cars()
             }
             Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_ARCHIVE) => {
                 let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_ARCHIVE);
