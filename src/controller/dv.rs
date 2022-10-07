@@ -19,7 +19,14 @@ where
         match event {
             Event::Command(cmd) if cmd.is(cmd::DV_SET_INSTALL_DIR) => {
                 let file_info = cmd.get_unchecked(cmd::DV_SET_INSTALL_DIR);
-                state.attempt_set_install_dir(&file_info.path);
+                let set = state
+                    .attempt_set_install_dir(&file_info.path)
+                    .unwrap_or_else(|err| {
+                        panic!("TODO: failed to set install dir: {}", err.to_string())
+                    });
+                if !set {
+                    panic!("TODO: invalid dir")
+                }
             }
             _ => child.event(ctx, event, state, env),
         }
