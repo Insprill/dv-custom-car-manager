@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::BufReader;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::{env, fs, io};
 
 use druid::{Data, Lens};
@@ -24,11 +24,20 @@ pub struct Car {
 }
 
 impl Car {
-    pub fn new(directory: PathBuf) -> Self {
-        Self {
-            config: CarConfig::new(directory.as_path()),
+    pub fn new(directory: PathBuf) -> Result<Self, String> {
+        let config_path = directory.join(CONFIG_NAME);
+        let file = match File::open(config_path) {
+            Ok(res) => res,
+            Err(err) => return Err(err.to_string()),
+        };
+        let cnfg = match CarConfig::new(&file) {
+            Ok(res) => res,
+            Err(err) => return Err(err.to_string()),
+        };
+        Ok(Self {
+            config: cnfg,
             directory,
-        }
+        })
     }
 
     pub fn delete(&self) -> Result<(), trash::Error> {
@@ -42,15 +51,13 @@ pub struct CarConfig {
 }
 
 impl CarConfig {
-    fn new(directory: &Path) -> Self {
-        let file =
-            File::open(directory.join(CONFIG_NAME)).expect("Failed to find car configuration");
-        serde_json::from_reader(file).expect("Failed to read car configuration")
+    fn new(file: &File) -> Result<Self, serde_json::Error> {
+        serde_json::from_reader(file)
     }
 }
 
-pub fn cars_path(config: &Config) -> PathBuf {
-    PathBuf::from(config.dv_install_dir.as_str()).join(CARS_PATH.iter().collect::<PathBuf>())
+pub fn cars_path(cnfg: &Config) -> PathBuf {
+    PathBuf::from(cnfg.dv_install_dir.as_str()).join(CARS_PATH.iter().collect::<PathBuf>())
 }
 
 pub fn dir_contains_car(path: &PathBuf) -> Result<bool, io::Error> {
@@ -73,7 +80,19 @@ pub fn dir_contains_car(path: &PathBuf) -> Result<bool, io::Error> {
 }
 
 pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
-    if !is_file_supported_archive(path) {
+    let is_supported = match is_supported_archive(path) {
+        Ok(res) => res,
+        Err(err) => {
+            error!(
+                "Failed to read archive at \"{}\": {}",
+                path.to_string_lossy().to_string(),
+                err.to_string()
+            );
+            todo!("alert");
+            // return;
+        }
+    };
+    if !is_supported {
         error!(
             "{} is not a supported archive type!",
             path.to_string_lossy().to_string()
@@ -218,15 +237,25 @@ fn extract_archive(
     Ok(())
 }
 
-fn is_file_supported_archive(path: &PathBuf) -> bool {
-    let result = infer::get_from_path(path).expect("Failed to read file");
+fn is_supported_archive(path: &PathBuf) -> Result<bool, io::Error> {
+    let result = match infer::get_from_path(path) {
+        Ok(res) => res,
+        Err(err) => {
+            error!(
+                "Failed to read file \"{}\": {}",
+                path.to_string_lossy().to_string(),
+                err.to_string()
+            );
+            return Err(err);
+        }
+    };
     return match result {
         Some(file_type) => match file_type.mime_type() {
-            "application/zip" => true,
-            "application/vnd.rar" => true,
-            _ => false,
+            "application/zip" => Ok(true),
+            "application/vnd.rar" => Ok(true),
+            _ => Ok(false),
         },
-        None => false,
+        None => Ok(false),
     };
 }
 
@@ -257,7 +286,11 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
             }
         };
         let path = &file.path();
-        if path.is_file() && is_file_supported_archive(path) {
+        let is_supported = match is_supported_archive(path) {
+            Ok(res) => res,
+            Err(_) => false,
+        };
+        if path.is_file() && is_supported {
             install_from_archive(path, state)
         } else if !path.is_dir() {
             continue;
@@ -278,7 +311,19 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
             install_from_folder(path, state);
             continue;
         }
-        let temp_car_ident = Car::new(path.clone()).config.identifier;
+        let temp_car = match Car::new(path.clone()) {
+            Ok(res) => res,
+            Err(err) => {
+                error!(
+                    "Failed to read car configuration in \"{}\": {}",
+                    path.to_string_lossy().to_string(),
+                    err
+                );
+                todo!("alert");
+                // continue;
+            }
+        };
+        let temp_car_ident = temp_car.config.identifier;
         if let Some(car) = state
             .cars
             .iter()
@@ -288,10 +333,34 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
                 "Deleting old car from \"{}\"",
                 car.directory.to_string_lossy().to_string()
             );
-            car.delete().expect("Failed to delete old car")
+            match car.delete() {
+                Ok(_) => {}
+                Err(err) => {
+                    error!(
+                        "Failed to delete old car {} at \"{}\": {}",
+                        car.config.identifier,
+                        car.directory.to_string_lossy().to_string(),
+                        err.to_string()
+                    );
+                    todo!("alert");
+                    // continue;
+                }
+            }
         }
         let cars_path = cars_path(&state.config);
-        dir::copy(path, cars_path, &CopyOptions::new()).expect("Failed to move dir");
+        match dir::copy(path, &cars_path, &CopyOptions::new()) {
+            Ok(_) => {}
+            Err(err) => {
+                error!(
+                    "Failed to copy car from \"{}\" to \"{}\": {}",
+                    path.to_string_lossy().to_string(),
+                    cars_path.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // continue;
+            }
+        };
         state.update_cars();
         info!("Successfully installed {}", temp_car_ident);
     }

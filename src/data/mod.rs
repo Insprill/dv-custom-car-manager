@@ -79,7 +79,15 @@ impl AppState {
                 match ccl::dir_contains_car(&path) {
                     Ok(contains_car) => {
                         if contains_car {
-                            cars.push(Car::new(path))
+                            let car = match Car::new(path) {
+                                Ok(res) => res,
+                                Err(err) => {
+                                    error!("Failed to read car configuration: {}", err);
+                                    todo!("alert");
+                                    // return;
+                                }
+                            };
+                            cars.push(car)
                         }
                     }
                     Err(err) => {
