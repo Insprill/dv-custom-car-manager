@@ -1,4 +1,5 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
+use log::error;
 
 use crate::{cmd, data::AppState};
 
@@ -22,10 +23,18 @@ where
                 let set = state
                     .attempt_set_install_dir(&file_info.path)
                     .unwrap_or_else(|err| {
-                        panic!("TODO: failed to set install dir: {}", err.to_string())
+                        error!(
+                            "Failed to set DV installation directory: {}",
+                            err.to_string()
+                        );
+                        todo!("alert")
                     });
                 if !set {
-                    panic!("TODO: invalid dir")
+                    error!(
+                        "Invalid DV installation directory \"{}\"",
+                        file_info.path.to_string_lossy().to_string()
+                    );
+                    todo!("alert")
                 }
             }
             _ => child.event(ctx, event, state, env),

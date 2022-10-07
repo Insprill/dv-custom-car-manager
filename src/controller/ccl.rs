@@ -22,6 +22,7 @@ where
                 let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
                 car.delete().unwrap_or_else(|err| {
                     error!("Failed to delete car! {}", err.to_string());
+                    todo!("alert")
                 });
                 state.update_cars()
             }

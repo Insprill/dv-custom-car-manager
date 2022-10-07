@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use druid::{Data, Lens};
+use log::error;
 
 use crate::{
     mods::ccl::{self, Car},
@@ -56,10 +57,41 @@ impl AppState {
             self.cars = Arc::new(Vec::new());
         } else {
             let mut cars = Vec::new();
-            for path in fs::read_dir(ccl::cars_path(&self.config)).unwrap() {
-                if ccl::dir_contains_car(&path.as_ref().unwrap().path()) {
-                    cars.push(Car::new(path.unwrap().path()))
+
+            let dirs = match fs::read_dir(ccl::cars_path(&self.config)) {
+                Ok(res) => res,
+                Err(err) => {
+                    error!("Error while updating cars list: {}", err.to_string());
+                    todo!("alert");
                 }
+            };
+
+            for dir in dirs {
+                let path = match dir {
+                    Ok(path) => path,
+                    Err(err) => {
+                        error!("Error while reading cars directory: {}", err.to_string());
+                        todo!("alert");
+                        // continue;
+                    }
+                }
+                .path();
+                match ccl::dir_contains_car(&path) {
+                    Ok(contains_car) => {
+                        if contains_car {
+                            cars.push(Car::new(path))
+                        }
+                    }
+                    Err(err) => {
+                        error!(
+                            "Failed to check if directory \"{}\" contains car: {}",
+                            path.to_string_lossy().to_string(),
+                            err.to_string()
+                        );
+                        todo!("alert");
+                        // return;
+                    }
+                };
             }
             self.cars = Arc::new(cars);
         }

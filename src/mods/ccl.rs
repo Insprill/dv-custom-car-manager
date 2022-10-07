@@ -5,7 +5,7 @@ use std::{env, fs, io};
 
 use druid::{Data, Lens};
 use fs_extra::dir::{self, CopyOptions};
-use log::{info, warn};
+use log::{error, info, warn};
 use rand::distributions::{Alphanumeric, DistString};
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
@@ -53,32 +53,60 @@ pub fn cars_path(config: &Config) -> PathBuf {
     PathBuf::from(config.dv_install_dir.as_str()).join(CARS_PATH.iter().collect::<PathBuf>())
 }
 
-pub fn dir_contains_car(path: &PathBuf) -> bool {
-    let mut dir = fs::read_dir(path).expect("Failed to read dir");
-    dir.any(|f| {
-        f.unwrap()
+pub fn dir_contains_car(path: &PathBuf) -> Result<bool, io::Error> {
+    let mut paths = match fs::read_dir(&path) {
+        Ok(res) => res,
+        Err(err) => return Err(err),
+    };
+    if paths.any(|path| match path {
+        Ok(path) => path
             .file_name()
             .to_string_lossy()
             .to_string()
-            .eq(CONFIG_NAME)
-    })
+            .eq(CONFIG_NAME),
+        Err(_) => false,
+    }) {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
 }
 
 pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
-    if !path.is_file() {
-        panic!("TODO: not a file")
-    }
     if !is_file_supported_archive(path) {
-        panic!("TODO: not supported")
+        error!(
+            "{} is not a supported archive type!",
+            path.to_string_lossy().to_string()
+        );
+        todo!("alert");
+        // return;
     }
 
-    let archive_file = File::open(path).expect("Failed to open archive file");
-    let reader = BufReader::new(archive_file);
+    let archive_file = match File::open(path) {
+        Ok(res) => res,
+        Err(err) => {
+            error!("Failed to open archive: {}", err.to_string());
+            todo!("alert");
+            // return;
+        }
+    };
 
-    let mut archive = ZipArchive::new(reader).expect("Failed to open archive");
+    let mut archive = match ZipArchive::new(BufReader::new(archive_file)) {
+        Ok(res) => res,
+        Err(err) => {
+            error!("Failed to open archive: {}", err.to_string());
+            todo!("alert");
+            // return;
+        }
+    };
 
     if !archive.file_names().any(|name| name.ends_with(CONFIG_NAME)) {
-        panic!("TODO: failed to find car")
+        error!(
+            "Failed to find car in archive \"{}\"",
+            path.to_string_lossy().to_string()
+        );
+        todo!("alert");
+        // return;
     }
 
     let extract_dir = env::temp_dir()
@@ -90,8 +118,49 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
         extract_dir.to_string_lossy().to_string()
     );
 
+    match extract_archive(&mut archive, &extract_dir) {
+        Ok(_) => {
+            install_from_folder(&extract_dir, state);
+        }
+        Err(_) => {
+            todo!("alert");
+        }
+    }
+
+    match fs::remove_dir_all(&extract_dir) {
+        Ok(_) => {
+            info!(
+                "Removed temp dir at \"{}\"",
+                extract_dir.to_string_lossy().to_string()
+            )
+        }
+        Err(_) => {
+            error!(
+                "Failed to remove temp dir at \"{}\"",
+                extract_dir.to_string_lossy().to_string()
+            );
+            todo!("alert");
+        }
+    }
+}
+
+fn extract_archive(
+    archive: &mut ZipArchive<BufReader<File>>,
+    extract_dir: &PathBuf,
+) -> Result<(), io::Error> {
     for i in 0..archive.len() {
-        let mut file = archive.by_index(i).expect("Failed to get archive file");
+        let mut file = match archive.by_index(i) {
+            Ok(res) => res,
+            Err(err) => {
+                error!(
+                    "Failed to extract file {} from archive: {}",
+                    i,
+                    err.to_string()
+                );
+                todo!("alert");
+                // return Err(err);
+            }
+        };
         if !file.is_file() {
             continue;
         }
@@ -107,10 +176,38 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
             }
         };
 
-        create_parents(&file_path);
+        if let Some(p) = file_path.parent() {
+            if !p.exists() {
+                match fs::create_dir_all(&p) {
+                    Ok(_) => {}
+                    Err(err) => {
+                        return Err(err);
+                    }
+                }
+            }
+        }
 
-        let mut outfile = File::create(&file_path).expect("Failed to open file");
-        io::copy(&mut file, &mut outfile).expect("Failed to write file");
+        let mut outfile = match File::create(&file_path) {
+            Ok(res) => res,
+            Err(err) => {
+                error!(
+                    "Failed to create file \"{}\"",
+                    file_path.to_string_lossy().to_string()
+                );
+                return Err(err);
+            }
+        };
+        match io::copy(&mut file, &mut outfile) {
+            Ok(_) => {}
+            Err(err) => {
+                error!(
+                    "Failed to extract file \"{}\" to \"{}\"",
+                    file.name().to_string(),
+                    file_path.to_string_lossy().to_string()
+                );
+                return Err(err);
+            }
+        };
         info!(
             "Extracted \"{}\" to \"{}\" ({} bytes)",
             file.name(),
@@ -118,12 +215,7 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
             file.size()
         );
     }
-    install_from_folder(&extract_dir, state);
-    fs::remove_dir_all(&extract_dir).expect("Failed to remove temp dir");
-    info!(
-        "Removed temp dir at \"{}\"",
-        extract_dir.to_string_lossy().to_string()
-    )
+    Ok(())
 }
 
 fn is_file_supported_archive(path: &PathBuf) -> bool {
@@ -139,43 +231,68 @@ fn is_file_supported_archive(path: &PathBuf) -> bool {
 }
 
 pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
-    if !root_path.is_dir() {
-        panic!("TODO: not a directory")
-    }
-    for res in fs::read_dir(root_path).unwrap() {
-        let file = res.unwrap();
-        let file_path = &file.path();
-        if file_path.is_dir() {
-            if dir_contains_car(file_path) {
-                let temp_car_ident = Car::new(file_path.clone()).config.identifier;
-                if let Some(car) = state
-                    .cars
-                    .iter()
-                    .find(|x| x.config.identifier.eq(&temp_car_ident))
-                {
-                    info!(
-                        "Deleting old car from \"{}\"",
-                        car.directory.to_string_lossy().to_string()
-                    );
-                    car.delete().expect("Failed to delete old car")
-                }
-                let cars_path = cars_path(&state.config);
-                dir::copy(file_path, cars_path, &CopyOptions::new()).expect("Failed to move dir");
-                state.update_cars();
-                info!("Successfully installed {}", temp_car_ident);
-            } else {
-                install_from_folder(file_path, state);
+    let paths = match fs::read_dir(&root_path) {
+        Ok(res) => res,
+        Err(err) => {
+            error!(
+                "Failed to read directory \"{}\": {}",
+                root_path.to_string_lossy().to_string(),
+                err.to_string()
+            );
+            todo!("alert");
+            // return;
+        }
+    };
+    for res in paths {
+        let file = match res {
+            Ok(res) => res,
+            Err(err) => {
+                error!(
+                    "Error occured while reading directory in \"{}\": {}",
+                    root_path.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // return;
             }
-        } else if file_path.is_file() && is_file_supported_archive(file_path) {
-            install_from_archive(file_path, state)
+        };
+        let path = &file.path();
+        if path.is_file() && is_file_supported_archive(path) {
+            install_from_archive(path, state)
+        } else if !path.is_dir() {
+            continue;
         }
-    }
-}
-
-fn create_parents(path: &PathBuf) {
-    if let Some(p) = path.parent() {
-        if !p.exists() {
-            fs::create_dir_all(&p).expect("Failed to create directory");
+        let contains_car = match dir_contains_car(path) {
+            Ok(res) => res,
+            Err(err) => {
+                error!(
+                    "Failed to check if directory \"{}\" contains car: {}",
+                    path.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // return;
+            }
+        };
+        if !contains_car {
+            install_from_folder(path, state);
+            continue;
         }
+        let temp_car_ident = Car::new(path.clone()).config.identifier;
+        if let Some(car) = state
+            .cars
+            .iter()
+            .find(|x| x.config.identifier.eq(&temp_car_ident))
+        {
+            info!(
+                "Deleting old car from \"{}\"",
+                car.directory.to_string_lossy().to_string()
+            );
+            car.delete().expect("Failed to delete old car")
+        }
+        let cars_path = cars_path(&state.config);
+        dir::copy(path, cars_path, &CopyOptions::new()).expect("Failed to move dir");
+        state.update_cars();
+        info!("Successfully installed {}", temp_car_ident);
     }
 }
