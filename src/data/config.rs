@@ -1,4 +1,4 @@
-use std::fs::{create_dir_all, File, OpenOptions};
+use std::fs::{self, create_dir_all, File, OpenOptions};
 use std::path::PathBuf;
 
 use druid::{Data, Lens};
@@ -23,17 +23,22 @@ impl Config {
         Self::config_dir().map(|dir| dir.join("config.json"))
     }
 
+    pub fn setup_dirs() {
+        let config_dir = Self::config_dir().expect("Failed to find config path");
+        fs::create_dir_all(config_dir).expect("Failed to create config directory");
+    }
+
     pub fn load() -> Option<Config> {
         let path = Self::config_path().expect("Failed to find config path");
         match File::open(&path) {
-            Ok(file) => { Some(serde_json::from_reader(file).expect("Failed to load config")) }
-            Err(_) => None
+            Ok(file) => Some(serde_json::from_reader(file).expect("Failed to load config")),
+            Err(_) => None,
         }
     }
 
     pub fn save(&self) {
         let dir = &Self::config_dir().expect("Failed to find config directory");
-        create_dir_all(dir).expect("Failed to create config directory");
+        fs::create_dir_all(dir).expect("Failed to create config directory");
 
         let mut options = OpenOptions::new();
         options.write(true).create(true).truncate(true);

@@ -18,6 +18,8 @@ mod mods;
 mod ui;
 
 fn main() {
+    Config::setup_dirs();
+
     CombinedLogger::init(vec![
         TermLogger::new(
             LevelFilter::Info,
