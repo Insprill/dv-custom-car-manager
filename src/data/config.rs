@@ -1,4 +1,4 @@
-use std::fs::{self, create_dir_all, File, OpenOptions};
+use std::fs::{self, File, OpenOptions};
 use std::path::PathBuf;
 
 use druid::{Data, Lens};
