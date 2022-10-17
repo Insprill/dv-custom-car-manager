@@ -12,7 +12,7 @@ pub struct Config {
 
 impl Config {
     fn app_dirs() -> Option<AppDirs> {
-        AppDirs::new(Some("custom-car-manager"), false)
+        AppDirs::new(Some(env!("CARGO_PKG_NAME")), false)
     }
 
     pub fn config_dir() -> Option<PathBuf> {
