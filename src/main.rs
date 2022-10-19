@@ -50,6 +50,7 @@ fn main() {
 
     let main_window = ui::main_window();
     AppLauncher::with_window(main_window)
+        .configure_env(ui::theme::setup_theme)
         .log_to_console()
         .launch(state)
         .expect("Failed to launch application");

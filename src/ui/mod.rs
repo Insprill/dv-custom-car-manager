@@ -8,6 +8,8 @@ use crate::data::AppState;
 use crate::mods::ccl::{Car, CarConfig};
 use crate::{cmd, Config};
 
+pub mod theme;
+
 pub fn main_window() -> WindowDesc<AppState> {
     WindowDesc::new(root())
         .title("Custom Car Manager")
