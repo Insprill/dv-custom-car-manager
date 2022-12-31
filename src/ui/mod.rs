@@ -77,7 +77,7 @@ fn cars() -> impl Widget<AppState> {
         .with_child(install_car_from_archive);
 
     let cars_header = Label::new("Installed Cars").with_text_size(22.0);
-    let cars_scroll = Scroll::new(List::new(|| car()))
+    let cars_scroll = Scroll::new(List::new(car))
         .fix_height(200.0)
         .lens(AppState::cars);
 

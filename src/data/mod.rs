@@ -36,7 +36,7 @@ impl AppState {
             return Err(io::Error::from(io::ErrorKind::InvalidInput));
         }
 
-        let mut paths = match fs::read_dir(&path) {
+        let mut paths = match fs::read_dir(path) {
             Ok(res) => res,
             Err(err) => return Err(err),
         };

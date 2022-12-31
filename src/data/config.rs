@@ -30,7 +30,7 @@ impl Config {
 
     pub fn load() -> Option<Config> {
         let path = Self::config_path().expect("Failed to find config path");
-        match File::open(&path) {
+        match File::open(path) {
             Ok(file) => Some(serde_json::from_reader(file).expect("Failed to load config")),
             Err(_) => None,
         }

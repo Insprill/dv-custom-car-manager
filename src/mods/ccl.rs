@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::BufReader;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::{env, fs, io};
 
 use druid::{Data, Lens};
@@ -14,7 +14,7 @@ use crate::data::AppState;
 use crate::Config;
 
 pub const CONFIG_NAME: &str = "car.json";
-const CARS_PATH: [&'static str; 3] = ["Mods", "DVCustomCarLoader", "Cars"];
+const CARS_PATH: [&str; 3] = ["Mods", "DVCustomCarLoader", "Cars"];
 
 #[derive(Clone, Data, Lens)]
 pub struct Car {
@@ -61,7 +61,7 @@ pub fn cars_path(cnfg: &Config) -> PathBuf {
 }
 
 pub fn dir_contains_car(path: &PathBuf) -> Result<bool, io::Error> {
-    let mut paths = match fs::read_dir(&path) {
+    let mut paths = match fs::read_dir(path) {
         Ok(res) => res,
         Err(err) => return Err(err),
     };
@@ -165,7 +165,7 @@ pub fn install_from_archive(path: &PathBuf, state: &mut AppState) {
 
 fn extract_archive(
     archive: &mut ZipArchive<BufReader<File>>,
-    extract_dir: &PathBuf,
+    extract_dir: &Path,
 ) -> Result<(), io::Error> {
     for i in 0..archive.len() {
         let mut file = match archive.by_index(i) {
@@ -197,7 +197,7 @@ fn extract_archive(
 
         if let Some(p) = file_path.parent() {
             if !p.exists() {
-                match fs::create_dir_all(&p) {
+                match fs::create_dir_all(p) {
                     Ok(_) => {}
                     Err(err) => {
                         return Err(err);
@@ -260,7 +260,7 @@ fn is_supported_archive(path: &PathBuf) -> Result<bool, io::Error> {
 }
 
 pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
-    let paths = match fs::read_dir(&root_path) {
+    let paths = match fs::read_dir(root_path) {
         Ok(res) => res,
         Err(err) => {
             error!(
@@ -286,10 +286,7 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
             }
         };
         let path = &file.path();
-        let is_supported = match is_supported_archive(path) {
-            Ok(res) => res,
-            Err(_) => false,
-        };
+        let is_supported = is_supported_archive(path).unwrap_or(false);
         if path.is_file() && is_supported {
             install_from_archive(path, state)
         } else if !path.is_dir() {
