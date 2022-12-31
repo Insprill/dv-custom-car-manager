@@ -12,9 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
-            suffix: ''
-            name: macOS
           - os: ubuntu-latest
             suffix: ''
             name: Linux
@@ -33,14 +30,18 @@ jobs:
       - name: Setup Cache
         uses: Swatinem/rust-cache@v2
 
+      - name: Install Linux Dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get install -y libgtk-3-dev libpango1.0-dev
+
       - name: Build
         run: cargo build --release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: BuildTools-Assistant-${{ matrix.name }}
-          path: target/release/buildtools-assistant${{ matrix.suffix }}
+          name: custom-car-manager-${{ matrix.name }}
+          path: target/release/custom-car-manager${{ matrix.suffix }}
 
   code-style:
     runs-on: ubuntu-latest
@@ -55,6 +56,10 @@ jobs:
 
       - name: Setup Cache
         uses: Swatinem/rust-cache@v2
+
+      - name: Install Linux Dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get install -y libgtk-3-dev libpango1.0-dev
 
       - name: Check Code Style
         run: cargo clippy -- -D warnings
