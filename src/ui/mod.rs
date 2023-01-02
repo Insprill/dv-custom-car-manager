@@ -12,7 +12,7 @@ pub mod theme;
 
 pub fn main_window() -> WindowDesc<AppState> {
     WindowDesc::new(root())
-        .title("Custom Car Manager")
+        .title("DV Content Manager")
         .window_size((600.0, 400.0))
         .resizable(false)
 }

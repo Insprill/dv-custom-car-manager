@@ -1,5 +1,5 @@
 [package]
-name = "custom-car-manager"
+name = "dv-content-manager"
 version = "2.0.0-SNAPSHOT"
 edition = "2021"
 

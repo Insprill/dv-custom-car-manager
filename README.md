@@ -6,9 +6,9 @@
 
 
 
-<h1 align="center">Custom Car Manager</h1>
+<h1 align="center">DV Content Manager</h1>
 <p align="center">
-  A simple program to manage <a href="https://www.nexusmods.com/derailvalley/mods/324">Custom Car Loader</a> cars for <a href="https://store.steampowered.com/app/588030">Derail Valley</a>.
+  A content management program for <a href="https://store.steampowered.com/app/588030">Derail Valley</a> mods.
   <br />
   <br />
   <a href="https://github.com/Insprill/dv-custom-car-manager/issues">Report Bugs</a>
@@ -43,7 +43,7 @@ Usage instructions can be found on the [Wiki](https://github.com/Insprill/dv-cus
 
 ## Compiling
 
-To compile Custom Car Manager, you need [Rust](https://www.rust-lang.org/tools/install), and `libgtk-3-dev` if on Linux.  
+To compile the content manager, you need [Rust](https://www.rust-lang.org/tools/install), and `libgtk-3-dev` if on Linux.  
 Clone this repo, then run `cargo build --release` from your terminal.  
 You can find the compiled program in the `target/release` directory.  
 
