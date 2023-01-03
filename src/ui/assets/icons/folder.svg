@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24px"
+   height="24px"
+   viewBox="0 0 24.00 24.00"
+   fill="#b0bac5"
+   stroke="#b0bac5"
+   stroke-width="0.4800000000000001"
+   version="1.1"
+   id="svg45"
+   sodipodi:docname="folder.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs49" />
+  <sodipodi:namedview
+     id="namedview47"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     showgrid="false"
+     inkscape:zoom="16.046875"
+     inkscape:cx="31.439143"
+     inkscape:cy="32.124635"
+     inkscape:window-width="1652"
+     inkscape:window-height="1400"
+     inkscape:window-x="5620"
+     inkscape:window-y="1052"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg45" />
+  <g
+     id="SVGRepo_bgCarrier"
+     stroke-width="0" />
+  <g
+     id="SVGRepo_iconCarrier">
+    <path
+       d="M2.8 5H1v16h22V5H12.2L11 3H4zM22 20H2V9h20zM10.434 4l1.2 2H22v2H2V6h1.366l1.2-2z"
+       id="path40"
+       style="stroke-width:0.65625;stroke-dasharray:none" />
+  </g>
+</svg>

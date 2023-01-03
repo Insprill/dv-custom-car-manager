@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="42px"
+   height="42px"
+   viewBox="0 0 24 24"
+   fill="#b0bac5"
+   stroke="#b0bac5"
+   stroke-width="0.00024000000000000003"
+   version="1.1"
+   id="svg42"
+   sodipodi:docname="skinmanager.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs46" />
+  <sodipodi:namedview
+     id="namedview44"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     showgrid="false"
+     inkscape:zoom="13.112826"
+     inkscape:cx="44.345895"
+     inkscape:cy="32.296623"
+     inkscape:window-width="1136"
+     inkscape:window-height="1400"
+     inkscape:window-x="6136"
+     inkscape:window-y="1052"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg42" />
+  <g
+     id="SVGRepo_bgCarrier"
+     stroke-width="0" />
+  <g
+     id="SVGRepo_iconCarrier"
+     style="stroke-width:0.65625;stroke-dasharray:none">
+    <path
+       d="M11.318 15h1.364a17.084 17.084 0 0 1 1.203 8h1.007a18.203 18.203 0 0 0-1.253-8.265 4.122 4.122 0 0 0 2.323-3.371 6.16 6.16 0 0 0-1.205-3.222A9.067 9.067 0 0 1 13.1 3v-.756l-.696.296A8.347 8.347 0 0 0 8 9.5a6.776 6.776 0 0 0 2.392 5.158A18.148 18.148 0 0 0 9.108 23h1.007a17.084 17.084 0 0 1 1.203-8zm.814-11.175a10.342 10.342 0 0 0 1.77 4.835 5.272 5.272 0 0 1 1.06 2.704 2.06 2.06 0 0 1-.09.589 3.783 3.783 0 0 1-3.335-2.317 6.014 6.014 0 0 0-1.965-2.627 7.72 7.72 0 0 1 2.56-3.184zM9 9.5a5.662 5.662 0 0 1 .233-1.534 5.545 5.545 0 0 1 1.392 2.08 4.655 4.655 0 0 0 3.725 2.839A4.805 4.805 0 0 1 12.89 14h-1.733A5.784 5.784 0 0 1 9 9.5z"
+       id="path37"
+       style="stroke-width:0.65625;stroke-dasharray:none" />
+  </g>
+</svg>

@@ -21,6 +21,7 @@ pub struct Car {
     pub config: CarConfig,
     #[data(ignore)]
     pub directory: PathBuf,
+    pub enabled: bool,
 }
 
 impl Car {
@@ -37,6 +38,7 @@ impl Car {
         Ok(Self {
             config: cnfg,
             directory,
+            enabled: true,
         })
     }
 
