@@ -21,6 +21,7 @@ where
             Event::Command(cmd) if cmd.is(cmd::DV_SET_INSTALL_DIR) => {
                 let file_info = cmd.get_unchecked(cmd::DV_SET_INSTALL_DIR);
                 let set = state
+                    .config
                     .attempt_set_install_dir(&file_info.path)
                     .unwrap_or_else(|err| {
                         error!(
