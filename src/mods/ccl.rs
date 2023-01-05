@@ -90,7 +90,7 @@ impl Car {
     }
 }
 
-#[derive(Clone, Data, Lens, Serialize, Deserialize)]
+#[derive(Clone, Data, Lens, Deserialize)]
 pub struct CarConfig {
     pub identifier: String,
 }
