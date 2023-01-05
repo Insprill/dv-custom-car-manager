@@ -73,7 +73,7 @@ impl Car {
                 // return;
             }
         };
-        match dir::move_dir(self_dir, &new_dir, &CopyOptions::new()) {
+        match dir::move_dir(self_dir, new_dir, &CopyOptions::new()) {
             Ok(_) => {}
             Err(err) => {
                 error!(
