@@ -87,7 +87,17 @@ fn car() -> impl Widget<Car> {
         .expand_width()
         .lens(Car::config.then(CarConfig::identifier));
 
-    let toggle_button = Checkbox::new("").lens(Car::enabled);
+    let toggle_button = Checkbox::new("")
+        .lens(Car::enabled)
+        .on_click(|ctx, car, _| {
+            let clone = car.clone();
+            let command = if car.enabled {
+                cmd::CCL_DISABLE_CAR.with(clone)
+            } else {
+                cmd::CCL_ENABLE_CAR.with(clone)
+            };
+            ctx.submit_command(command)
+        });
 
     let delete_button = Flex::row()
         .with_child(svg(include_str!("assets/icons/delete.svg")))

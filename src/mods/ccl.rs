@@ -1,6 +1,8 @@
+use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::{env, fs, io};
 
 use druid::{Data, Lens};
@@ -15,6 +17,7 @@ use crate::Config;
 
 pub const CONFIG_NAME: &str = "car.json";
 const CARS_PATH: [&str; 3] = ["Mods", "DVCustomCarLoader", "Cars"];
+const DISABLED_CARS_PATH: [&str; 2] = ["ccl", "disabled"];
 
 #[derive(Clone, Data, Lens)]
 pub struct Car {
@@ -25,7 +28,7 @@ pub struct Car {
 }
 
 impl Car {
-    pub fn new(directory: PathBuf) -> Result<Self, String> {
+    pub fn new(directory: PathBuf, enabled: bool) -> Result<Self, String> {
         let config_path = directory.join(CONFIG_NAME);
         let file = match File::open(config_path) {
             Ok(res) => res,
@@ -38,12 +41,52 @@ impl Car {
         Ok(Self {
             config: cnfg,
             directory,
-            enabled: true,
+            enabled,
         })
     }
 
     pub fn delete(&self) -> Result<(), trash::Error> {
         trash::delete(&self.directory)
+    }
+
+    pub fn enable(&self, state: &mut AppState) {
+        let path = cars_path(&state.config);
+        Self::move_car(self, state, &path);
+    }
+
+    pub fn disable(&self, state: &mut AppState) {
+        let disabled_dir = Config::data_dir().join("ccl").join("disabled");
+        Self::move_car(self, state, &disabled_dir);
+    }
+
+    fn move_car(&self, state: &mut AppState, new_dir: &Path) {
+        let self_dir = &self.directory;
+        match fs::create_dir_all(new_dir) {
+            Ok(_) => {}
+            Err(err) => {
+                error!(
+                    "Failed to create dir \"{}\": {}",
+                    new_dir.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // return;
+            }
+        };
+        match dir::move_dir(self_dir, &new_dir, &CopyOptions::new()) {
+            Ok(_) => {}
+            Err(err) => {
+                error!(
+                    "Failed to copy car from \"{}\" to \"{}\": {}",
+                    self_dir.to_string_lossy().to_string(),
+                    new_dir.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // return;
+            }
+        };
+        update_cars(state);
     }
 }
 
@@ -60,6 +103,78 @@ impl CarConfig {
 
 pub fn cars_path(cnfg: &Config) -> PathBuf {
     PathBuf::from(cnfg.dv_install_dir.as_str()).join(CARS_PATH.iter().collect::<PathBuf>())
+}
+
+pub fn disabled_cars_path() -> PathBuf {
+    Config::data_dir().join(DISABLED_CARS_PATH.iter().collect::<PathBuf>())
+}
+
+pub fn update_cars(state: &mut AppState) {
+    if state.config.dv_install_dir.is_empty() {
+        state.cars = Arc::new(Vec::new());
+    } else {
+        let mut cars = load_cars(cars_path(&state.config), true).unwrap_or_else(|_| vec![]);
+        cars.append(&mut load_cars(disabled_cars_path(), false).unwrap_or_else(|_| vec![]));
+        cars.sort_by(|a, b| a.config.identifier.cmp(&b.config.identifier));
+        state.cars = Arc::new(cars);
+    }
+}
+
+fn load_cars(dir: PathBuf, enabled: bool) -> Result<Vec<Car>, Box<dyn Error>> {
+    let mut cars = Vec::new();
+
+    if !dir.is_dir() {
+        return Ok(cars);
+    }
+
+    let dirs = match fs::read_dir(&dir) {
+        Ok(res) => res,
+        Err(err) => {
+            error!(
+                "Error while updating cars list from \"{}\": {}",
+                dir.to_string_lossy().to_string(),
+                err.to_string()
+            );
+            todo!("alert");
+        }
+    };
+
+    for dir in dirs {
+        let path = match dir {
+            Ok(path) => path,
+            Err(err) => {
+                error!("Error while reading cars directory: {}", err.to_string());
+                todo!("alert");
+                // return Err(err);
+            }
+        }
+        .path();
+        match dir_contains_car(&path) {
+            Ok(contains_car) => {
+                if contains_car {
+                    let car = match Car::new(path, enabled) {
+                        Ok(res) => res,
+                        Err(err) => {
+                            error!("Failed to read car configuration: {}", err);
+                            todo!("alert");
+                            // return Err(err);
+                        }
+                    };
+                    cars.push(car)
+                }
+            }
+            Err(err) => {
+                error!(
+                    "Failed to check if directory \"{}\" contains car: {}",
+                    path.to_string_lossy().to_string(),
+                    err.to_string()
+                );
+                todo!("alert");
+                // return Err(err);
+            }
+        };
+    }
+    Ok(cars)
 }
 
 pub fn dir_contains_car(path: &PathBuf) -> Result<bool, io::Error> {
@@ -310,7 +425,7 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
             install_from_folder(path, state);
             continue;
         }
-        let temp_car = match Car::new(path.clone()) {
+        let temp_car = match Car::new(path.clone(), false) {
             Ok(res) => res,
             Err(err) => {
                 error!(
@@ -360,7 +475,7 @@ pub fn install_from_folder(root_path: &PathBuf, state: &mut AppState) {
                 // continue;
             }
         };
-        state.update_cars();
+        update_cars(state);
         info!("Successfully installed {}", temp_car_ident);
     }
 }

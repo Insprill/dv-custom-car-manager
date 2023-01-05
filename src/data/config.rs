@@ -18,21 +18,29 @@ impl Config {
         AppDirs::new(Some(env!("CARGO_PKG_NAME")), false)
     }
 
-    pub fn config_dir() -> Option<PathBuf> {
-        Self::app_dirs().map(|dirs| dirs.config_dir)
+    pub fn config_dir() -> PathBuf {
+        Self::app_dirs()
+            .map(|dirs| dirs.config_dir)
+            .expect("Failed to find config path")
     }
 
-    fn config_path() -> Option<PathBuf> {
-        Self::config_dir().map(|dir| dir.join("config.json"))
+    pub fn data_dir() -> PathBuf {
+        Self::app_dirs()
+            .map(|dirs| dirs.data_dir)
+            .expect("Failed to find data path")
+    }
+
+    fn config_path() -> PathBuf {
+        Self::config_dir().join("config.json")
     }
 
     pub fn setup_dirs() {
-        let config_dir = Self::config_dir().expect("Failed to find config path");
-        fs::create_dir_all(config_dir).expect("Failed to create config directory");
+        fs::create_dir_all(Self::config_dir()).expect("Failed to create config directory");
+        fs::create_dir_all(Self::data_dir()).expect("Failed to create data directory");
     }
 
     pub fn load() -> Option<Config> {
-        let path = Self::config_path().expect("Failed to find config path");
+        let path = Self::config_path();
         match File::open(path) {
             Ok(file) => Some(serde_json::from_reader(file).expect("Failed to load config")),
             Err(_) => None,
@@ -40,13 +48,13 @@ impl Config {
     }
 
     pub fn save(&self) {
-        let dir = &Self::config_dir().expect("Failed to find config directory");
+        let dir = &Self::config_dir();
         fs::create_dir_all(dir).expect("Failed to create config directory");
 
         let mut options = OpenOptions::new();
         options.write(true).create(true).truncate(true);
 
-        let path = &Self::config_path().expect("Failed to find config path");
+        let path = &Self::config_path();
         let file = options.open(path).expect("Failed to create/open config");
 
         serde_json::to_writer_pretty(file, self).expect("Failed to write config");

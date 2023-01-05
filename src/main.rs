@@ -30,12 +30,7 @@ fn main() {
         WriteLogger::new(
             LevelFilter::Info,
             simplelog::Config::default(),
-            File::create(
-                Config::config_dir()
-                    .expect("Failed to find config dir")
-                    .join("latest.log"),
-            )
-            .unwrap(),
+            File::create(Config::data_dir().join("latest.log")).unwrap(),
         ),
     ])
     .unwrap();

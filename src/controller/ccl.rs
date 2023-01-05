@@ -24,7 +24,7 @@ where
                     error!("Failed to delete car! {}", err.to_string());
                     todo!("alert")
                 });
-                state.update_cars()
+                ccl::update_cars(state);
             }
             Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_ARCHIVE) => {
                 let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_ARCHIVE);
@@ -33,6 +33,14 @@ where
             Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_FOLDER) => {
                 let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_FOLDER);
                 ccl::install_from_folder(&file_info.path, state);
+            }
+            Event::Command(cmd) if cmd.is(cmd::CCL_ENABLE_CAR) => {
+                let car = cmd.get_unchecked(cmd::CCL_ENABLE_CAR);
+                car.enable(state);
+            }
+            Event::Command(cmd) if cmd.is(cmd::CCL_DISABLE_CAR) => {
+                let car = cmd.get_unchecked(cmd::CCL_DISABLE_CAR);
+                car.disable(state);
             }
             _ => child.event(ctx, event, state, env),
         }
