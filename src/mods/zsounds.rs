@@ -48,7 +48,7 @@ impl SoundGroup {
         Ok(SoundGroup {
             name: path_name,
             sounds: Arc::new(sound_config.sounds.into_values().collect()),
-            directory: path.to_path_buf(),
+            directory: sound_folder.to_path_buf(),
         })
     }
 
