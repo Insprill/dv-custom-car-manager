@@ -9,6 +9,7 @@ pub mod gutter;
 pub mod settings;
 pub mod theme;
 pub mod widget;
+pub mod zsounds;
 
 pub fn main_window() -> WindowDesc<AppState> {
     WindowDesc::new(root())
@@ -31,7 +32,7 @@ fn nav() -> impl Widget<AppState> {
             Nav::CustomCarLoader => Box::new(ccl::root()),
             Nav::SkinManager => todo!(),
             Nav::CargoSwap => todo!(),
-            Nav::ZSounds => todo!(),
+            Nav::ZSounds => Box::new(zsounds::root()),
         },
     )
     .align_vertical(UnitPoint::TOP)

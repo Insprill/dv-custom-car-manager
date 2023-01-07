@@ -42,7 +42,7 @@ impl Config {
     pub fn load() -> Option<Config> {
         let path = Self::config_path();
         match File::open(path) {
-            Ok(file) => Some(serde_json::from_reader(file).expect("Failed to load config")),
+            Ok(file) => Some(serde_json_lenient::from_reader(file).expect("Failed to load config")),
             Err(_) => None,
         }
     }
@@ -57,7 +57,7 @@ impl Config {
         let path = &Self::config_path();
         let file = options.open(path).expect("Failed to create/open config");
 
-        serde_json::to_writer_pretty(file, self).expect("Failed to write config");
+        serde_json_lenient::to_writer_pretty(file, self).expect("Failed to write config");
     }
 
     pub fn attempt_set_install_dir(&mut self, path: &PathBuf) -> Result<bool, io::Error> {
@@ -79,5 +79,9 @@ impl Config {
         } else {
             Ok(false)
         }
+    }
+
+    pub fn relative_to_install<T: AsRef<[&'static str]>>(&self, arr: T) -> PathBuf {
+        PathBuf::from(self.dv_install_dir.as_str()).join(arr.as_ref().iter().collect::<PathBuf>())
     }
 }

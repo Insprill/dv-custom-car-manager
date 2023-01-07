@@ -1,6 +1,6 @@
 use druid::Data;
 
-#[derive(Copy, Clone, Debug, Data, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Data, PartialEq, Eq)]
 pub enum Nav {
     Settings,
     CustomCarLoader,

@@ -11,6 +11,9 @@ pub const COLOR_RAISED_BACKGROUND_HOVER: Key<Color> =
 pub const COLOR_RED: Key<Color> = Key::new("app.theme.color.red");
 pub const COLOR_RED_HOVER: Key<Color> = Key::new("app.theme.color.red.hover");
 pub const COLOR_RED_ACTIVE: Key<Color> = Key::new("app.theme.color.red.active");
+pub const COLOR_GREEN: Key<Color> = Key::new("app.theme.color.green");
+pub const COLOR_GREEN_HOVER: Key<Color> = Key::new("app.theme.color.green.color");
+pub const COLOR_GREEN_ACTIVE: Key<Color> = Key::new("app.theme.color.green.active");
 pub const COLOR_TEXT_INVERTED: Key<Color> = Key::new("app.theme.color.text.dark");
 pub const COLOR_BUTTON_BACKGROUND: Key<Color> = Key::new("app.theme.color.button.background");
 pub const COLOR_BUTTON_BACKGROUND_HOVER: Key<Color> =
@@ -31,6 +34,7 @@ pub const SPACER: Key<f64> = Key::new("app.theme.spacer");
 pub const PADDING: Key<Insets> = Key::new("app.theme.padding");
 
 pub const LIST_BOX_ITEM_SPACING: Key<f64> = Key::new("app.theme.list-box.item.spacing");
+pub const LIST_BOX_ITEM_INDENT: Key<f64> = Key::new("app.theme.list-box.item.indent");
 pub const LIST_BOX_ITEM_FONT: Key<FontDescriptor> = Key::new("app.theme.list-box.item.font");
 pub const LIST_BOX_ITEM_DELETE_FONT: Key<FontDescriptor> =
     Key::new("app.theme.list-box.delete.item.font");
@@ -56,6 +60,10 @@ fn apply_dark_theme(env: &mut Env) {
     env.set(COLOR_RED, hex("#ff496e"));
     env.set(COLOR_RED_HOVER, hex("#d93e5d"));
     env.set(COLOR_RED_ACTIVE, hex("#ce3b59"));
+
+    env.set(COLOR_GREEN, hex("#1bd96a"));
+    env.set(COLOR_GREEN_HOVER, hex("#17b85a"));
+    env.set(COLOR_GREEN_ACTIVE, hex("#16ae55"));
 
     fn hex(hex: &str) -> Color {
         Color::from_hex_str(hex).unwrap()
@@ -96,5 +104,6 @@ fn apply_style(env: &mut Env) {
             .with_weight(FontWeight::SEMI_BOLD)
             .with_size(16.0),
     );
-    env.set(LIST_BOX_ITEM_SPACING, 4.0)
+    env.set(LIST_BOX_ITEM_SPACING, 4.0);
+    env.set(LIST_BOX_ITEM_INDENT, 18.0);
 }
