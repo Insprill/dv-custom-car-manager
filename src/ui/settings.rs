@@ -64,8 +64,8 @@ fn zsounds() -> impl Widget<AppState> {
 }
 
 fn zs_volume() -> impl Widget<AppState> {
-    return Flex::column()
+    Flex::column()
         .with_child(Label::new("Playback Volume").with_font(theme::HEADER_3_FONT))
         .with_default_spacer()
-        .with_child(Slider::new().lens(AppState::config.then(Config::volume)));
+        .with_child(Slider::new().lens(AppState::config.then(Config::volume)))
 }
