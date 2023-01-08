@@ -15,6 +15,7 @@ jobs:
           - os: ubuntu-latest
             suffix: ''
             name: Linux
+            deps: libgtk-3-dev libpango1.0-dev librust-alsa-sys-dev
           - os: windows-latest
             suffix: .exe
             name: Windows
@@ -30,7 +31,7 @@ jobs:
 
       - name: Install Linux Dependencies
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt-get install -y libgtk-3-dev libpango1.0-dev
+        run: sudo apt install -y ${{ matrix.deps }}
 
       - name: Build
         run: cargo build --release
@@ -57,7 +58,7 @@ jobs:
 
       - name: Install Linux Dependencies
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt-get install -y libgtk-3-dev libpango1.0-dev librust-alsa-sys-dev
+        run: sudo apt install -y ${{ matrix.deps }}
 
       - name: Check Code Style
         run: cargo clippy -- -D warnings
