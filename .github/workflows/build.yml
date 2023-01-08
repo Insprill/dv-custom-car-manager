@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: custom-car-manager-${{ matrix.name }}
-          path: target/release/custom-car-manager${{ matrix.suffix }}
+          path: target/release/dv-content-manager${{ matrix.suffix }}
 
   code-style:
     runs-on: ubuntu-latest
