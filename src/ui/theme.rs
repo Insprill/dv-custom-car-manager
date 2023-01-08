@@ -28,6 +28,7 @@ pub const GUTTER_ICON_PADDING: Key<Insets> = Key::new("app.theme.gutter.icon.pad
 
 pub const HEADER_1_FONT: Key<FontDescriptor> = Key::new("app.theme.header.1");
 pub const HEADER_2_FONT: Key<FontDescriptor> = Key::new("app.theme.header.2");
+pub const HEADER_3_FONT: Key<FontDescriptor> = Key::new("app.theme.header.3");
 
 pub const BORDER_RADIUS: Key<RoundedRectRadii> = Key::new("app.theme.border-radius");
 pub const SPACER: Key<f64> = Key::new("app.theme.spacer");
@@ -92,6 +93,12 @@ fn apply_style(env: &mut Env) {
         FontDescriptor::new(FontFamily::SANS_SERIF)
             .with_weight(FontWeight::SEMI_BOLD)
             .with_size(24.0),
+    );
+    env.set(
+        HEADER_3_FONT,
+        FontDescriptor::new(FontFamily::SANS_SERIF)
+            .with_weight(FontWeight::MEDIUM)
+            .with_size(18.0),
     );
 
     env.set(

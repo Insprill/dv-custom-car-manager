@@ -1,4 +1,4 @@
-use druid::widget::{Button, Flex, Label, TextBox};
+use druid::widget::{Button, Flex, Label, Slider, TextBox};
 use druid::LensExt;
 use druid::{Widget, WidgetExt};
 
@@ -8,18 +8,28 @@ use crate::ui::theme;
 use crate::{cmd, Config};
 
 pub fn root() -> impl Widget<AppState> {
-    dv_install_dir()
+    Flex::column()
+        .with_child(
+            Label::new("Settings")
+                .with_font(theme::HEADER_1_FONT)
+                .with_text_alignment(druid::TextAlignment::Center),
+        )
+        .with_default_spacer()
+        .with_child(derail_valley())
+        .with_default_spacer()
+        .with_child(zsounds())
+}
+
+fn derail_valley() -> impl Widget<AppState> {
+    Flex::column()
+        .with_child(Label::new("Derail Valley").with_font(theme::HEADER_2_FONT))
+        .with_default_spacer()
+        .with_child(dv_install_dir())
+        .expand()
+        .controller(DvController)
 }
 
 fn dv_install_dir() -> impl Widget<AppState> {
-    let settings_header = Label::new("Settings")
-        .with_font(theme::HEADER_1_FONT)
-        .with_text_alignment(druid::TextAlignment::Center);
-
-    let dv_install_dir_header = Label::new("Derail Valley Install Directory")
-        .with_font(theme::HEADER_2_FONT)
-        .with_text_alignment(druid::TextAlignment::Center);
-
     let dv_install_dir_field = TextBox::new()
         .scroll()
         .fix_width(375.0)
@@ -37,11 +47,25 @@ fn dv_install_dir() -> impl Widget<AppState> {
         .with_child(dv_select_install_dir_button);
 
     Flex::column()
-        .with_child(settings_header)
-        .with_spacer(10.0)
-        .with_child(dv_install_dir_header)
-        .with_spacer(10.0)
+        .with_child(Label::new("Installation Directory").with_font(theme::HEADER_3_FONT))
+        .with_default_spacer()
         .with_child(dv_install_dir_row)
         .expand()
         .controller(DvController)
+}
+
+fn zsounds() -> impl Widget<AppState> {
+    Flex::column()
+        .with_child(Label::new("ZSounds").with_font(theme::HEADER_2_FONT))
+        .with_default_spacer()
+        .with_child(zs_volume())
+        .expand()
+        .controller(DvController)
+}
+
+fn zs_volume() -> impl Widget<AppState> {
+    return Flex::column()
+        .with_child(Label::new("Playback Volume").with_font(theme::HEADER_3_FONT))
+        .with_default_spacer()
+        .with_child(Slider::new().lens(AppState::config.then(Config::volume)));
 }

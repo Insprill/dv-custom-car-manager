@@ -8,9 +8,19 @@ use serde::{Deserialize, Serialize};
 
 const DV_EXE: &str = "DerailValley.exe";
 
-#[derive(Clone, Debug, Data, Lens, Serialize, Deserialize, Default)]
+#[derive(Clone, Debug, Data, Lens, Serialize, Deserialize)]
 pub struct Config {
     pub dv_install_dir: String,
+    pub volume: f64,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            dv_install_dir: String::new(),
+            volume: 0.25,
+        }
+    }
 }
 
 impl Config {
