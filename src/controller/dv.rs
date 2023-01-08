@@ -30,6 +30,7 @@ where
                         );
                         todo!("alert")
                     });
+                state.update_all();
                 if !set {
                     error!(
                         "Invalid DV installation directory \"{}\"",

@@ -23,7 +23,11 @@ pub struct AppState {
 impl AppState {
     pub fn from_config(config: Config) -> Self {
         let mut state = Self {
-            nav: Nav::default(),
+            nav: if config.dv_install_dir.is_empty() {
+                Nav::Settings
+            } else {
+                Nav::default()
+            },
             config,
             ccl: CustomCarLoader {
                 cars: Arc::new(vec![]),
@@ -35,5 +39,10 @@ impl AppState {
         state.ccl.update(&state.config);
         state.zsounds.update(&state.config);
         state
+    }
+
+    pub fn update_all(&mut self) {
+        self.ccl.update(&self.config);
+        self.zsounds.update(&self.config);
     }
 }

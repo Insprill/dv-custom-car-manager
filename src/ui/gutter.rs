@@ -58,4 +58,5 @@ fn icon(svg_data: &str, nav: Nav) -> impl Widget<AppState> {
         ))
         .rounded(theme::BORDER_RADIUS)
         .on_click(move |_, state: &mut AppState, _| state.nav = nav)
+        .disabled_if(|state, _env| state.config.dv_install_dir.is_empty())
 }
