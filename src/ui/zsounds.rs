@@ -11,12 +11,15 @@ use super::widget::svg::svg;
 use super::widget::{mod_header::mod_header, painter};
 
 pub fn root() -> impl Widget<AppState> {
-    let sounds_scroll =
-        Scroll::new(List::new(sound_group).with_spacing(theme::LIST_BOX_ITEM_SPACING))
-            .vertical()
-            .expand()
-            .lens(AppState::zsounds.then(ZSounds::sound_groups))
-            .padding(theme::PADDING);
+    let sounds_scroll = Scroll::new(
+        List::new(sound_group)
+            .with_spacing(theme::LIST_BOX_ITEM_SPACING)
+            .padding(theme::LIST_BOX_PADDING),
+    )
+    .vertical()
+    .expand()
+    .lens(AppState::zsounds.then(ZSounds::sound_groups))
+    .padding(theme::PADDING);
 
     Flex::column()
         .with_child(mod_header(

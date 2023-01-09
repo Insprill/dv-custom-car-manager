@@ -13,11 +13,15 @@ use super::widget::svg::svg;
 use super::widget::{mod_header::mod_header, painter};
 
 pub fn root() -> impl Widget<AppState> {
-    let cars_scroll = Scroll::new(List::new(car).with_spacing(theme::LIST_BOX_ITEM_SPACING))
-        .vertical()
-        .expand()
-        .lens(AppState::ccl.then(CustomCarLoader::cars))
-        .padding(theme::PADDING);
+    let cars_scroll = Scroll::new(
+        List::new(car)
+            .with_spacing(theme::LIST_BOX_ITEM_SPACING)
+            .padding(theme::LIST_BOX_PADDING),
+    )
+    .vertical()
+    .expand()
+    .lens(AppState::ccl.then(CustomCarLoader::cars))
+    .padding(theme::PADDING);
 
     Flex::column()
         .with_child(mod_header(

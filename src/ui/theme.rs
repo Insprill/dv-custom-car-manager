@@ -34,6 +34,7 @@ pub const BORDER_RADIUS: Key<RoundedRectRadii> = Key::new("app.theme.border-radi
 pub const SPACER: Key<f64> = Key::new("app.theme.spacer");
 pub const PADDING: Key<Insets> = Key::new("app.theme.padding");
 
+pub const LIST_BOX_PADDING: Key<Insets> = Key::new("app.theme.list-box.padding");
 pub const LIST_BOX_ITEM_SPACING: Key<f64> = Key::new("app.theme.list-box.item.spacing");
 pub const LIST_BOX_ITEM_INDENT: Key<f64> = Key::new("app.theme.list-box.item.indent");
 pub const LIST_BOX_ITEM_FONT: Key<FontDescriptor> = Key::new("app.theme.list-box.item.font");
@@ -113,4 +114,7 @@ fn apply_style(env: &mut Env) {
     );
     env.set(LIST_BOX_ITEM_SPACING, 4.0);
     env.set(LIST_BOX_ITEM_INDENT, 18.0);
+    env.set(LIST_BOX_PADDING, Insets::new(0.0, 0.0, 14.0, 0.0));
+
+    env.set(theme::SCROLLBAR_PAD, 0.1);
 }
