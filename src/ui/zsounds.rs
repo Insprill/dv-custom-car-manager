@@ -6,7 +6,7 @@ use crate::controller::zsounds::ZSoundsController;
 use crate::data::AppState;
 use crate::mods::zsounds::{Sound, SoundGroup, ZSounds};
 
-use super::theme;
+use super::theme::{self, COLOR_RED};
 use super::widget::svg::svg;
 use super::widget::{mod_header::mod_header, painter};
 
@@ -47,14 +47,16 @@ fn sound_group() -> impl Widget<SoundGroup> {
         .with_child(
             Label::new("Delete")
                 .with_font(theme::LIST_BOX_ITEM_DELETE_FONT)
-                .with_text_color(theme::COLOR_TEXT_INVERTED),
+                .with_text_color(theme::COLOR_TEXT_INVERTED)
+                .env_scope(|env, _| {
+                    env.set(
+                        druid::theme::DISABLED_TEXT_COLOR,
+                        env.get(theme::COLOR_TEXT_INVERTED),
+                    )
+                }),
         )
         .padding(4.0)
-        .background(painter::solid_reactive(
-            theme::COLOR_RED,
-            theme::COLOR_RED_HOVER,
-            theme::COLOR_RED_ACTIVE,
-        ))
+        .background(painter::solid_reactive(COLOR_RED))
         .rounded(theme::BORDER_RADIUS)
         .on_click(|ctx, group: &mut SoundGroup, _| {
             ctx.submit_command(cmd::ZSOUNDS_DELETE_SOUNDGROUP.with(group.clone()))
@@ -96,11 +98,7 @@ pub fn sound() -> impl Widget<Sound> {
                 .with_text_color(theme::COLOR_TEXT_INVERTED),
         )
         .padding(4.0)
-        .background(painter::solid_reactive(
-            theme::COLOR_GREEN,
-            theme::COLOR_GREEN_HOVER,
-            theme::COLOR_GREEN_ACTIVE,
-        ))
+        .background(painter::solid_reactive(theme::COLOR_GREEN))
         .rounded(theme::BORDER_RADIUS)
         .on_click(|ctx, sound: &mut Sound, _| {
             ctx.submit_command(cmd::ZSOUNDS_PLAY_SOUND.with(sound.clone()))

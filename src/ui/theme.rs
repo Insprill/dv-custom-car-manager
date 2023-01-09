@@ -8,18 +8,42 @@ pub const COLOR_BACKGROUND: Key<Color> = Key::new("app.theme.color.background");
 pub const COLOR_RAISED_BACKGROUND: Key<Color> = Key::new("app.theme.color.raised-background");
 pub const COLOR_RAISED_BACKGROUND_HOVER: Key<Color> =
     Key::new("app.theme.color.raised-background.hover");
-pub const COLOR_RED: Key<Color> = Key::new("app.theme.color.red");
+
+pub const COLOR_RED_NORMAL: Key<Color> = Key::new("app.theme.color.red.normal");
 pub const COLOR_RED_HOVER: Key<Color> = Key::new("app.theme.color.red.hover");
 pub const COLOR_RED_ACTIVE: Key<Color> = Key::new("app.theme.color.red.active");
-pub const COLOR_GREEN: Key<Color> = Key::new("app.theme.color.green");
+pub const COLOR_RED_DISABLED: Key<Color> = Key::new("app.theme.color.red.disabled");
+pub const COLOR_RED: ColorGroup = ColorGroup {
+    normal: COLOR_RED_NORMAL,
+    hover: COLOR_RED_HOVER,
+    active: COLOR_RED_ACTIVE,
+    disabled: COLOR_RED_DISABLED,
+};
+
+pub const COLOR_GREEN_NORMAL: Key<Color> = Key::new("app.theme.color.green.normal");
 pub const COLOR_GREEN_HOVER: Key<Color> = Key::new("app.theme.color.green.color");
 pub const COLOR_GREEN_ACTIVE: Key<Color> = Key::new("app.theme.color.green.active");
+pub const COLOR_GREEN_DISABLED: Key<Color> = Key::new("app.theme.color.green.disabled");
+pub const COLOR_GREEN: ColorGroup = ColorGroup {
+    normal: COLOR_GREEN_NORMAL,
+    hover: COLOR_GREEN_HOVER,
+    active: COLOR_GREEN_ACTIVE,
+    disabled: COLOR_GREEN_DISABLED,
+};
+
 pub const COLOR_TEXT_INVERTED: Key<Color> = Key::new("app.theme.color.text.dark");
-pub const COLOR_BUTTON_BACKGROUND: Key<Color> = Key::new("app.theme.color.button.background");
-pub const COLOR_BUTTON_BACKGROUND_HOVER: Key<Color> =
-    Key::new("app.theme.color.button.background.hover");
-pub const COLOR_BUTTON_BACKGROUND_ACTIVE: Key<Color> =
-    Key::new("app.theme.color.button.background.active");
+
+pub const COLOR_BUTTON_NORMAL: Key<Color> = Key::new("app.theme.color.button.normal");
+pub const COLOR_BUTTON_HOVER: Key<Color> = Key::new("app.theme.color.button.background.hover");
+pub const COLOR_BUTTON_ACTIVE: Key<Color> = Key::new("app.theme.color.button.background.active");
+pub const COLOR_BUTTON_DISABLED: Key<Color> =
+    Key::new("app.theme.color.button.background.disabled");
+pub const COLOR_BUTTON: ColorGroup = ColorGroup {
+    normal: COLOR_BUTTON_NORMAL,
+    hover: COLOR_BUTTON_HOVER,
+    active: COLOR_BUTTON_ACTIVE,
+    disabled: COLOR_BUTTON_DISABLED,
+};
 
 pub const GUTTER_PADDING: Key<f64> = Key::new("app.theme.gutter.background.vertical-padding");
 pub const GUTTER_WIDTH: Key<f64> = Key::new("app.theme.gutter.width");
@@ -52,20 +76,23 @@ fn apply_dark_theme(env: &mut Env) {
     env.set(COLOR_RAISED_BACKGROUND, hex("#26292f"));
     env.set(COLOR_RAISED_BACKGROUND_HOVER, hex("#464646"));
 
-    env.set(COLOR_BUTTON_BACKGROUND, hex("#434956"));
-    env.set(COLOR_BUTTON_BACKGROUND_HOVER, hex("#494f58"));
-    env.set(COLOR_BUTTON_BACKGROUND_ACTIVE, hex("#616570"));
+    env.set(COLOR_BUTTON_NORMAL, hex("#434956"));
+    env.set(COLOR_BUTTON_HOVER, hex("#494f58"));
+    env.set(COLOR_BUTTON_ACTIVE, hex("#616570"));
+    env.set(COLOR_BUTTON_DISABLED, hex("#434956"));
 
     env.set(theme::TEXT_COLOR, hex("#b0bac5"));
     env.set(COLOR_TEXT_INVERTED, env.get(COLOR_BACKGROUND));
 
-    env.set(COLOR_RED, hex("#ff496e"));
+    env.set(COLOR_RED_NORMAL, hex("#ff496e"));
     env.set(COLOR_RED_HOVER, hex("#d93e5d"));
     env.set(COLOR_RED_ACTIVE, hex("#ce3b59"));
+    env.set(COLOR_RED_DISABLED, hex("#704350"));
 
-    env.set(COLOR_GREEN, hex("#1bd96a"));
+    env.set(COLOR_GREEN_NORMAL, hex("#1bd96a"));
     env.set(COLOR_GREEN_HOVER, hex("#17b85a"));
     env.set(COLOR_GREEN_ACTIVE, hex("#16ae55"));
+    env.set(COLOR_GREEN_DISABLED, hex("#44755c"));
 
     fn hex(hex: &str) -> Color {
         Color::from_hex_str(hex).unwrap()
@@ -117,4 +144,12 @@ fn apply_style(env: &mut Env) {
     env.set(LIST_BOX_PADDING, Insets::new(0.0, 0.0, 14.0, 0.0));
 
     env.set(theme::SCROLLBAR_PAD, 0.1);
+}
+
+#[derive(Clone)]
+pub struct ColorGroup {
+    pub normal: Key<Color>,
+    pub hover: Key<Color>,
+    pub active: Key<Color>,
+    pub disabled: Key<Color>,
 }

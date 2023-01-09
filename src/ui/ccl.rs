@@ -64,11 +64,7 @@ fn car() -> impl Widget<Car> {
                 .with_text_color(theme::COLOR_TEXT_INVERTED),
         )
         .padding(4.0)
-        .background(painter::solid_reactive(
-            theme::COLOR_RED,
-            theme::COLOR_RED_HOVER,
-            theme::COLOR_RED_ACTIVE,
-        ))
+        .background(painter::solid_reactive(theme::COLOR_RED))
         .rounded(theme::BORDER_RADIUS)
         .on_click(|ctx, car: &mut Car, _| {
             ctx.submit_command(cmd::CCL_DELETE_CAR.with(car.clone()))

@@ -27,11 +27,7 @@ pub fn mod_header(
                 .with_font(theme::LIST_BOX_ITEM_FONT),
         )
         .padding(4.0)
-        .background(painter::solid_reactive(
-            theme::COLOR_BUTTON_BACKGROUND,
-            theme::COLOR_BUTTON_BACKGROUND_HOVER,
-            theme::COLOR_BUTTON_BACKGROUND_ACTIVE,
-        ))
+        .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
         .on_click(move |ctx, _: &mut AppState, _| {
             let options = druid::FileDialogOptions::new()
@@ -47,11 +43,7 @@ pub fn mod_header(
         .with_default_spacer()
         .with_child(Label::new("Install Car(s) from Archive").with_font(theme::LIST_BOX_ITEM_FONT))
         .padding(4.0)
-        .background(painter::solid_reactive(
-            theme::COLOR_BUTTON_BACKGROUND,
-            theme::COLOR_BUTTON_BACKGROUND_HOVER,
-            theme::COLOR_BUTTON_BACKGROUND_ACTIVE,
-        ))
+        .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
         .on_click(move |ctx, _, _| {
             let options = druid::FileDialogOptions::new()

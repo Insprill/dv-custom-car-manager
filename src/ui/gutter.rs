@@ -51,11 +51,7 @@ fn settings_icon() -> impl Widget<AppState> {
 fn icon(svg_data: &str, nav: Nav) -> impl Widget<AppState> {
     svg(svg_data)
         .padding(theme::GUTTER_ICON_PADDING)
-        .background(painter::solid_reactive(
-            theme::COLOR_BUTTON_BACKGROUND,
-            theme::COLOR_BUTTON_BACKGROUND_HOVER,
-            theme::COLOR_BUTTON_BACKGROUND_ACTIVE,
-        ))
+        .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
         .on_click(move |_, state: &mut AppState, _| state.nav = nav)
         .disabled_if(|state, _env| state.config.dv_install_dir.is_empty())
