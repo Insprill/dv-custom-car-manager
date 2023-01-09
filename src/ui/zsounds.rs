@@ -60,7 +60,8 @@ fn sound_group() -> impl Widget<SoundGroup> {
         .rounded(theme::BORDER_RADIUS)
         .on_click(|ctx, group: &mut SoundGroup, _| {
             ctx.submit_command(cmd::ZSOUNDS_DELETE_SOUNDGROUP.with(group.clone()))
-        });
+        })
+        .disabled_if(|group, _| group.is_root);
 
     let group_row = Flex::row()
         .with_default_spacer()

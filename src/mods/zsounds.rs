@@ -28,6 +28,7 @@ pub struct SoundGroup {
     pub sounds: Arc<Vec<Sound>>,
     #[data(ignore)]
     pub directory: PathBuf,
+    pub is_root: bool,
 }
 
 impl SoundGroup {
@@ -46,9 +47,20 @@ impl SoundGroup {
             sound.name = name.to_string();
         });
         Ok(SoundGroup {
-            name: path_name,
+            name: path_name.clone(),
             sounds: Arc::new(sound_config.sounds.into_values().collect()),
             directory: sound_folder.to_path_buf(),
+            is_root: sound_folder.read_dir()?.any(|entry| match entry {
+                Ok(e) => e.file_name() == "ZSounds.dll",
+                Err(err) => {
+                    error!(
+                        "Error occured while searching for ZSounds in \"{}\": {:?}",
+                        path_name, err
+                    );
+                    // Yes, if this happens while iterating the root dir you can delete the mod. In that case, you can cope.
+                    false
+                }
+            }),
         })
     }
 
