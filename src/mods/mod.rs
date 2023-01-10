@@ -222,8 +222,7 @@ pub trait Installable {
                 }
             };
             let path = &file.path();
-            let is_supported = Self::is_supported_archive(ctx, path).unwrap_or(false);
-            if path.is_file() && is_supported {
+            if path.is_file() && Self::is_supported_archive(ctx, path).unwrap_or(false) {
                 Self::install_from_archive(self, ctx, path, config)
             } else if !path.is_dir() {
                 continue;
