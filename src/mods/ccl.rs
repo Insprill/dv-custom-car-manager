@@ -215,7 +215,7 @@ impl CustomCarLoader {
             return Ok(cars);
         }
 
-        let dirs = match fs::read_dir(&dir) {
+        let dirs = match fs::read_dir(dir) {
             Ok(res) => res,
             Err(err) => {
                 Alert::error(ctx, format!("Failed to read cars directory: {:?}", err));

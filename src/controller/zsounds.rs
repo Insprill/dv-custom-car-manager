@@ -5,7 +5,7 @@ use std::path::Path;
 use std::thread;
 use std::{error::Error, fs::File};
 
-use crate::ui::alert::{Alert};
+use crate::ui::alert::Alert;
 use crate::{cmd, data::AppState, mods::Installable};
 
 pub struct ZSoundsController;
