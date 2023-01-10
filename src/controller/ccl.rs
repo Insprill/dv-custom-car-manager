@@ -30,16 +30,20 @@ where
                 state.ccl.update(ctx, &state.config);
             }
             Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_ARCHIVE) => {
-                let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_ARCHIVE);
-                state
-                    .ccl
-                    .install_from_archive(ctx, &file_info.path, &state.config);
+                let files = cmd.get_unchecked(cmd::CCL_INSTALL_ARCHIVE);
+                for file_info in files {
+                    state
+                        .ccl
+                        .install_from_archive(ctx, &file_info.path, &state.config);
+                }
             }
             Event::Command(cmd) if cmd.is(cmd::CCL_INSTALL_FOLDER) => {
-                let file_info = cmd.get_unchecked(cmd::CCL_INSTALL_FOLDER);
-                state
-                    .ccl
-                    .install_from_folder(ctx, &file_info.path, &state.config);
+                let files = cmd.get_unchecked(cmd::CCL_INSTALL_FOLDER);
+                for file_info in files {
+                    state
+                        .ccl
+                        .install_from_folder(ctx, &file_info.path, &state.config);
+                }
             }
             Event::Command(cmd) if cmd.is(cmd::CCL_ENABLE_CAR) => {
                 let car = cmd.get_unchecked(cmd::CCL_ENABLE_CAR);

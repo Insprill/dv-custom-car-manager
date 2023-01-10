@@ -11,8 +11,8 @@ use super::svg::svg;
 pub fn mod_header(
     mod_name: &str,
     install_name: &str,
-    folder_install_cmd: Selector<FileInfo>,
-    archive_install_cmd: Selector<FileInfo>,
+    folder_install_cmd: Selector<Vec<FileInfo>>,
+    archive_install_cmd: Selector<Vec<FileInfo>>,
 ) -> impl Widget<AppState> {
     let header = Label::new(mod_name)
         .with_font(theme::HEADER_1_FONT)
@@ -32,7 +32,7 @@ pub fn mod_header(
             let options = druid::FileDialogOptions::new()
                 .multi_selection()
                 .select_directories()
-                .accept_command(folder_install_cmd);
+                .accept_multiple_command(folder_install_cmd);
             ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
 
@@ -50,7 +50,7 @@ pub fn mod_header(
                     name: "Archive",
                     extensions: &["zip", "rar"],
                 }])
-                .accept_command(archive_install_cmd);
+                .accept_multiple_command(archive_install_cmd);
             ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
 

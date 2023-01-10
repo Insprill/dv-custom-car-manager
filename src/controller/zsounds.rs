@@ -37,16 +37,20 @@ where
                 state.zsounds.update(ctx, &state.config);
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_INSTALL_ARCHIVE) => {
-                let file_info = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_ARCHIVE);
-                state
-                    .zsounds
-                    .install_from_archive(ctx, &file_info.path, &state.config);
+                let files = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_ARCHIVE);
+                for file_info in files {
+                    state
+                        .zsounds
+                        .install_from_archive(ctx, &file_info.path, &state.config);
+                }
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_INSTALL_FOLDER) => {
-                let file_info = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_FOLDER);
-                state
-                    .zsounds
-                    .install_from_folder(ctx, &file_info.path, &state.config);
+                let files = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_FOLDER);
+                for file_info in files {
+                    state
+                        .zsounds
+                        .install_from_folder(ctx, &file_info.path, &state.config);
+                }
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_PLAY_SOUND) => {
                 let sound = cmd.get_unchecked(cmd::ZSOUNDS_PLAY_SOUND);
