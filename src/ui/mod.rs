@@ -4,6 +4,9 @@ use druid::{UnitPoint, Widget, WidgetExt, WindowDesc};
 use crate::data::nav::Nav;
 use crate::data::AppState;
 
+use self::widget::overlay::Overlay;
+
+pub mod alert;
 pub mod ccl;
 pub mod gutter;
 pub mod settings;
@@ -21,7 +24,7 @@ pub fn main_window() -> WindowDesc<AppState> {
 fn root() -> impl Widget<AppState> {
     Flex::row()
         .with_child(gutter::gutter())
-        .with_flex_child(nav(), 1.0)
+        .with_flex_child(Overlay::bottom(nav(), alert::alert_box()), 1.0)
 }
 
 fn nav() -> impl Widget<AppState> {

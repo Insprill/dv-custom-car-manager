@@ -5,6 +5,7 @@ use crate::mods::{
     zsounds::{Sound, SoundGroup},
 };
 
+// DV
 pub const DV_SET_INSTALL_DIR: Selector<FileInfo> = Selector::new("app.dv.install-dir");
 
 // CCL
@@ -21,3 +22,6 @@ pub const ZSOUNDS_INSTALL_FOLDER: Selector<FileInfo> = Selector::new("app.zsound
 pub const ZSOUNDS_INSTALL_ARCHIVE: Selector<FileInfo> =
     Selector::new("app.zsounds.install.archive");
 pub const ZSOUNDS_PLAY_SOUND: Selector<Sound> = Selector::new("app.zsounds.play-sound");
+
+// MISC
+pub const DISMISS_ALERT: Selector<u32> = Selector::new("app.alert.dismiss");

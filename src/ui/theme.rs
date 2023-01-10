@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use druid::{
     theme, Color, Env, FontDescriptor, FontFamily, FontWeight, Insets, Key, RoundedRectRadii,
 };
@@ -64,6 +66,11 @@ pub const LIST_BOX_ITEM_INDENT: Key<f64> = Key::new("app.theme.list-box.item.ind
 pub const LIST_BOX_ITEM_FONT: Key<FontDescriptor> = Key::new("app.theme.list-box.item.font");
 pub const LIST_BOX_ITEM_DELETE_FONT: Key<FontDescriptor> =
     Key::new("app.theme.list-box.delete.item.font");
+
+pub const ALERT_TEXT_PADDING: Key<Insets> = Key::new("app.theme.alert.text.padding");
+pub const ALERT_SPACING: Key<f64> = Key::new("app.theme.alert.spacing");
+pub const ALERT_INFO_DURATION: Duration = Duration::from_secs(3);
+pub const ALERT_ERROR_DURATION: Duration = Duration::from_secs(10);
 
 pub fn apply_theme(env: &mut Env, _state: &AppState) {
     apply_dark_theme(env);
@@ -144,6 +151,9 @@ fn apply_style(env: &mut Env) {
     env.set(LIST_BOX_PADDING, Insets::new(0.0, 0.0, 14.0, 0.0));
 
     env.set(theme::SCROLLBAR_PAD, 0.1);
+
+    env.set(ALERT_TEXT_PADDING, 4.0);
+    env.set(ALERT_SPACING, env.get(PADDING).x0);
 }
 
 #[derive(Clone)]

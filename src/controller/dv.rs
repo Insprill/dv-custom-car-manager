@@ -1,7 +1,7 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
 use log::error;
 
-use crate::{cmd, data::AppState};
+use crate::{cmd, data::AppState, ui::alert::AlertStyle};
 
 pub struct DvController;
 
@@ -19,6 +19,7 @@ where
     ) {
         match event {
             Event::Command(cmd) if cmd.is(cmd::DV_SET_INSTALL_DIR) => {
+                println!("bro");
                 let file_info = cmd.get_unchecked(cmd::DV_SET_INSTALL_DIR);
                 let set = state
                     .config
@@ -30,14 +31,15 @@ where
                         );
                         todo!("alert")
                     });
-                state.update_all();
                 if !set {
                     error!(
                         "Invalid DV installation directory \"{}\"",
                         file_info.path.to_string_lossy().to_string()
                     );
-                    todo!("alert")
+                    state.alert("Invalid", AlertStyle::Error);
+                    return;
                 }
+                state.update_all()
             }
             _ => child.event(ctx, event, state, env),
         }
