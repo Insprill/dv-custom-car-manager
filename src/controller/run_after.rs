@@ -4,13 +4,13 @@ use druid::{
     widget::Controller, Data, Env, Event, EventCtx, LifeCycle, LifeCycleCtx, TimerToken, Widget,
 };
 
-type DelayFunc<T> = Box<dyn FnOnce(&mut EventCtx, &mut T, &Env)>;
+type DelayFunc<T> = Box<dyn Fn(&mut EventCtx, &mut T, &Env)>;
 type DurationFunc<T> = Box<dyn Fn(&T, &Env) -> Duration>;
 
 pub struct RunAfter<T> {
     dur_func: DurationFunc<T>,
     timer: TimerToken,
-    func: Option<DelayFunc<T>>,
+    func: DelayFunc<T>,
 }
 
 impl<T> RunAfter<T> {
@@ -21,7 +21,7 @@ impl<T> RunAfter<T> {
         Self {
             dur_func: Box::new(duration_func),
             timer: TimerToken::INVALID,
-            func: Some(Box::new(func)),
+            func: Box::new(func),
         }
     }
 }
@@ -34,9 +34,7 @@ where
     fn event(&mut self, child: &mut W, ctx: &mut EventCtx, event: &Event, data: &mut T, env: &Env) {
         match event {
             Event::Timer(token) if token == &self.timer => {
-                if let Some(func) = self.func.take() {
-                    func(ctx, data, env);
-                }
+                (self.func)(ctx, data, env);
                 self.timer = TimerToken::INVALID;
             }
             _ => child.event(ctx, event, data, env),
