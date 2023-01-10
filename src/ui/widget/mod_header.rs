@@ -18,7 +18,6 @@ pub fn mod_header(
         .with_font(theme::HEADER_1_FONT)
         .with_text_alignment(druid::TextAlignment::Center);
 
-    let folder_install_cmd = folder_install_cmd;
     let install_from_folder_button = Flex::row()
         .with_child(svg(include_str!("../assets/icons/folder.svg")))
         .with_default_spacer()
@@ -29,7 +28,7 @@ pub fn mod_header(
         .padding(4.0)
         .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
-        .on_click(move |ctx, _: &mut AppState, _| {
+        .on_click(move |ctx, _, _| {
             let options = druid::FileDialogOptions::new()
                 .multi_selection()
                 .select_directories()
@@ -37,7 +36,6 @@ pub fn mod_header(
             ctx.submit_command(druid::commands::SHOW_OPEN_PANEL.with(options))
         });
 
-    let archive_install_cmd = archive_install_cmd;
     let install_from_archive_button = Flex::row()
         .with_child(svg(include_str!("../assets/icons/archive.svg")))
         .with_default_spacer()
