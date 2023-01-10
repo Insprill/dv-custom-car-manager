@@ -161,11 +161,13 @@ impl Installable for CustomCarLoader {
             }
         };
         let temp_car_ident = temp_car.config.identifier;
+        let mut already_installed = false;
         if let Some(car) = self
             .cars
             .iter()
             .find(|x| x.config.identifier.eq(&temp_car_ident))
         {
+            already_installed = true;
             info!(
                 "Deleting old car from \"{}\"",
                 car.directory.to_string_lossy().to_string()
@@ -198,7 +200,18 @@ impl Installable for CustomCarLoader {
                 return;
             }
         };
-        Alert::info(ctx, format!("Successfully installed {}", temp_car_ident));
+        Alert::info(
+            ctx,
+            format!(
+                "Successfully {} {}",
+                if already_installed {
+                    "updated"
+                } else {
+                    "installed"
+                },
+                temp_car_ident
+            ),
+        );
     }
 }
 
