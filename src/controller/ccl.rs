@@ -23,10 +23,7 @@ where
                     let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
                     Alert::error(
                         ctx,
-                        format!(
-                            "Failed to delete car at {:?}!\nError: {:?}",
-                            car.directory, err
-                        ),
+                        format!("Failed to delete car at {:?}: {:?}", car.directory, err),
                     );
                 });
                 Alert::info(ctx, format!("Deleted {}", car.config.identifier));
