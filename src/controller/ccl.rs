@@ -1,7 +1,6 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
-use log::error;
 
-use crate::{cmd, data::AppState, mods::Installable};
+use crate::{cmd, data::AppState, mods::Installable, ui::alert::AlertStyle};
 
 pub struct CclController;
 
@@ -21,8 +20,14 @@ where
             Event::Command(cmd) if cmd.is(cmd::CCL_DELETE_CAR) => {
                 let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
                 car.delete().unwrap_or_else(|err| {
-                    error!("Failed to delete car! {}", err.to_string());
-                    todo!("alert")
+                    let car = cmd.get_unchecked(cmd::CCL_DELETE_CAR);
+                    state.alert(
+                        format!(
+                            "Failed to delete car at {:?}!\nError: {:?}",
+                            car.directory, err
+                        ),
+                        AlertStyle::Error,
+                    );
                 });
                 state.ccl.update(&state.config);
             }

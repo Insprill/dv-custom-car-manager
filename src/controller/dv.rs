@@ -1,5 +1,4 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
-use log::error;
 
 use crate::{cmd, data::AppState, ui::alert::AlertStyle};
 
@@ -19,24 +18,25 @@ where
     ) {
         match event {
             Event::Command(cmd) if cmd.is(cmd::DV_SET_INSTALL_DIR) => {
-                println!("bro");
                 let file_info = cmd.get_unchecked(cmd::DV_SET_INSTALL_DIR);
                 let set = state
                     .config
                     .attempt_set_install_dir(&file_info.path)
                     .unwrap_or_else(|err| {
-                        error!(
-                            "Failed to set DV installation directory: {}",
-                            err.to_string()
+                        state.alert(
+                            format!(
+                                "Failed to set DV installation directory to {:?}: {:?}",
+                                file_info.path, err
+                            ),
+                            AlertStyle::Error,
                         );
-                        todo!("alert")
+                        false
                     });
                 if !set {
-                    error!(
-                        "Invalid DV installation directory \"{}\"",
-                        file_info.path.to_string_lossy().to_string()
+                    state.alert(
+                        format!("Invalid DV installation directory {:?}", file_info.path),
+                        AlertStyle::Error,
                     );
-                    state.alert("Invalid", AlertStyle::Error);
                     return;
                 }
                 state.update_all()

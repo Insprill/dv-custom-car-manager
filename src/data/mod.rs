@@ -1,6 +1,7 @@
 use std::{fmt::Display, sync::Arc};
 
 use druid::{im::Vector, Data, Lens};
+use log::{error, info};
 
 use crate::{
     mods::{ccl::CustomCarLoader, zsounds::ZSounds, Installable},
@@ -50,6 +51,11 @@ impl AppState {
     }
 
     pub fn alert(&mut self, message: impl Display, style: AlertStyle) {
+        let single_line = message.to_string().replace('\n', ". ");
+        match style {
+            AlertStyle::Error => error!("{}", single_line),
+            AlertStyle::Info => info!("{}", single_line),
+        }
         self.alerts.push_back(Alert::new(message, style))
     }
 
