@@ -4,12 +4,13 @@ use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use druid::{Data, Lens};
+use druid::{Data, EventCtx, Lens};
 use fs_extra::dir::{self, CopyOptions};
-use log::{error, info};
+use log::info;
 use serde::Deserialize;
 
 use crate::data::AppState;
+use crate::ui::alert::Alert;
 use crate::Config;
 
 use super::Installable;
@@ -27,15 +28,15 @@ pub struct Car {
 }
 
 impl Car {
-    pub fn new(directory: &Path, enabled: bool) -> Result<Self, String> {
+    pub fn new(directory: &Path, enabled: bool) -> Result<Self, Box<dyn Error>> {
         let config_path = directory.join(CONFIG_NAME);
         let file = match File::open(config_path) {
             Ok(res) => res,
-            Err(err) => return Err(err.to_string()),
+            Err(err) => return Err(Box::new(err)),
         };
         let cnfg = match CarConfig::new(&file) {
             Ok(res) => res,
-            Err(err) => return Err(err.to_string()),
+            Err(err) => return Err(Box::new(err)),
         };
         Ok(Self {
             config: cnfg,
@@ -48,44 +49,52 @@ impl Car {
         trash::delete(&self.directory)
     }
 
-    pub fn enable(&self, state: &mut AppState) {
+    pub fn enable(&self, ctx: &mut EventCtx, state: &mut AppState) {
         let path = cars_path(&state.config);
-        Self::move_car(self, state, &path);
+        if Self::move_car(self, ctx, state, &path).is_ok() {
+            Alert::info(ctx, format!("Enabled {}", self.config.identifier));
+        }
     }
 
-    pub fn disable(&self, state: &mut AppState) {
+    pub fn disable(&self, ctx: &mut EventCtx, state: &mut AppState) {
         let disabled_dir = Config::data_dir().join("ccl").join("disabled");
-        Self::move_car(self, state, &disabled_dir);
+        if Self::move_car(self, ctx, state, &disabled_dir).is_ok() {
+            Alert::info(ctx, format!("Disabled {}", self.config.identifier));
+        }
     }
 
-    fn move_car(&self, state: &mut AppState, new_dir: &Path) {
+    fn move_car(
+        &self,
+        ctx: &mut EventCtx,
+        state: &mut AppState,
+        new_dir: &Path,
+    ) -> Result<(), Box<dyn Error>> {
         let self_dir = &self.directory;
         match fs::create_dir_all(new_dir) {
             Ok(_) => {}
             Err(err) => {
-                error!(
-                    "Failed to create dir \"{}\": {}",
-                    new_dir.to_string_lossy().to_string(),
-                    err.to_string()
+                Alert::error(
+                    ctx,
+                    format!("Failed to create directory {:?}: {:?}", new_dir, err),
                 );
-                todo!("alert");
-                // return;
+                return Err(Box::new(err));
             }
         };
         match dir::move_dir(self_dir, new_dir, &CopyOptions::new()) {
             Ok(_) => {}
             Err(err) => {
-                error!(
-                    "Failed to copy car from \"{}\" to \"{}\": {}",
-                    self_dir.to_string_lossy().to_string(),
-                    new_dir.to_string_lossy().to_string(),
-                    err.to_string()
+                Alert::error(
+                    ctx,
+                    format!(
+                        "Failed to copy car from {:?} to {:?}: {:?}",
+                        self_dir, new_dir, err
+                    ),
                 );
-                todo!("alert");
-                // return;
+                return Err(Box::new(err));
             }
         };
-        state.ccl.update(&state.config);
+        state.ccl.update(ctx, &state.config);
+        Ok(())
     }
 }
 
@@ -118,48 +127,37 @@ impl Installable for CustomCarLoader {
         name.eq(CONFIG_NAME)
     }
 
-    fn update(&mut self, config: &Config) {
+    fn update(&mut self, ctx: &mut EventCtx, config: &Config) {
         if config.dv_install_dir.is_empty() {
             self.cars = Arc::new(Vec::new());
             return;
         }
-        let mut cars = self
-            .load_cars(cars_path(config), true)
-            .unwrap_or_else(|err| {
-                error!(
-                    "Error loading cars from \"{:?}\": {:?}",
-                    cars_path(config),
-                    err
+
+        fn load(ccl: &CustomCarLoader, ctx: &mut EventCtx, path: &Path, enabled: bool) -> Vec<Car> {
+            ccl.load_cars(ctx, path, enabled).unwrap_or_else(|err| {
+                Alert::error(
+                    ctx,
+                    format!("Failed to load cars from {:?}: {:?}", path, err),
                 );
                 vec![]
-            });
-        cars.append(
-            &mut self
-                .load_cars(disabled_cars_path(), false)
-                .unwrap_or_else(|err| {
-                    error!(
-                        "Error loading cars from \"{:?}\": {:?}",
-                        disabled_cars_path(),
-                        err
-                    );
-                    vec![]
-                }),
-        );
+            })
+        }
+
+        let mut cars = load(self, ctx, &cars_path(config), true);
+        cars.append(&mut load(self, ctx, &disabled_cars_path(), false));
         cars.sort_by(|a, b| a.config.identifier.cmp(&b.config.identifier));
         self.cars = Arc::new(cars);
     }
 
-    fn install(&mut self, config: &Config, path: &Path) {
+    fn install(&mut self, ctx: &mut EventCtx, config: &Config, path: &Path) {
         let temp_car = match Car::new(path, false) {
             Ok(res) => res,
             Err(err) => {
-                error!(
-                    "Failed to read car configuration in \"{}\": {}",
-                    path.to_string_lossy().to_string(),
-                    err
+                Alert::error(
+                    ctx,
+                    format!("Failed to read car configuration in {:?}: {:?}", path, err),
                 );
-                todo!("alert");
-                // continue;
+                return;
             }
         };
         let temp_car_ident = temp_car.config.identifier;
@@ -175,14 +173,14 @@ impl Installable for CustomCarLoader {
             match car.delete() {
                 Ok(_) => {}
                 Err(err) => {
-                    error!(
-                        "Failed to delete old car {} at \"{}\": {}",
-                        car.config.identifier,
-                        car.directory.to_string_lossy().to_string(),
-                        err.to_string()
+                    Alert::error(
+                        ctx,
+                        format!(
+                            "Failed to delete old car {} at {:?}: {:?}",
+                            car.config.identifier, car.directory, err
+                        ),
                     );
-                    todo!("alert");
-                    // continue;
+                    return;
                 }
             }
         }
@@ -190,22 +188,27 @@ impl Installable for CustomCarLoader {
         match dir::copy(path, &cars_path, &CopyOptions::new()) {
             Ok(_) => {}
             Err(err) => {
-                error!(
-                    "Failed to copy car from \"{}\" to \"{}\": {}",
-                    path.to_string_lossy().to_string(),
-                    cars_path.to_string_lossy().to_string(),
-                    err.to_string()
+                Alert::error(
+                    ctx,
+                    format!(
+                        "Failed to copy car {} from {:?} to {:?}: {:?}",
+                        temp_car_ident, path, cars_path, err
+                    ),
                 );
-                todo!("alert");
-                // continue;
+                return;
             }
         };
-        info!("Successfully installed {}", temp_car_ident);
+        Alert::info(ctx, format!("Successfully installed {}", temp_car_ident));
     }
 }
 
 impl CustomCarLoader {
-    fn load_cars(&self, dir: PathBuf, enabled: bool) -> Result<Vec<Car>, Box<dyn Error>> {
+    fn load_cars(
+        &self,
+        ctx: &mut EventCtx,
+        dir: &Path,
+        enabled: bool,
+    ) -> Result<Vec<Car>, Box<dyn Error>> {
         let mut cars = Vec::new();
 
         if !dir.is_dir() {
@@ -215,12 +218,8 @@ impl CustomCarLoader {
         let dirs = match fs::read_dir(&dir) {
             Ok(res) => res,
             Err(err) => {
-                error!(
-                    "Error while updating cars list from \"{}\": {}",
-                    dir.to_string_lossy().to_string(),
-                    err.to_string()
-                );
-                todo!("alert");
+                Alert::error(ctx, format!("Failed to read cars directory: {:?}", err));
+                return Err(Box::new(err));
             }
         };
 
@@ -228,9 +227,8 @@ impl CustomCarLoader {
             let path = match dir {
                 Ok(path) => path,
                 Err(err) => {
-                    error!("Error while reading cars directory: {}", err.to_string());
-                    todo!("alert");
-                    // return Err(err);
+                    Alert::error(ctx, format!("Failed to read car directory: {:?}", err));
+                    return Err(Box::new(err));
                 }
             }
             .path();
@@ -240,22 +238,28 @@ impl CustomCarLoader {
                         let car = match Car::new(&path, enabled) {
                             Ok(res) => res,
                             Err(err) => {
-                                error!("Failed to read car configuration: {}", err);
-                                todo!("alert");
-                                // return Err(err);
+                                Alert::error(
+                                    ctx,
+                                    format!(
+                                        "Failed to read car configuration at {:?}: {:?}",
+                                        path, err
+                                    ),
+                                );
+                                return Err(err);
                             }
                         };
                         cars.push(car)
                     }
                 }
                 Err(err) => {
-                    error!(
-                        "Failed to check if directory \"{}\" contains car: {}",
-                        path.to_string_lossy().to_string(),
-                        err.to_string()
+                    Alert::error(
+                        ctx,
+                        format!(
+                            "Failed to check if directory {:?} contains car: {:?}",
+                            path, err
+                        ),
                     );
-                    todo!("alert");
-                    // return Err(err);
+                    return Err(Box::new(err));
                 }
             };
         }

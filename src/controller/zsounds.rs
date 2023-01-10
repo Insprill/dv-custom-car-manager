@@ -5,6 +5,7 @@ use std::path::Path;
 use std::thread;
 use std::{error::Error, fs::File};
 
+use crate::ui::alert::{Alert};
 use crate::{cmd, data::AppState, mods::Installable};
 
 pub struct ZSoundsController;
@@ -25,22 +26,27 @@ where
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_DELETE_SOUNDGROUP) => {
                 let group = cmd.get_unchecked(cmd::ZSOUNDS_DELETE_SOUNDGROUP);
                 group.delete().unwrap_or_else(|err| {
-                    error!("Failed to delete sound! {}", err.to_string());
-                    todo!("alert")
+                    Alert::error(
+                        ctx,
+                        format!(
+                            "Failed to delete sound group at {:?}!\nError: {:?}",
+                            group.directory, err
+                        ),
+                    );
                 });
-                state.zsounds.update(&state.config);
+                state.zsounds.update(ctx, &state.config);
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_INSTALL_ARCHIVE) => {
                 let file_info = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_ARCHIVE);
                 state
                     .zsounds
-                    .install_from_archive(&file_info.path, &state.config);
+                    .install_from_archive(ctx, &file_info.path, &state.config);
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_INSTALL_FOLDER) => {
                 let file_info = cmd.get_unchecked(cmd::ZSOUNDS_INSTALL_FOLDER);
                 state
                     .zsounds
-                    .install_from_folder(&file_info.path, &state.config);
+                    .install_from_folder(ctx, &file_info.path, &state.config);
             }
             Event::Command(cmd) if cmd.is(cmd::ZSOUNDS_PLAY_SOUND) => {
                 let sound = cmd.get_unchecked(cmd::ZSOUNDS_PLAY_SOUND);
@@ -48,15 +54,12 @@ where
                 let audio_file_name = sound.filename.clone();
                 let volume = state.config.volume;
                 thread::spawn(move || {
-                    match play_sound(&audio_file_path, volume) {
-                        Ok(_) => {}
-                        Err(err) => {
-                            error!(
-                                "Failed to play sound {} ({:?}): {}",
-                                audio_file_name, audio_file_path, err
-                            );
-                            //todo: alert
-                        }
+                    if let Err(err) = play_sound(&audio_file_path, volume) {
+                        error!(
+                            "Failed to play sound {} ({:?}): {}",
+                            audio_file_name, audio_file_path, err
+                        );
+                        todo!("alert")
                     }
                 });
             }

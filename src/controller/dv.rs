@@ -1,6 +1,6 @@
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
 
-use crate::{cmd, data::AppState, ui::alert::AlertStyle};
+use crate::{cmd, data::AppState, ui::alert::Alert};
 
 pub struct DvController;
 
@@ -23,23 +23,23 @@ where
                     .config
                     .attempt_set_install_dir(&file_info.path)
                     .unwrap_or_else(|err| {
-                        state.alert(
+                        Alert::error(
+                            ctx,
                             format!(
                                 "Failed to set DV installation directory to {:?}: {:?}",
                                 file_info.path, err
                             ),
-                            AlertStyle::Error,
                         );
                         false
                     });
                 if !set {
-                    state.alert(
+                    Alert::error(
+                        ctx,
                         format!("Invalid DV installation directory {:?}", file_info.path),
-                        AlertStyle::Error,
                     );
                     return;
                 }
-                state.update_all()
+                state.update_all(ctx)
             }
             _ => child.event(ctx, event, state, env),
         }

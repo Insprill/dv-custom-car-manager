@@ -22,6 +22,17 @@ pub const COLOR_RED: ColorGroup = ColorGroup {
     disabled: COLOR_RED_DISABLED,
 };
 
+pub const COLOR_ORANGE_NORMAL: Key<Color> = Key::new("app.theme.color.orange.normal");
+pub const COLOR_ORANGE_HOVER: Key<Color> = Key::new("app.theme.color.orange.hover");
+pub const COLOR_ORANGE_ACTIVE: Key<Color> = Key::new("app.theme.color.orange.active");
+pub const COLOR_ORANGE_DISABLED: Key<Color> = Key::new("app.theme.color.orange.disabled");
+pub const COLOR_ORANGE: ColorGroup = ColorGroup {
+    normal: COLOR_ORANGE_NORMAL,
+    hover: COLOR_ORANGE_HOVER,
+    active: COLOR_ORANGE_ACTIVE,
+    disabled: COLOR_ORANGE_DISABLED,
+};
+
 pub const COLOR_GREEN_NORMAL: Key<Color> = Key::new("app.theme.color.green.normal");
 pub const COLOR_GREEN_HOVER: Key<Color> = Key::new("app.theme.color.green.color");
 pub const COLOR_GREEN_ACTIVE: Key<Color> = Key::new("app.theme.color.green.active");
@@ -70,6 +81,7 @@ pub const LIST_BOX_ITEM_DELETE_FONT: Key<FontDescriptor> =
 pub const ALERT_TEXT_PADDING: Key<Insets> = Key::new("app.theme.alert.text.padding");
 pub const ALERT_SPACING: Key<f64> = Key::new("app.theme.alert.spacing");
 pub const ALERT_INFO_DURATION: Duration = Duration::from_secs(3);
+pub const ALERT_WARN_DURATION: Duration = Duration::from_secs(6);
 pub const ALERT_ERROR_DURATION: Duration = Duration::from_secs(10);
 
 pub fn apply_theme(env: &mut Env, _state: &AppState) {
@@ -95,6 +107,11 @@ fn apply_dark_theme(env: &mut Env) {
     env.set(COLOR_RED_HOVER, hex("#d93e5d"));
     env.set(COLOR_RED_ACTIVE, hex("#ce3b59"));
     env.set(COLOR_RED_DISABLED, hex("#704350"));
+
+    env.set(COLOR_ORANGE_NORMAL, hex("#ffa347"));
+    env.set(COLOR_ORANGE_HOVER, hex("#d98b3c"));
+    env.set(COLOR_ORANGE_ACTIVE, hex("#cc8239"));
+    env.set(COLOR_ORANGE_DISABLED, hex("#7f6a55"));
 
     env.set(COLOR_GREEN_NORMAL, hex("#1bd96a"));
     env.set(COLOR_GREEN_HOVER, hex("#17b85a"));

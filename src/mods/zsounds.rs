@@ -7,7 +7,7 @@ use std::{
     sync::Arc,
 };
 
-use druid::{Data, Lens};
+use druid::{Data, EventCtx, Lens};
 use fs_extra::dir;
 use fs_extra::dir::CopyOptions;
 use log::error;
@@ -15,7 +15,7 @@ use log::info;
 use serde::{self, Deserialize};
 use serde_json_lenient::Value;
 
-use crate::data::config::Config;
+use crate::{data::config::Config, ui::alert::Alert};
 
 use super::Installable;
 
@@ -96,35 +96,34 @@ impl Installable for ZSounds {
         name == CONFIG_NAME
     }
 
-    fn update(&mut self, config: &Config) {
+    fn update(&mut self, ctx: &mut EventCtx, config: &Config) {
         if config.dv_install_dir.is_empty() {
             self.sound_groups = Arc::new(Vec::new());
             return;
         }
         let (mut groups, errors) = Self::load_sounds(config).unwrap_or_else(|err| {
-            error!("Error loading sounds: {:?}", err);
-            //todo: alert
+            Alert::error(ctx, format!("Failed to load sounds: {:?}", err));
             (vec![], vec![])
         });
         for err in errors {
-            error!("Error loading sound: {:?}", err);
-            //todo: alert
+            Alert::error(ctx, format!("Error loading sound: {:?}", err));
         }
         groups.sort_by(|a, b| a.name.cmp(&b.name));
         self.sound_groups = Arc::new(groups);
     }
 
-    fn install(&mut self, config: &Config, path: &Path) {
+    fn install(&mut self, ctx: &mut EventCtx, config: &Config, path: &Path) {
         let tmp = match SoundGroup::new(path) {
             Ok(res) => res,
             Err(err) => {
-                error!(
-                    "Failed to read sound configuration in \"{}\": {}",
-                    path.to_string_lossy().to_string(),
-                    err
+                Alert::error(
+                    ctx,
+                    format!(
+                        "Failed to read sound group configuration at {:?}: {:?}",
+                        path, err
+                    ),
                 );
-                todo!("alert");
-                // continue;
+                return;
             }
         };
 
@@ -136,14 +135,14 @@ impl Installable for ZSounds {
             match sound_group.delete() {
                 Ok(_) => {}
                 Err(err) => {
-                    error!(
-                        "Failed to delete old sound group {} at \"{}\": {}",
-                        sound_group.name,
-                        sound_group.directory.to_string_lossy().to_string(),
-                        err.to_string()
+                    Alert::error(
+                        ctx,
+                        format!(
+                            "Failed to delete old sound group {} at {:?}: {:?}",
+                            sound_group.name, sound_group.directory, err
+                        ),
                     );
-                    todo!("alert");
-                    // continue;
+                    return;
                 }
             }
         }
@@ -151,14 +150,14 @@ impl Installable for ZSounds {
         match dir::copy(path, &sounds_path, &CopyOptions::new()) {
             Ok(_) => {}
             Err(err) => {
-                error!(
-                    "Failed to copy car from \"{}\" to \"{}\": {}",
-                    path.to_string_lossy().to_string(),
-                    sounds_path.to_string_lossy().to_string(),
-                    err.to_string()
+                Alert::error(
+                    ctx,
+                    format!(
+                        "Failed to copy sound group from {:?} to {:?}: {:?}",
+                        path, sounds_path, err
+                    ),
                 );
-                todo!("alert");
-                // continue;
+                return;
             }
         };
         info!("Successfully installed {}", tmp.name);

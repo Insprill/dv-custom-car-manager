@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use druid::widget::{Flex, ViewSwitcher};
 use druid::{UnitPoint, Widget, WidgetExt, WindowDesc};
 
@@ -5,6 +7,7 @@ use crate::data::nav::Nav;
 use crate::data::AppState;
 
 use self::widget::overlay::Overlay;
+use self::widget::CustomWidgetExt;
 
 pub mod alert;
 pub mod ccl;
@@ -25,6 +28,7 @@ fn root() -> impl Widget<AppState> {
     Flex::row()
         .with_child(gutter::gutter())
         .with_flex_child(Overlay::bottom(nav(), alert::alert_box()), 1.0)
+        .run_after(|_, _| Duration::ZERO, |ctx, state, _| state.update_all(ctx))
 }
 
 fn nav() -> impl Widget<AppState> {

@@ -1,7 +1,7 @@
-use std::{fmt::Display, sync::Arc};
+use std::sync::Arc;
 
-use druid::{im::Vector, Data, Lens};
-use log::{error, info};
+use druid::{im::Vector, Data, EventCtx, Lens};
+use log::{error, info, warn};
 
 use crate::{
     mods::{ccl::CustomCarLoader, zsounds::ZSounds, Installable},
@@ -25,7 +25,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn from_config(config: Config) -> Self {
-        let mut state = Self {
+        Self {
             nav: if config.dv_install_dir.is_empty() {
                 Nav::Settings
             } else {
@@ -39,24 +39,22 @@ impl AppState {
                 sound_groups: Arc::new(vec![]),
             },
             alerts: Vector::new(),
-        };
-        state.ccl.update(&state.config);
-        state.zsounds.update(&state.config);
-        state
+        }
     }
 
-    pub fn update_all(&mut self) {
-        self.ccl.update(&self.config);
-        self.zsounds.update(&self.config);
+    pub fn update_all(&mut self, ctx: &mut EventCtx) {
+        self.ccl.update(ctx, &self.config);
+        self.zsounds.update(ctx, &self.config);
     }
 
-    pub fn alert(&mut self, message: impl Display, style: AlertStyle) {
-        let single_line = message.to_string().replace('\n', ". ");
-        match style {
+    pub fn alert(&mut self, alert: &Alert) {
+        let single_line = alert.message.to_string().replace('\n', ". ");
+        match alert.style {
             AlertStyle::Error => error!("{}", single_line),
+            AlertStyle::Warn => warn!("{}", single_line),
             AlertStyle::Info => info!("{}", single_line),
         }
-        self.alerts.push_back(Alert::new(message, style))
+        self.alerts.push_back(alert.clone())
     }
 
     pub fn dismiss_alert(&mut self, id: u32) {

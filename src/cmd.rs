@@ -1,8 +1,11 @@
 use druid::{FileInfo, Selector};
 
-use crate::mods::{
-    ccl::Car,
-    zsounds::{Sound, SoundGroup},
+use crate::{
+    mods::{
+        ccl::Car,
+        zsounds::{Sound, SoundGroup},
+    },
+    ui::alert::Alert,
 };
 
 // DV
@@ -23,5 +26,6 @@ pub const ZSOUNDS_INSTALL_ARCHIVE: Selector<FileInfo> =
     Selector::new("app.zsounds.install.archive");
 pub const ZSOUNDS_PLAY_SOUND: Selector<Sound> = Selector::new("app.zsounds.play-sound");
 
-// MISC
+// Alerts
+pub const ALERT: Selector<Alert> = Selector::new("app.alert");
 pub const DISMISS_ALERT: Selector<u32> = Selector::new("app.alert.dismiss");
