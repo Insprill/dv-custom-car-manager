@@ -3,10 +3,11 @@ use std::time::Duration;
 use druid::widget::{Flex, ViewSwitcher};
 use druid::{UnitPoint, Widget, WidgetExt, WindowDesc};
 
+use crate::cmd;
+use crate::controller::RootController;
 use crate::data::nav::Nav;
 use crate::data::AppState;
 
-use self::alert::Alert;
 use self::widget::overlay::Overlay;
 use self::widget::CustomWidgetExt;
 
@@ -29,13 +30,13 @@ fn root() -> impl Widget<AppState> {
     Flex::row()
         .with_child(gutter::gutter())
         .with_flex_child(Overlay::bottom(nav(), alert::alert_box()), 1.0)
-        .run_after(|_, _| Duration::ZERO, |ctx, state, _| {
-            if state.config.dv_install_dir.is_empty() {
-                Alert::error(ctx, "Please set the installation directory of Derail Valley! \nThis is where the executable is located, e.g. C:/Program Files (x86)/Steam/steamapps/common/Derail Valley/");
-            } else {
-                state.update_all(ctx);
-            }
-        })
+        .controller(RootController)
+        .run_after(
+            |_, _| Duration::ZERO,
+            |ctx, _, _| {
+                ctx.submit_command(cmd::DV_VALIDATE_INSTALL_DIR);
+            },
+        )
 }
 
 fn nav() -> impl Widget<AppState> {

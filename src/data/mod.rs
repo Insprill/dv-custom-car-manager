@@ -12,12 +12,14 @@ use crate::{
 use self::nav::Nav;
 
 pub mod config;
+pub mod dv;
 pub mod nav;
 
 #[derive(Clone, Data, Lens)]
 pub struct AppState {
     pub config: Config,
     pub nav: Nav,
+    pub can_navigate: bool,
     pub ccl: CustomCarLoader,
     pub zsounds: ZSounds,
     pub alerts: Vector<Alert>,
@@ -26,11 +28,8 @@ pub struct AppState {
 impl AppState {
     pub fn from_config(config: Config) -> Self {
         Self {
-            nav: if config.dv_install_dir.is_empty() {
-                Nav::Settings
-            } else {
-                Nav::default()
-            },
+            nav: Nav::default(),
+            can_navigate: false,
             config,
             ccl: CustomCarLoader {
                 cars: Arc::new(vec![]),

@@ -97,7 +97,7 @@ impl Installable for ZSounds {
     }
 
     fn update(&mut self, ctx: &mut EventCtx, config: &Config) {
-        if config.dv_install_dir.is_empty() {
+        if !config.derail_valley.has_install_dir() {
             self.sound_groups = Arc::new(Vec::new());
             return;
         }
@@ -146,7 +146,7 @@ impl Installable for ZSounds {
                 }
             }
         }
-        let sounds_path = config.relative_to_install(SOUNDS_PATH);
+        let sounds_path = config.derail_valley.relative_to_install(SOUNDS_PATH);
         match dir::copy(path, &sounds_path, &CopyOptions::new()) {
             Ok(_) => {}
             Err(err) => {
@@ -171,7 +171,7 @@ impl ZSounds {
         config: &Config,
     ) -> Result<(Vec<SoundGroup>, Vec<Box<dyn Error>>), Box<dyn Error>> {
         let (groups, errors): (Vec<_>, Vec<_>) =
-            dir::get_dir_content(config.relative_to_install(SOUNDS_PATH))?
+            dir::get_dir_content(config.derail_valley.relative_to_install(SOUNDS_PATH))?
                 .files
                 .into_iter()
                 .map(PathBuf::from)

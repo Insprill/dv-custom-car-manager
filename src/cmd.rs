@@ -9,7 +9,8 @@ use crate::{
 };
 
 // DV
-pub const DV_SET_INSTALL_DIR: Selector<FileInfo> = Selector::new("app.dv.install-dir");
+pub const DV_SET_INSTALL_DIR: Selector<FileInfo> = Selector::new("app.dv.set-install-dir");
+pub const DV_VALIDATE_INSTALL_DIR: Selector = Selector::new("app.dv.validate-install-dir");
 
 // CCL
 pub const CCL_DELETE_CAR: Selector<Car> = Selector::new("app.ccl.delete-car");
@@ -30,3 +31,7 @@ pub const ZSOUNDS_PLAY_SOUND: Selector<Sound> = Selector::new("app.zsounds.play-
 // Alerts
 pub const ALERT: Selector<Alert> = Selector::new("app.alert");
 pub const DISMISS_ALERT: Selector<u32> = Selector::new("app.alert.dismiss");
+
+// Root
+pub const CONFIG_SAVE: Selector = Selector::new("app.config.save");
+pub const NAV_TOGGLE: Selector<bool> = Selector::new("app.nav.toggle");

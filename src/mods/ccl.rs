@@ -110,7 +110,7 @@ impl CarConfig {
 }
 
 pub fn cars_path(config: &Config) -> PathBuf {
-    config.relative_to_install(CARS_PATH)
+    config.derail_valley.relative_to_install(CARS_PATH)
 }
 
 pub fn disabled_cars_path() -> PathBuf {
@@ -128,7 +128,7 @@ impl Installable for CustomCarLoader {
     }
 
     fn update(&mut self, ctx: &mut EventCtx, config: &Config) {
-        if config.dv_install_dir.is_empty() {
+        if !config.derail_valley.has_install_dir() {
             self.cars = Arc::new(Vec::new());
             return;
         }

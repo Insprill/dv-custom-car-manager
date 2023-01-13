@@ -3,6 +3,7 @@ use druid::LensExt;
 use druid::{Widget, WidgetExt};
 
 use crate::controller::dv::DvController;
+use crate::data::dv::DerailValley;
 use crate::data::AppState;
 use crate::ui::theme;
 use crate::{cmd, Config};
@@ -30,10 +31,11 @@ fn derail_valley() -> impl Widget<AppState> {
 }
 
 fn dv_install_dir() -> impl Widget<AppState> {
-    let dv_install_dir_field = TextBox::new()
-        .scroll()
-        .fix_width(375.0)
-        .lens(AppState::config.then(Config::dv_install_dir));
+    let dv_install_dir_field = TextBox::new().scroll().fix_width(375.0).lens(
+        AppState::config
+            .then(Config::derail_valley)
+            .then(DerailValley::install_dir),
+    );
     let dv_select_install_dir_button =
         Button::new("Select Install Directory").on_click(|ctx, _, _| {
             let options = druid::FileDialogOptions::new()
