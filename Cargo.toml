@@ -16,7 +16,7 @@ rodio = { version = "0.16.0", default-features = false, features = ["vorbis"] }
 serde = { version = "1.0.152", features = ["derive"] }
 serde_json_lenient = { git = "https://github.com/google/serde_json_lenient", branch = "upgrade-serde-json" }
 simplelog = "0.12.0"
-sysinfo = "0.27.4"
+sysinfo = "0.27.5"
 trash = "3.0.0"
 zip = "0.6.3"
 
