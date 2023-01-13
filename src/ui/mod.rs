@@ -34,7 +34,7 @@ fn root() -> impl Widget<AppState> {
         .run_after(
             |_, _| Duration::ZERO,
             |ctx, _, _| {
-                ctx.submit_command(cmd::DV_VALIDATE_INSTALL_DIR);
+                ctx.submit_command(cmd::INIT);
             },
         )
 }

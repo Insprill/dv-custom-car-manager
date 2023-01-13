@@ -5,6 +5,7 @@ pub mod run_after;
 pub mod zsounds;
 
 use druid::{widget::Controller, Env, Event, EventCtx, Widget};
+use sysinfo::{ProcessRefreshKind, System, SystemExt};
 
 use crate::{
     cmd,
@@ -27,6 +28,17 @@ where
         env: &Env,
     ) {
         match event {
+            Event::Command(cmd) if cmd.is(cmd::INIT) => {
+                ctx.submit_command(cmd::DV_VALIDATE_INSTALL_DIR);
+                ctx.submit_command(cmd::DV_CHECK_RUNNING);
+            }
+            Event::Command(cmd) if cmd.is(cmd::DV_CHECK_RUNNING) => {
+                let mut sys = System::new();
+                sys.refresh_processes_specifics(ProcessRefreshKind::default());
+                if sys.processes_by_name("DerailValley").count() > 0 {
+                    Alert::warn(ctx, "Derail Valley is running! Making any modifications to mods while the game is running may lead to undefined behaviour. Proceed at your own risk!")
+                }
+            }
             Event::Command(cmd) if cmd.is(cmd::NAV_TOGGLE) => {
                 state.can_navigate = *cmd.get_unchecked(cmd::NAV_TOGGLE);
             }
