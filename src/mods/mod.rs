@@ -17,6 +17,11 @@ pub mod zsounds;
 
 pub trait Installable {
     fn install_from_archive(&mut self, ctx: &mut EventCtx, path: &PathBuf, config: &Config) {
+        if path.starts_with(Path::new(&config.derail_valley.install_dir)) {
+            Alert::error(ctx, "Cannot install from within the game's directory.");
+            return;
+        }
+
         let is_supported = match Self::is_supported_archive(ctx, path) {
             Ok(res) => res,
             Err(_) => {
@@ -200,6 +205,10 @@ pub trait Installable {
     }
 
     fn install_from_folder(&mut self, ctx: &mut EventCtx, root_path: &PathBuf, config: &Config) {
+        if root_path.starts_with(Path::new(&config.derail_valley.install_dir)) {
+            Alert::error(ctx, "Cannot install from within the game's directory.");
+            return;
+        }
         let paths = match fs::read_dir(root_path) {
             Ok(res) => res,
             Err(err) => {
