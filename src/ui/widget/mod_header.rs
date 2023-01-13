@@ -39,7 +39,10 @@ pub fn mod_header(
     let install_from_archive_button = Flex::row()
         .with_child(svg(include_str!("../assets/icons/archive.svg")))
         .with_default_spacer()
-        .with_child(Label::new("Install Car(s) from Archive").with_font(theme::LIST_BOX_ITEM_FONT))
+        .with_child(
+            Label::new(format!("Install {}(s) from Archive", install_name))
+                .with_font(theme::LIST_BOX_ITEM_FONT),
+        )
         .padding(4.0)
         .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
