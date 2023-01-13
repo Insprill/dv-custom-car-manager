@@ -48,9 +48,10 @@ impl DerailValley {
     }
 
     pub fn is_install_dir_valid(&self, ctx: &mut EventCtx) -> bool {
+        #[allow(clippy::blocks_in_if_conditions)]
         if self.install_dir.is_empty() {
             return false;
-        } else if Self::is_valid_install_dir(&Path::new(&self.install_dir)).unwrap_or_else(|err| {
+        } else if Self::is_valid_install_dir(Path::new(&self.install_dir)).unwrap_or_else(|err| {
             Alert::error(
                 ctx,
                 format!(
@@ -58,11 +59,11 @@ impl DerailValley {
                     self.install_dir, err
                 ),
             );
-            return false;
+            false
         }) {
             return true;
         }
-        return false;
+        false
     }
 
     // todo: check this on startup

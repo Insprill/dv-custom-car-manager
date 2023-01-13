@@ -25,7 +25,7 @@ pub fn mod_header(
             Label::new(format!("Install {}(s) from Folder", install_name))
                 .with_font(theme::LIST_BOX_ITEM_FONT),
         )
-        .padding(4.0)
+        .padding(theme::TEXT_PADDING)
         .background(painter::solid_reactive(theme::COLOR_BUTTON))
         .rounded(theme::BORDER_RADIUS)
         .on_click(move |ctx, _, _| {

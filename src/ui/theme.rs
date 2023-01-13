@@ -44,7 +44,7 @@ pub const COLOR_GREEN: ColorGroup = ColorGroup {
     disabled: COLOR_GREEN_DISABLED,
 };
 
-pub const COLOR_TEXT_INVERTED: Key<Color> = Key::new("app.theme.color.text.dark");
+pub const COLOR_TEXT_INVERTED: Key<Color> = Key::new("app.theme.color.text.inverted");
 
 pub const COLOR_BUTTON_NORMAL: Key<Color> = Key::new("app.theme.color.button.normal");
 pub const COLOR_BUTTON_HOVER: Key<Color> = Key::new("app.theme.color.button.background.hover");
@@ -70,6 +70,7 @@ pub const HEADER_3_FONT: Key<FontDescriptor> = Key::new("app.theme.header.3");
 pub const BORDER_RADIUS: Key<RoundedRectRadii> = Key::new("app.theme.border-radius");
 pub const SPACER: Key<f64> = Key::new("app.theme.spacer");
 pub const PADDING: Key<Insets> = Key::new("app.theme.padding");
+pub const TEXT_PADDING: Key<Insets> = Key::new("app.theme.text-padding");
 
 pub const LIST_BOX_PADDING: Key<Insets> = Key::new("app.theme.list-box.padding");
 pub const LIST_BOX_ITEM_SPACING: Key<f64> = Key::new("app.theme.list-box.item.spacing");
@@ -78,7 +79,6 @@ pub const LIST_BOX_ITEM_FONT: Key<FontDescriptor> = Key::new("app.theme.list-box
 pub const LIST_BOX_ITEM_DELETE_FONT: Key<FontDescriptor> =
     Key::new("app.theme.list-box.delete.item.font");
 
-pub const ALERT_TEXT_PADDING: Key<Insets> = Key::new("app.theme.alert.text.padding");
 pub const ALERT_SPACING: Key<f64> = Key::new("app.theme.alert.spacing");
 pub const ALERT_INFO_DURATION: Duration = Duration::from_secs(3);
 pub const ALERT_WARN_DURATION: Duration = Duration::from_secs(6);
@@ -101,6 +101,7 @@ fn apply_dark_theme(env: &mut Env) {
     env.set(COLOR_BUTTON_DISABLED, hex("#434956"));
 
     env.set(theme::TEXT_COLOR, hex("#b0bac5"));
+    env.set(theme::DISABLED_TEXT_COLOR, hex("#7c818b"));
     env.set(COLOR_TEXT_INVERTED, env.get(COLOR_BACKGROUND));
 
     env.set(COLOR_RED_NORMAL, hex("#ff496e"));
@@ -127,6 +128,7 @@ fn apply_style(env: &mut Env) {
     env.set(BORDER_RADIUS, 6.0);
     env.set(theme::BUTTON_BORDER_RADIUS, env.get(BORDER_RADIUS));
     env.set(SPACER, 12.0);
+    env.set(TEXT_PADDING, 4.0);
     env.set(PADDING, Insets::uniform(10.0));
 
     env.set(GUTTER_PADDING, 6.0);
@@ -169,7 +171,6 @@ fn apply_style(env: &mut Env) {
 
     env.set(theme::SCROLLBAR_PAD, 0.1);
 
-    env.set(ALERT_TEXT_PADDING, 4.0);
     env.set(ALERT_SPACING, env.get(PADDING).x0);
 }
 

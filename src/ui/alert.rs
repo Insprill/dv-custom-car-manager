@@ -82,7 +82,7 @@ pub fn alert_box() -> impl Widget<AppState> {
                     .with_text_color(theme::COLOR_TEXT_INVERTED)
                     .with_line_break_mode(LineBreaking::WordWrap)
                     .lens(Alert::message)
-                    .padding(theme::ALERT_TEXT_PADDING),
+                    .padding(theme::TEXT_PADDING),
                 1.0,
             )
             .background(painter::dyn_solid_reactive(
