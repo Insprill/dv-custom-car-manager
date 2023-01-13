@@ -17,7 +17,7 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             derail_valley: DerailValley::new(),
-            volume: 0.25,
+            volume: 0.5,
         }
     }
 }

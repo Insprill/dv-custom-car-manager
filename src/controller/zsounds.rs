@@ -75,7 +75,7 @@ where
 fn play_sound(path: &Path, volume: f64) -> Result<(), Box<dyn Error>> {
     let (_stream, stream_handle) = OutputStream::try_default()?;
     let sink = stream_handle.play_once(File::open(path)?)?;
-    sink.set_volume(volume as f32);
+    sink.set_volume(volume.powi(4) as f32);
     sink.sleep_until_end();
     Ok(())
 }
