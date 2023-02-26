@@ -6,15 +6,21 @@
 
 
 
-<h1 align="center">Custom Car Manager</h1>
-<p align="center">
-  A simple program to manage <a href="https://www.nexusmods.com/derailvalley/mods/324">Custom Car Loader</a> cars for <a href="https://store.steampowered.com/app/588030">Derail Valley</a>.
-  <br />
-  <br />
-  <a href="https://github.com/Insprill/dv-custom-car-manager/issues">Report Bugs</a>
-  ·
-  <a href="https://github.com/Insprill/dv-custom-car-manager/issues">Request Features</a>
-</p>
+<div align="center">
+  <h1 align="center">Custom Car Manager</h1>
+  <p align="center">
+    <h3>⚠️ Warning ⚠️</h3>
+    <h5>
+      Custom Car Manager is no longer supported! The incomplete Content Manager rewrite in Rust can be found on the content-manager branch. The functionallity of both has since been added to Vortex.
+    </h5>
+    A simple program to manage <a href="https://www.nexusmods.com/derailvalley/mods/324">Custom Car Loader</a> cars for <a href="https://store.steampowered.com/app/588030">Derail Valley</a>.
+    <br />
+    <br />
+    <a href="https://github.com/Insprill/dv-custom-car-manager/issues">Report Bugs</a>
+    ·
+    <a href="https://github.com/Insprill/dv-custom-car-manager/issues">Request Features</a>
+  </p>
+</div>
 
 
 
