@@ -20,6 +20,13 @@ pub const CCL_INSTALL_ARCHIVE: Selector<Vec<FileInfo>> = Selector::new("app.ccl.
 pub const CCL_ENABLE_CAR: Selector<Car> = Selector::new("app.ccl.enable-car");
 pub const CCL_DISABLE_CAR: Selector<Car> = Selector::new("app.ccl.disable-car");
 
+// Skin Manager
+pub const SKINMANAGER_DELETE: Selector<Car> = Selector::new("app.ccl.delete");
+pub const SKINMANAGER_INSTALL_FOLDER: Selector<Vec<FileInfo>> =
+    Selector::new("app.ccl.install.folder");
+pub const SKINMANAGER_INSTALL_ARCHIVE: Selector<Vec<FileInfo>> =
+    Selector::new("app.ccl.install.archive");
+
 // ZSounds
 pub const ZSOUNDS_DELETE_SOUNDGROUP: Selector<SoundGroup> =
     Selector::new("app.zsounds.delete-sound");

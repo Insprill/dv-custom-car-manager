@@ -4,7 +4,7 @@ use druid::{im::Vector, Data, EventCtx, Lens};
 use log::{error, info, warn};
 
 use crate::{
-    mods::{ccl::CustomCarLoader, zsounds::ZSounds, Installable},
+    mods::{ccl::CustomCarLoader, skinmanager::SkinManager, zsounds::ZSounds, Installable},
     ui::alert::{Alert, AlertStyle},
     Config,
 };
@@ -21,6 +21,7 @@ pub struct AppState {
     pub nav: Nav,
     pub can_navigate: bool,
     pub ccl: CustomCarLoader,
+    pub skinmanager: SkinManager,
     pub zsounds: ZSounds,
     pub alerts: Vector<Alert>,
 }
@@ -33,6 +34,9 @@ impl AppState {
             config,
             ccl: CustomCarLoader {
                 cars: Arc::new(vec![]),
+            },
+            skinmanager: SkinManager {
+                skins: Vector::new(),
             },
             zsounds: ZSounds {
                 sound_groups: Arc::new(vec![]),

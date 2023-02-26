@@ -15,6 +15,7 @@ pub mod alert;
 pub mod ccl;
 pub mod gutter;
 pub mod settings;
+pub mod skinmanager;
 pub mod theme;
 pub mod widget;
 pub mod zsounds;

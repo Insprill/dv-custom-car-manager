@@ -13,6 +13,7 @@ use crate::data::config::Config;
 use crate::ui::alert::Alert;
 
 pub mod ccl;
+pub mod skinmanager;
 pub mod zsounds;
 
 pub trait Installable {

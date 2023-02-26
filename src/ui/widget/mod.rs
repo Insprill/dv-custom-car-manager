@@ -4,6 +4,7 @@ use druid::{widget::ControllerHost, Data, Env, EventCtx, Selector, Widget, Widge
 
 use crate::controller::{on_command::OnCommand, run_after::RunAfter};
 
+pub mod dropdown;
 pub mod mod_header;
 pub mod overlay;
 pub mod painter;
